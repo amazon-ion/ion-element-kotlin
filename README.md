@@ -5,6 +5,11 @@ that is idiomatic to Kotlin.  `IonElement` is meant as an alternative to `IonVal
 [Ion-java](https://github.com/amzn/ion-java) but is not a complete implementation of Ion as it relies on `Ion-java`'s 
 `IonReader` and `IonWriter` interfaces for reading and writing Ion data.
 
+### Status
+
+The the library is feature complete and capable of representing any Ion value, however public API should be considered 
+unstable and in alpha status.
+
 ## Example
 
 ```Kotlin
