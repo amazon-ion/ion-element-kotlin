@@ -39,6 +39,7 @@ import java.math.BigInteger
 
 // TODO:  add "metas: MetaContainer = emptyMetaContainer()" to all IonElement constructor functions.
 // Currently, this is only present on [ionSexpOf] overloads.
+// https://github.com/amzn/ion-element-kotlin/issues/6
 
 /** Creates an [IonElement] that represents an Ion `null.null` or a typed `null`.*/
 @JvmOverloads

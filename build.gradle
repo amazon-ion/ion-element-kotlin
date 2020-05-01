@@ -59,13 +59,11 @@ task submodulesUpdate(type:Exec) {
 
 test {
     useJUnitPlatform()
-    maxHeapSize = "4g"
 }
 
 dokka {
     outputFormat = "html"
     outputDirectory = "$buildDir/javadoc"
-    //todo: includes = ["path/to/module.md"]
 }
 
 task sourcesJar(type: Jar) {
