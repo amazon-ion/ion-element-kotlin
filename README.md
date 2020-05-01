@@ -64,7 +64,6 @@ Pull in the `ion-tests` git submodule:
 
 ``` 
 git submodule update --init
-``
 
 Then run the gradle wrapper:
 
