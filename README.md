@@ -60,7 +60,7 @@ val stockItems = ion.newReader(stockItemsIonText).use { reader ->
 
 ## Building
 
-Pull in the `ion-tests` repository:
+Pull in the `ion-tests` git submodule:
 
 ``` 
 git submodule update --init
