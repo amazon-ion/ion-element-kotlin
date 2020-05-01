@@ -7,7 +7,7 @@ that is idiomatic to Kotlin.  `IonElement` is meant as an alternative to `IonVal
 
 ### Status
 
-The the library is capable of representing any Ion value, however public API should be considered 
+The the library is capable of representing any Ion value, however the public API should be considered 
 unstable and in alpha status.
 
 ## Example
