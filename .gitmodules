@@ -1,3 +1,0 @@
-[submodule "ion-tests"]
-	path = ion-tests
-	url = git@github.com:amzn/ion-tests.git
