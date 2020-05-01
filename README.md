@@ -58,6 +58,20 @@ val stockItems = ion.newReader(stockItemsIonText).use { reader ->
 }.asSequence().toList()
 ```
 
+## Building
+
+Pull in the `ion-tests` git submodule:
+
+``` 
+git submodule update --init
+``
+
+Then run the gradle wrapper:
+
+```
+./gradlew build
+```
+
 ## License
 
 This project is licensed under the Apache-2.0 License.
