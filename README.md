@@ -62,8 +62,9 @@ val stockItems = ion.newReader(stockItemsIonText).use { reader ->
 
 Pull in the `ion-tests` git submodule:
 
-``` 
+```
 git submodule update --init
+```
 
 Then run the gradle wrapper:
 
