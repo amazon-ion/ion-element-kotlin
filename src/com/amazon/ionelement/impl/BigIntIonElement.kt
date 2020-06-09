@@ -20,8 +20,8 @@ import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionError
 import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 import java.math.BigInteger
 
 internal class BigIntIonElement(
@@ -30,7 +30,7 @@ internal class BigIntIonElement(
     override val metas: MetaContainer = emptyMetaContainer()
 ) : IonElementBase() {
 
-    override val type: IonType get() = IonType.INT
+    override val type: ElementType get() = ElementType.INT
 
     override val integerSize: IntegerSize get() = IntegerSize.BIG_INTEGER
 

@@ -30,7 +30,7 @@ internal abstract class OrderedIonElementArray(
     override val containerValueOrNull: IonElementContainer get() = this
 
     override fun writeContentTo(writer: IonWriter) {
-        writer.stepIn(type)
+        writer.stepIn(type.toIonType())
         values.forEach {
             it.writeTo(writer)
         }

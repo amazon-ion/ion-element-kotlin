@@ -32,17 +32,15 @@ import com.amazon.ionelement.util.ArgumentsProviderBase
 import com.amazon.ionelement.util.randomIonElement
 import com.amazon.ionelement.util.randomSeed
 import com.amazon.ion.Decimal
-import com.amazon.ion.IonType
 import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.ElementType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 
 
-private val ALL_NULLS = IonType.values()
-    .filter { it != IonType.DATAGRAM }
-    .map { ionNull(it) }
+private val ALL_NULLS = ElementType.values().map { ionNull(it) }
 
 /** Expands a [EquivTestCase] by adding variations that include type annotations. */
 private fun List<EquivTestCase>.includeAnnotations(): List<EquivTestCase> {

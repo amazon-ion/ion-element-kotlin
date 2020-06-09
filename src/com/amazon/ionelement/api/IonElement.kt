@@ -30,20 +30,20 @@ import java.math.BigInteger
  *
  * The table below shows which properties should be used to access the raw values for each of the given [IonType]s.
  *
- * | When the IonType is... | The Valid Accessors Are (others will throw [IonElectrolyteException])      |
- * |------------------------|----------------------------------------------------------------------------|
- * | [IonType.NULL]         | ...any function with the `OrNull` suffix.                                  |
- * | [IonType.BOOL]         | [booleanValue], [booleanValueOrNull]                                       |
- * | [IonType.INT]          | [longValue], [longValueOrNull], [bigIntegerValue], [bigIntegerValueOrNull] |
- * | [IonType.STRING]       | [textValue], [textValueOrNull], [stringValue], [stringValueOrNull]         |
- * | [IonType.SYMBOL]       | [textValue], [textValueOrNull], [symbolValue], [symbolValueOrNull]         |
- * | [IonType.DECIMAL]      | [decimalValue], [decimalValueOrNull]                                       |
- * | [IonType.TIMESTAMP]    | [timestampValue], [timestampValueOrNull]                                   |
- * | [IonType.CLOB]         | [bytesValue], [bytesValueOrNull], [clobValue], [clobValueOrNull]           |
- * | [IonType.BLOB]         | [bytesValue], [bytesValueOrNull], [blobValue], [blobValueOrNull]           |
- * | [IonType.LIST]         | [containerValue], [containerValueOrNull], [listValue], [listValueOrNull]   |
- * | [IonType.SEXP]         | [containerValue], [containerValueOrNull], [sexpValue], [sexpValueOrNull]   |
- * | [IonType.STRUCT]       | [structValue], [structValueOrNull]                                         |
+ * | When the [ElementType] is... | The Valid Accessors Are (others will throw [IonElectrolyteException])      |
+ * |------------------------------|----------------------------------------------------------------------------|
+ * | [ElementType.NULL]           | ...any function with the `OrNull` suffix.                                  |
+ * | [ElementType.BOOL]           | [booleanValue], [booleanValueOrNull]                                       |
+ * | [ElementType.INT]            | [longValue], [longValueOrNull], [bigIntegerValue], [bigIntegerValueOrNull] |
+ * | [ElementType.STRING]         | [textValue], [textValueOrNull], [stringValue], [stringValueOrNull]         |
+ * | [ElementType.SYMBOL]         | [textValue], [textValueOrNull], [symbolValue], [symbolValueOrNull]         |
+ * | [ElementType.DECIMAL]        | [decimalValue], [decimalValueOrNull]                                       |
+ * | [ElementType.TIMESTAMP]      | [timestampValue], [timestampValueOrNull]                                   |
+ * | [ElementType.CLOB]           | [bytesValue], [bytesValueOrNull], [clobValue], [clobValueOrNull]           |
+ * | [ElementType.BLOB]           | [bytesValue], [bytesValueOrNull], [blobValue], [blobValueOrNull]           |
+ * | [ElementType.LIST]           | [containerValue], [containerValueOrNull], [listValue], [listValueOrNull]   |
+ * | [ElementType.SEXP]           | [containerValue], [containerValueOrNull], [sexpValue], [sexpValueOrNull]   |
+ * | [ElementType.STRUCT]         | [structValue], [structValueOrNull]                                         |
  *
  * These accessors can be chained together in a way that allows data to be mapped to domain objects very easily.  The
  * main benefit of this approach is that data is automatically checked to ensure it's the proper data type and
@@ -99,7 +99,7 @@ import java.math.BigInteger
 interface IonElement {
 
     /** The Ion data type of the current node.  */
-    val type: IonType
+    val type: ElementType
 
     /** This element's Ion metadata. */
     val metas: MetaContainer
@@ -144,97 +144,97 @@ interface IonElement {
     val booleanValue: Boolean get() = handleNull { booleanValueOrNull }
 
     /** See [IonElement]. */
-    val booleanValueOrNull: Boolean? get() = expectNullOr(IonType.BOOL).run { null }
+    val booleanValueOrNull: Boolean? get() = expectNullOr(ElementType.BOOL).run { null }
 
     /** See [IonElement]. */
     val longValue: Long get() = handleNull { longValueOrNull }
 
     /** See [IonElement]. */
-    val longValueOrNull: Long? get() = expectNullOr(IonType.INT).run { null }
+    val longValueOrNull: Long? get() = expectNullOr(ElementType.INT).run { null }
 
     /** See [IonElement]. */
     val bigIntegerValue: BigInteger get() = handleNull { bigIntegerValueOrNull }
 
     /** See [IonElement]. */
-    val bigIntegerValueOrNull: BigInteger? get() = expectNullOr(IonType.INT).run { null }
+    val bigIntegerValueOrNull: BigInteger? get() = expectNullOr(ElementType.INT).run { null }
 
     /** See [IonElement]. */
     val textValue: String get() = handleNull { textValueOrNull }
 
     /** See [IonElement]. */
-    val textValueOrNull: String? get() = expectNullOr(IonType.STRING, IonType.SYMBOL).run { null }
+    val textValueOrNull: String? get() = expectNullOr(ElementType.STRING, ElementType.SYMBOL).run { null }
 
     /** See [IonElement]. */
     val stringValue: String get() = handleNull { stringValueOrNull }
 
     /** See [IonElement]. */
-    val stringValueOrNull: String? get() = expectNullOr(IonType.STRING).run { null }
+    val stringValueOrNull: String? get() = expectNullOr(ElementType.STRING).run { null }
 
     /** See [IonElement]. */
     val symbolValue: String get() = handleNull { symbolValueOrNull }
 
     /** See [IonElement]. */
-    val symbolValueOrNull: String? get() = expectNullOr(IonType.SYMBOL).run { null }
+    val symbolValueOrNull: String? get() = expectNullOr(ElementType.SYMBOL).run { null }
 
     /** See [IonElement]. */
     val decimalValue: Decimal get() = handleNull { decimalValueOrNull }
 
     /** See [IonElement]. */
-    val decimalValueOrNull: Decimal? get() = expectNullOr(IonType.DECIMAL).run { null }
+    val decimalValueOrNull: Decimal? get() = expectNullOr(ElementType.DECIMAL).run { null }
 
     /** See [IonElement]. */
     val doubleValue: Double get()  = handleNull { doubleValueOrNull }
 
     /** See [IonElement]. */
-    val doubleValueOrNull: Double? get() = expectNullOr(IonType.FLOAT).run { null }
+    val doubleValueOrNull: Double? get() = expectNullOr(ElementType.FLOAT).run { null }
 
     /** See [IonElement]. */
     val timestampValue: Timestamp get() = handleNull { timestampValueOrNull }
 
     /** See [IonElement]. */
-    val timestampValueOrNull: Timestamp? get() = expectNullOr(IonType.TIMESTAMP).run { null }
+    val timestampValueOrNull: Timestamp? get() = expectNullOr(ElementType.TIMESTAMP).run { null }
 
     /** See [IonElement]. */
     val bytesValue: IonByteArray get() = handleNull { bytesValueOrNull }
 
     /** See [IonElement]. */
-    val bytesValueOrNull: IonByteArray? get() = expectNullOr(IonType.BLOB, IonType.CLOB).run { null }
+    val bytesValueOrNull: IonByteArray? get() = expectNullOr(ElementType.BLOB, ElementType.CLOB).run { null }
 
     /** See [IonElement]. */
     val blobValue: IonByteArray get() = handleNull { blobValueOrNull }
 
     /** See [IonElement]. */
-    val blobValueOrNull: IonByteArray? get() = expectNullOr(IonType.BLOB).run { null }
+    val blobValueOrNull: IonByteArray? get() = expectNullOr(ElementType.BLOB).run { null }
 
     /** See [IonElement]. */
     val clobValue: IonByteArray get() = handleNull { clobValueOrNull }
 
     /** See [IonElement]. */
-    val clobValueOrNull: IonByteArray? get() = expectNullOr(IonType.CLOB).run { null }
+    val clobValueOrNull: IonByteArray? get() = expectNullOr(ElementType.CLOB).run { null }
 
     /** See [IonElement]. */
     val containerValue: IonElementContainer get() = handleNull { containerValueOrNull }
 
     /** See [IonElement]. */
-    val containerValueOrNull: IonElementContainer? get() = expectNullOr(IonType.LIST, IonType.SEXP).run { null }
+    val containerValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.LIST, ElementType.SEXP).run { null }
 
     /** See [IonElement]. */
     val listValue: IonElementContainer get() = handleNull { listValueOrNull }
 
     /** See [IonElement]. */
-    val listValueOrNull: IonElementContainer? get() = expectNullOr(IonType.LIST).run { null }
+    val listValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.LIST).run { null }
 
     /** See [IonElement]. */
     val sexpValue: IonElementContainer get() = handleNull { sexpValueOrNull }
 
     /** See [IonElement]. */
-    val sexpValueOrNull: IonElementContainer? get() = expectNullOr(IonType.SEXP).run { null }
+    val sexpValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.SEXP).run { null }
 
     /** See [IonElement]. */
     val structValue: StructIonElement get() = handleNull { structValueOrNull }
 
     /** See [IonElement]. */
-    val structValueOrNull: StructIonElement? get() = expectNullOr(IonType.STRUCT).run { null }
+    val structValueOrNull: StructIonElement? get() = expectNullOr(ElementType.STRUCT).run { null }
 
 
     /** Writes the current Ion element to the specified [IonWriter]. */
@@ -243,9 +243,9 @@ interface IonElement {
     /** Converts the current element to Ion text. */
     override fun toString(): String
 
-    /** Throws an [IonElectrolyteException] if the current instance was not [IonType.NULL] or in [expectedTypes]. */
-    private fun expectNullOr(vararg expectedTypes: IonType) {
-        if (this.type != IonType.NULL && !expectedTypes.contains(type)) {
+    /** Throws an [IonElectrolyteException] if the current instance was not [ElementType.NULL] or in [expectedTypes]. */
+    private fun expectNullOr(vararg expectedTypes: ElementType) {
+        if (this.type != ElementType.NULL && !expectedTypes.contains(type)) {
             ionError(this, "Expected Ion value of type ${expectedTypes.joinToString(",")} but found a value of type $type")
         }
     }

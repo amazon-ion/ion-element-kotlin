@@ -22,6 +22,7 @@ import com.amazon.ionelement.api.StructIonElement
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 
 internal class StructIonElementImpl(
     override val fields: List<IonStructField>,
@@ -31,7 +32,7 @@ internal class StructIonElementImpl(
 
     override fun iterator(): Iterator<IonStructField> = fields.iterator()
 
-    override val type: IonType get() = IonType.STRUCT
+    override val type: ElementType get() = ElementType.STRUCT
     override val structValueOrNull: StructIonElement get() = this
 
     override fun firstOrNull(fieldName: String): IonElement? =

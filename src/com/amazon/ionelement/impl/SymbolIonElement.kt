@@ -18,15 +18,15 @@ package com.amazon.ionelement.impl
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 
 internal class SymbolIonElement(
     override val value: String,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): TextIonElement() {
-    override val type: IonType get() = IonType.SYMBOL
+    override val type: ElementType get() = ElementType.SYMBOL
 
     override val symbolValueOrNull: String get() = value
 

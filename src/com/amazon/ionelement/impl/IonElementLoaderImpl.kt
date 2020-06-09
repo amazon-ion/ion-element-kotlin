@@ -46,6 +46,7 @@ import com.amazon.ion.OffsetSpan
 import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
+import com.amazon.ionelement.api.toElementType
 
 class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
@@ -126,7 +127,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
 
             var element = when {
                 ionReader.type == IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
-                ionReader.isNullValue -> ionNull(valueType)
+                ionReader.isNullValue -> ionNull(valueType.toElementType())
                 else -> {
                     when {
                         !IonType.isContainer(valueType) -> {
