@@ -28,8 +28,8 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
-import com.amazon.ion.IonType
 import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.ElementType
 import java.util.*
 
 val randomSeed = Random().nextLong()
@@ -44,8 +44,6 @@ private val MAX_TIMESTAMP_MILLIS = Timestamp.forSecond(1999, 12, 31, 23, 59, 59,
 private const val MAX_RANDOM_STRING_LENGTH = 25
 private const val CHARACTERS = "_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 private const val MAX_LOB_SIZE = 64
-
-private val ION_TYPES = IonType.values().filter { it != IonType.DATAGRAM }
 
 fun randomIonElement(): IonElement {
 
@@ -65,7 +63,7 @@ fun randomIonElement(): IonElement {
             // Generate a scalar value
             else -> {
                 when(random.nextInt(8)) {
-                    0 -> ionNull(ION_TYPES[random.nextInt(ION_TYPES.size)])
+                    0 -> ionNull(ElementType.values()[random.nextInt(ElementType.values().size)])
                     1 -> ionBool(random.nextBoolean())
                     2 -> ionInt(random.nextLong())
                     3 -> ionSymbol(randomString())

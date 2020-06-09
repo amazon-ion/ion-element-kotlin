@@ -18,15 +18,15 @@ package com.amazon.ionelement.impl
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 
 internal class BoolIonElement(
     val value: Boolean,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): IonElementBase() {
-    override val type: IonType get() = IonType.BOOL
+    override val type: ElementType get() = ElementType.BOOL
     override val booleanValueOrNull: Boolean get() = value
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =

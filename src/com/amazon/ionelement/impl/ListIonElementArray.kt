@@ -19,14 +19,14 @@ import com.amazon.ionelement.api.IonElementContainer
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonType
+import com.amazon.ionelement.api.ElementType
 
 internal class ListIonElementArray (
     override val values: List<IonElement>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): OrderedIonElementArray(), IonElementContainer {
-    override val type: IonType get() = IonType.LIST
+    override val type: ElementType get() = ElementType.LIST
     override val listValueOrNull: IonElementContainer get() = this
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =

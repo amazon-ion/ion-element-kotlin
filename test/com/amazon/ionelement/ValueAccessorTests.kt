@@ -25,22 +25,23 @@ import com.amazon.ionelement.api.ionListOf
 import com.amazon.ionelement.api.ionSexpOf
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ion.Decimal
-import com.amazon.ion.IonType
-import com.amazon.ion.IonType.BLOB
-import com.amazon.ion.IonType.BOOL
-import com.amazon.ion.IonType.CLOB
-import com.amazon.ion.IonType.DECIMAL
-import com.amazon.ion.IonType.TIMESTAMP
-import com.amazon.ion.IonType.FLOAT
-import com.amazon.ion.IonType.INT
-import com.amazon.ion.IonType.LIST
-import com.amazon.ion.IonType.NULL
-import com.amazon.ion.IonType.SEXP
-import com.amazon.ion.IonType.STRING
-import com.amazon.ion.IonType.STRUCT
-import com.amazon.ion.IonType.SYMBOL
-import com.amazon.ion.IonType.DATAGRAM
-import org.junit.jupiter.api.Assertions.*
+import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.ElementType.NULL
+import com.amazon.ionelement.api.ElementType.BOOL
+import com.amazon.ionelement.api.ElementType.INT
+import com.amazon.ionelement.api.ElementType.FLOAT
+import com.amazon.ionelement.api.ElementType.DECIMAL
+import com.amazon.ionelement.api.ElementType.STRING
+import com.amazon.ionelement.api.ElementType.SYMBOL
+import com.amazon.ionelement.api.ElementType.TIMESTAMP
+import com.amazon.ionelement.api.ElementType.CLOB
+import com.amazon.ionelement.api.ElementType.BLOB
+import com.amazon.ionelement.api.ElementType.LIST
+import com.amazon.ionelement.api.ElementType.SEXP
+import com.amazon.ionelement.api.ElementType.STRUCT
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
@@ -51,11 +52,11 @@ class ValueAccessorTests {
     fun valueAccessorTests(tc: TestCase) {
 
         val element = createIonElementLoader().loadSingleElement(tc.ionText)
-        assertElementProperties(element, tc.ionType, tc.expectedValue)
+        assertElementProperties(element, tc.elementType, tc.expectedValue)
     }
 
     companion object {
-        data class TestCase(val ionText: String, val ionType: IonType, val expectedValue: Any?)
+        data class TestCase(val ionText: String, val elementType: ElementType, val expectedValue: Any?)
 
         @JvmStatic
         @Suppress("unused")
@@ -96,8 +97,8 @@ class ValueAccessorTests {
             TestCase("{ foo: 42 }", STRUCT, ionStructOf("foo" to ionInt(42))))
 
 
-        private fun assertElementProperties(element: IonElement, ionType: IonType, expectedValue: Any?) {
-            assertEquals(ionType, element.type)
+        private fun assertElementProperties(element: IonElement, elementType: ElementType, expectedValue: Any?) {
+            assertEquals(elementType, element.type)
 
             assertEquals(expectedValue == null, element.isNull)
             assertThrowsForWrongAccessorTypes(element)
@@ -144,7 +145,6 @@ class ValueAccessorTests {
                     LIST -> listOf(containerValue, containerValueOrNull, listValue, listValueOrNull)
                     SEXP -> listOf(containerValue, containerValueOrNull, sexpValue, sexpValueOrNull)
                     STRUCT -> listOf(structValue, structValueOrNull)
-                    DATAGRAM -> error("DATAGRAM not supported")
                 }
             }
 
@@ -192,7 +192,6 @@ class ValueAccessorTests {
                     LIST -> assertNull(listValueOrNull).also { assertNull(containerValueOrNull) }
                     SEXP -> assertNull(sexpValueOrNull).also { assertNull(containerValueOrNull) }
                     STRUCT -> assertNull(structValueOrNull)
-                    DATAGRAM -> error("IonType.DATAGRAM is unsupported")
                 }
             }
         }
@@ -237,7 +236,6 @@ class ValueAccessorTests {
                     LIST -> assertThrows<IonElectrolyteException> { listValue }.also { assertThrows<IonElectrolyteException> { containerValue } }
                     SEXP -> assertThrows<IonElectrolyteException> { sexpValue }.also { assertThrows<IonElectrolyteException> { containerValue } }
                     STRUCT -> assertThrows<IonElectrolyteException> { structValue }
-                    DATAGRAM -> error("IonType.DATAGRAM is unsupported")
                 }
             }
         }
@@ -304,9 +302,6 @@ class ValueAccessorTests {
                 if (type != STRUCT) {
                     assertThrows<IonElectrolyteException>("structValue") { structValue }
                     assertThrows<IonElectrolyteException>("structValueOrNull") { structValueOrNull }
-                }
-                if (type == DATAGRAM) {
-                    error("IonElement does not support IonType.DATAGRAM")
                 }
             }
         }

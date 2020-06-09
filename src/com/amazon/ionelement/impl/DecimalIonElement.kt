@@ -19,15 +19,15 @@ import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.Decimal
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 
 internal class DecimalIonElement(
     val value: Decimal,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ) : IonElementBase() {
-    override val type get() = IonType.DECIMAL
+    override val type get() = ElementType.DECIMAL
     override val decimalValueOrNull: Decimal get() = value
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =

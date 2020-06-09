@@ -33,7 +33,6 @@ import com.amazon.ionelement.impl.StructIonElementImpl
 import com.amazon.ionelement.impl.SymbolIonElement
 import com.amazon.ionelement.impl.TimestampIonElement
 import com.amazon.ion.Decimal
-import com.amazon.ion.IonType
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
 
@@ -43,43 +42,43 @@ import java.math.BigInteger
 
 /** Creates an [IonElement] that represents an Ion `null.null` or a typed `null`.*/
 @JvmOverloads
-fun ionNull(ionType: IonType = IonType.NULL): IonElement = ALL_NULLS.getValue(ionType)
+fun ionNull(elementType: ElementType = ElementType.NULL): IonElement = ALL_NULLS.getValue(elementType)
 
 /** Creates an [IonElement] that represents an Ion `symbol`.*/
 fun ionString(s: String?): IonElement =
-    s?.let { StringIonElement(it) } ?: ionNull(IonType.STRING)
+    s?.let { StringIonElement(it) } ?: ionNull(ElementType.STRING)
 
 /** Creates an [IonElement] that represents an Ion `symbol`.*/
 fun ionSymbol(s: String?): IonElement =
-    s?.let { SymbolIonElement(it) } ?: ionNull(IonType.SYMBOL)
+    s?.let { SymbolIonElement(it) } ?: ionNull(ElementType.SYMBOL)
 
 /** Creates an IonElement that represents an Ion `timestamp`.*/
 fun ionTimestamp(s: String?): IonElement =
-    s?.let { TimestampIonElement(Timestamp.valueOf(s)) } ?: ionNull(IonType.TIMESTAMP)
+    s?.let { TimestampIonElement(Timestamp.valueOf(s)) } ?: ionNull(ElementType.TIMESTAMP)
 
 /** Creates an [IonElement] that represents an Ion `timestamp`.*/
 fun ionTimestamp(timestamp: Timestamp?): IonElement =
-    timestamp?.let { TimestampIonElement(timestamp) } ?: ionNull(IonType.TIMESTAMP)
+    timestamp?.let { TimestampIonElement(timestamp) } ?: ionNull(ElementType.TIMESTAMP)
 
 /** Creates an [IonElement] that represents an Ion `int`.*/
 fun ionInt(l: Long?): IonElement =
-    l?.let { IntIonElement(it) } ?: ionNull(IonType.INT)
+    l?.let { IntIonElement(it) } ?: ionNull(ElementType.INT)
 
 /** Creates an [IonElement] that represents an Ion `BitInteger`.*/
 fun ionInt(bigInt: BigInteger?): IonElement =
-    bigInt?.let { BigIntIonElement(it) } ?: ionNull(IonType.INT)
+    bigInt?.let { BigIntIonElement(it) } ?: ionNull(ElementType.INT)
 
 /** Creates an [IonElement] that represents an Ion `bool`.*/
 fun ionBool(b: Boolean?): IonElement =
-    b?.let { BoolIonElement(it) } ?: ionNull(IonType.BOOL)
+    b?.let { BoolIonElement(it) } ?: ionNull(ElementType.BOOL)
 
 /** Creates an [IonElement] that represents an Ion `float`.*/
 fun ionFloat(d: Double?): IonElement =
-    d?.let { FloatIonElement(it) } ?: ionNull(IonType.FLOAT)
+    d?.let { FloatIonElement(it) } ?: ionNull(ElementType.FLOAT)
 
 /** Creates an [IonElement] that represents an Ion `decimall`.*/
 fun ionDecimal(bigDecimal: Decimal?): IonElement =
-    bigDecimal?.let { DecimalIonElement(bigDecimal) } ?: ionNull(IonType.DECIMAL)
+    bigDecimal?.let { DecimalIonElement(bigDecimal) } ?: ionNull(ElementType.DECIMAL)
 
 /**
  * Creates an [IonElement] that represents an Ion `blob`.
@@ -87,7 +86,7 @@ fun ionDecimal(bigDecimal: Decimal?): IonElement =
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
 fun ionBlob(bytes: ByteArray?): IonElement =
-    bytes?.let { BlobIonElement(bytes.clone()) } ?: ionNull(IonType.BLOB)
+    bytes?.let { BlobIonElement(bytes.clone()) } ?: ionNull(ElementType.BLOB)
 
 fun emptyBlob(): IonElement = EMPTY_BLOB
 
@@ -97,7 +96,7 @@ fun emptyBlob(): IonElement = EMPTY_BLOB
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
 fun ionClob(bytes: ByteArray?): IonElement =
-    bytes?.let { ClobIonElement(bytes.clone()) } ?: ionNull(IonType.CLOB)
+    bytes?.let { ClobIonElement(bytes.clone()) } ?: ionNull(ElementType.CLOB)
 
 fun emptyClob(): IonElement = EMPTY_CLOB
 
@@ -159,4 +158,4 @@ private val EMPTY_BLOB = BlobIonElement(ByteArray(0))
 private val EMPTY_CLOB = ClobIonElement(ByteArray(0))
 
 // Memoized instances of all of our null values.
-private val ALL_NULLS = IonType.values().map { it to NullIonElement(it) }.toMap()
+private val ALL_NULLS = ElementType.values().map { it to NullIonElement(it) }.toMap()

@@ -19,8 +19,8 @@ import com.amazon.ionelement.api.IonByteArray
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
 
 internal class ClobIonElement(
     override val bytes: ByteArray,
@@ -33,5 +33,5 @@ internal class ClobIonElement(
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
         ClobIonElement(bytes, annotations, metas)
 
-    override val type: IonType get() = IonType.CLOB
+    override val type: ElementType get() = ElementType.CLOB
 }
