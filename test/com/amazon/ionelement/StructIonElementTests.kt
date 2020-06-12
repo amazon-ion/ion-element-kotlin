@@ -15,55 +15,54 @@
 
 package com.amazon.ionelement
 
+import com.amazon.ionelement.api.Element
 import com.amazon.ionelement.api.IonElectrolyteException
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.IonStructField
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.api.ionStructOf
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 
 class StructIonElementTests {
 
     @Test
     fun fieldAccessorTests() {
-        val struct =  createIonElementLoader().loadSingleElement("{ a: 1, b: 2, b: 3 }").structValueOrNull!!
+        val struct =  createIonElementLoader().loadSingleElement("{ a: 1, b: 2, b: 3 }").asStruct()
 
-        val structFields = struct.toList()
+        // TODO: need to add similar tests for StructElement.values
+        // TODO: need to review this and see if it still covers other parts of the modified API.
+
+        val structFields = struct.fields
         assertEquals(3, structFields.size)
         structFields.assertHasField("a", ionInt(1))
         structFields.assertHasField("b", ionInt(2))
         structFields.assertHasField("b", ionInt(3))
 
-        assertEquals(3, struct.size)
+        assertEquals(3, struct.fields.size)
         val fields = struct.fieldNames
         assertEquals(2, fields.size)
         assertTrue(fields.containsAll(listOf("a", "b")))
 
-        val values = struct.values
+        val values: Collection<Element> = struct.values
         assertEquals(3, values.size)
         assertTrue(values.containsAll(listOf(ionInt(1), ionInt(2), ionInt(3))))
 
-        assertEquals(ionInt(1), struct.first("a"))
-        assertEquals(ionInt(2), struct.first("b"))
+        assertEquals(ionInt(1), struct["a"])
+        assertEquals(ionInt(2), struct["b"])
 
-        assertEquals(ionInt(1), struct.firstOrNull("a"))
-        assertEquals(ionInt(2), struct.firstOrNull("b"))
+        assertEquals(ionInt(1), struct.findOne("a"))
+        assertEquals(ionInt(2), struct.findOne("b"))
 
-        val ex = assertThrows<IonElectrolyteException> { struct.first("z" ) }
+        val ex = assertThrows<IonElectrolyteException> { struct["z"] }
         assertTrue(ex.message!!.contains("'z'"))
 
-        assertNull(struct.firstOrNull("z"))
+        assertNull(struct.findOne("z"))
     }
 
-    private fun List<IonStructField>.assertHasField(fieldName: String, value: IonElement) {
+    private fun Iterable<IonStructField>.assertHasField(fieldName: String, value: Element) {
         assertTrue(this.any { it.name == fieldName && it.value == value })
     }
 

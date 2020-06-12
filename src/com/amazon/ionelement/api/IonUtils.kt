@@ -16,10 +16,9 @@
 @file:JvmName("IonUtils")
 package com.amazon.ionelement.api
 
-import com.amazon.ionelement.impl.IonElementLoaderImpl
 import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.impl.IonElementLoaderImpl
 
 /**
  * Creates an [IonElementLoader] implementation.
@@ -54,7 +53,7 @@ fun IonValue.toIonElement(): IonElement =
     }
 
 /** Throws an [IonElectrolyteException], including the [IonLocation] (if available). */
-fun ionError(blame: IonElement, description: String): Nothing {
+fun ionError(blame: Element, description: String): Nothing {
     ionError(blame.metas, description)
 }
 

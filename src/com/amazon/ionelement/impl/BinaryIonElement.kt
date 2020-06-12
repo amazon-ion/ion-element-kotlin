@@ -16,11 +16,13 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.IonByteArray
+import com.amazon.ionelement.api.LobElement
 
-internal abstract class BinaryIonElement: IonElementBase(), IonByteArray {
-    protected abstract val bytes: ByteArray
+internal abstract class BinaryIonElement(
+    protected val bytes: ByteArray
+): IonElementBase(), IonByteArray, LobElement {
 
-    override val bytesValueOrNull: IonByteArray get() = this
+    override val bytesValue: IonByteArray get() = this
 
     // IonByteArray implementation
     override fun size(): Int = bytes.size
@@ -39,7 +41,6 @@ internal abstract class BinaryIonElement: IonElementBase(), IonByteArray {
             // Metas are intentionally omitted here.
             else -> true
         }
-
     }
 
     override fun hashCode(): Int {

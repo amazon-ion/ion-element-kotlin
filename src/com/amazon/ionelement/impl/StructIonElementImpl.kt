@@ -15,30 +15,25 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.IonStructField
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.StructIonElement
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.StructElement
+import com.amazon.ionelement.api.emptyMetaContainer
+import com.amazon.ionelement.api.ionError
 
 internal class StructIonElementImpl(
-    override val fields: List<IonStructField>,
+    override val fields: Collection<IonStructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), StructIonElement {
-
-    override fun iterator(): Iterator<IonStructField> = fields.iterator()
+): IonElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
-    override val structValueOrNull: StructIonElement get() = this
 
-    override fun firstOrNull(fieldName: String): IonElement? =
-        get(fieldName)?.firstOrNull()
-
-    override fun get(fieldName: String): Iterable<IonElement>? = fieldsByName[fieldName] ?: emptyList()
+    override val values: Collection<IonElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
 
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<IonElement>> by lazy(LazyThreadSafetyMode.NONE) {
@@ -48,9 +43,18 @@ internal class StructIonElementImpl(
             .toMap()
     }
 
-    override val size: Int get() = fields.size
     override val fieldNames: List<String> get() = fields.map { it.name }.distinct()
-    override val values: List<IonElement> get() = fields.map { it.value }
+
+    override fun get(fieldName: String): IonElement =
+        fieldsByName[fieldName]?.firstOrNull() ?: fieldMissing(fieldName)
+
+    private fun fieldMissing(fieldName: String): Nothing {
+        ionError(this, "Required struct field '$fieldName' missing")
+    }
+
+    override fun getAll(fieldName: String): Iterable<IonElement> = fieldsByName[fieldName] ?: emptyList()
+
+    override fun findOne(fieldName: String): IonElement? = fieldsByName[fieldName]?.firstOrNull()
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
         StructIonElementImpl(fields, annotations, metas)

@@ -15,31 +15,31 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.BooleanElement
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
 
 internal class BoolIonElement(
-    val value: Boolean,
+    override val booleanValue: Boolean,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase() {
+): IonElementBase(), BooleanElement {
     override val type: ElementType get() = ElementType.BOOL
-    override val booleanValueOrNull: Boolean get() = value
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        BoolIonElement(value, annotations, metas)
+        BoolIonElement(booleanValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeBool(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as BoolIonElement
 
-        if (value != other.value) return false
+        if (booleanValue != other.booleanValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -47,7 +47,7 @@ internal class BoolIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.hashCode()
+        var result = booleanValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result

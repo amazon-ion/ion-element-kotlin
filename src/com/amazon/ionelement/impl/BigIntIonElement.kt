@@ -15,38 +15,37 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IntegerSize
+import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionError
-import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
 import java.math.BigInteger
 
 internal class BigIntIonElement(
-    val value: BigInteger,
+    override val bigIntegerValue: BigInteger,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase() {
+) : IonElementBase(), IntElement {
 
     override val type: ElementType get() = ElementType.INT
 
     override val integerSize: IntegerSize get() = IntegerSize.BIG_INTEGER
 
-    override val longValueOrNull: Long get() {
-        if(value > MAX_LONG_AS_BIG_INT || value < MIN_LONG_AS_BIG_INT) {
+    override val longValue: Long get() {
+        if(bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
             ionError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
         }
-        return value.longValueExact()
+        return bigIntegerValue.longValueExact()
     }
 
-    override val bigIntegerValueOrNull: BigInteger? get() = value
-
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        BigIntIonElement(value, annotations, metas)
+        BigIntIonElement(bigIntegerValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeInt(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -54,7 +53,7 @@ internal class BigIntIonElement(
 
         other as BigIntIonElement
 
-        if (value != other.value) return false
+        if (bigIntegerValue != other.bigIntegerValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -62,7 +61,7 @@ internal class BigIntIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.hashCode()
+        var result = bigIntegerValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result
@@ -71,3 +70,4 @@ internal class BigIntIonElement(
 
 internal val MAX_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MAX_VALUE)
 internal val MIN_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MIN_VALUE)
+

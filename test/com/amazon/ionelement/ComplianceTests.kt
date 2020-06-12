@@ -15,12 +15,12 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ion.IonValue
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ion.system.IonSystemBuilder
 import com.amazon.ion.system.IonTextWriterBuilder
+import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.createIonElementLoader
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -112,7 +112,7 @@ class ComplianceTests {
         // Every top level value is a list or s-exp value containing values that should be equivalent
         topLevelValues.forEach { equivalenceGroup ->
             if(equivalenceGroup.annotations.contains("embedded_documents")) {
-                val documents = equivalenceGroup.containerValueOrNull?.map {
+                val documents = equivalenceGroup.asSeqOrNull()?.values?.map {
                     loader.loadAllElements(it.stringValueOrNull ?: error("Unexpected null encountered"))
                 } ?: error("Unexpected null encountered")
 
@@ -123,7 +123,7 @@ class ComplianceTests {
                     }
                 }
             } else {
-                val seqEquivalenceGroup = equivalenceGroup.containerValueOrNull ?: error("Unexpected null encountered")
+                val seqEquivalenceGroup = equivalenceGroup.asSeqOrNull()?.values ?: error("Unexpected null encountered")
                 seqEquivalenceGroup.forEach { i ->
                     seqEquivalenceGroup.forEach { n ->
                         assertEquivalence(i, n)
