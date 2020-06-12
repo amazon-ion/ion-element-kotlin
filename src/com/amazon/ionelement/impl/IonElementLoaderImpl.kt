@@ -15,6 +15,14 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IntegerSize
+import com.amazon.ion.IonException
+import com.amazon.ion.IonReader
+import com.amazon.ion.IonType
+import com.amazon.ion.OffsetSpan
+import com.amazon.ion.SpanProvider
+import com.amazon.ion.TextSpan
+import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.ION_LOCATION_META_TAG
 import com.amazon.ionelement.api.IonBinaryLocation
 import com.amazon.ionelement.api.IonElectrolyteException
@@ -38,14 +46,6 @@ import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.metaContainerOf
-import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonException
-import com.amazon.ion.IonReader
-import com.amazon.ion.IonType
-import com.amazon.ion.OffsetSpan
-import com.amazon.ion.SpanProvider
-import com.amazon.ion.TextSpan
-import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.toElementType
 
 class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
@@ -125,7 +125,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                 else -> emptyMetaContainer()
             }
 
-            var element = when {
+            var element: IonElement = when {
                 ionReader.type == IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
                 ionReader.isNullValue -> ionNull(valueType.toElementType())
                 else -> {
@@ -180,7 +180,11 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                         }
                     }
                 }
-            }
+            } as IonElement
+            // Note that all factory functions return instances of the narrowed [Element] sub-interfaces.
+            // However, all implementations of [Element] must also implement [IonElement], which is the type that
+            // must be returned from API functions when the Ion type is not guaranteed.
+
 
             if (annotations.any()) {
                 element = element.withAnnotations(*annotations)

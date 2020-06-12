@@ -51,11 +51,11 @@ class UnexpectedTypesTest {
         fun parametersForIonElectrolyteExceptionTest() = listOf(
             TestCase("\n\n    1", IonTextLocation(3, 5)) { it.stringValueOrNull },
             TestCase("\n   null.string", IonTextLocation(2, 4)) {
-                it.listValueOrNull ?: error("Unexpected null")
+                it.asListOrNull() ?: error("Unexpected null")
             },
             TestCase("""{ some_field: [ 1, 2, 3, 4, "err" ] }""", IonTextLocation(1, 27)) {
-                it.structValueOrNull?.run {
-                    first("some_field").containerValueOrNull?.map { it.longValueOrNull ?: error("Unexpected null") }
+                it.asStructOrNull()?.run {
+                    get("some_field").asContainerOrNull()?.values?.map { it.longValueOrNull ?: error("Unexpected null") }
                 } ?: error("Unexpected null")
             }
         )

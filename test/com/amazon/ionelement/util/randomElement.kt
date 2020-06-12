@@ -15,6 +15,8 @@
 
 package com.amazon.ionelement.util
 
+import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.field
 import com.amazon.ionelement.api.ionBlob
@@ -28,9 +30,7 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
-import com.amazon.ion.Timestamp
-import com.amazon.ionelement.api.ElementType
-import java.util.*
+import java.util.Random
 
 val randomSeed = Random().nextLong()
 private val random = Random(randomSeed)
@@ -81,7 +81,7 @@ fun randomIonElement(): IonElement {
                 element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
             }
             else {
-                element
+                element as IonElement
             }
         }
     }

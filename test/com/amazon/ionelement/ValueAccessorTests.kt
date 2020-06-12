@@ -15,6 +15,21 @@
 
 package com.amazon.ionelement
 
+import com.amazon.ion.Decimal
+import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.ElementType.BLOB
+import com.amazon.ionelement.api.ElementType.BOOL
+import com.amazon.ionelement.api.ElementType.CLOB
+import com.amazon.ionelement.api.ElementType.DECIMAL
+import com.amazon.ionelement.api.ElementType.FLOAT
+import com.amazon.ionelement.api.ElementType.INT
+import com.amazon.ionelement.api.ElementType.LIST
+import com.amazon.ionelement.api.ElementType.NULL
+import com.amazon.ionelement.api.ElementType.SEXP
+import com.amazon.ionelement.api.ElementType.STRING
+import com.amazon.ionelement.api.ElementType.STRUCT
+import com.amazon.ionelement.api.ElementType.SYMBOL
+import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.IonElectrolyteException
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.createIonElementLoader
@@ -24,33 +39,21 @@ import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.ionListOf
 import com.amazon.ionelement.api.ionSexpOf
 import com.amazon.ionelement.api.ionStructOf
-import com.amazon.ion.Decimal
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.ElementType.NULL
-import com.amazon.ionelement.api.ElementType.BOOL
-import com.amazon.ionelement.api.ElementType.INT
-import com.amazon.ionelement.api.ElementType.FLOAT
-import com.amazon.ionelement.api.ElementType.DECIMAL
-import com.amazon.ionelement.api.ElementType.STRING
-import com.amazon.ionelement.api.ElementType.SYMBOL
-import com.amazon.ionelement.api.ElementType.TIMESTAMP
-import com.amazon.ionelement.api.ElementType.CLOB
-import com.amazon.ionelement.api.ElementType.BLOB
-import com.amazon.ionelement.api.ElementType.LIST
-import com.amazon.ionelement.api.ElementType.SEXP
-import com.amazon.ionelement.api.ElementType.STRUCT
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+
+// TODO:  need to revisit these tests to ensure that *all* element and scalar accessors are included.
+// Not doing this yet until I can confirm that the public APi is as desired.  The only work done here
+// makes it build and pass all tests.
 
 class ValueAccessorTests {
     @ParameterizedTest
     @MethodSource("parametersForValueAccessorsTest")
     fun valueAccessorTests(tc: TestCase) {
-
         val element = createIonElementLoader().loadSingleElement(tc.ionText)
         assertElementProperties(element, tc.elementType, tc.expectedValue)
     }
@@ -126,10 +129,11 @@ class ValueAccessorTests {
                                 textValueOrNull,
                                 stringValueOrNull,
                                 symbolValueOrNull,
-                                containerValueOrNull,
-                                listValueOrNull,
-                                sexpValueOrNull,
-                                structValueOrNull),
+                                asContainerOrNull(),
+                                asSeqOrNull(),
+                                asListOrNull(),
+                                asSexpOrNull(),
+                                asStructOrNull()),
                             "All *OrNull value accessors should return null for IonType.NULL")
                         return
                     }
@@ -142,9 +146,9 @@ class ValueAccessorTests {
                     SYMBOL -> listOf(textValue, textValueOrNull, symbolValue, symbolValueOrNull)
                     CLOB -> listOf(bytesValue, bytesValueOrNull, clobValue, clobValueOrNull)
                     BLOB -> listOf(bytesValue, bytesValueOrNull, blobValue, blobValueOrNull)
-                    LIST -> listOf(containerValue, containerValueOrNull, listValue, listValueOrNull)
-                    SEXP -> listOf(containerValue, containerValueOrNull, sexpValue, sexpValueOrNull)
-                    STRUCT -> listOf(structValue, structValueOrNull)
+                    LIST -> listOf(asContainer(), asContainerOrNull(), asSeq(), asSeqOrNull(), asList(), asListOrNull())
+                    SEXP -> listOf(asContainer(), asContainerOrNull(), asSeq(), asSeqOrNull(), asSexp(), asSexpOrNull())
+                    STRUCT -> listOf(asContainer(), asContainerOrNull(), asStruct(), asStructOrNull())
                 }
             }
 
@@ -162,6 +166,8 @@ class ValueAccessorTests {
             return with(element) {
                 when(type) {
                     NULL -> {
+                        // TODO:  add scalar as*[OrNull()] member functions here.
+
                         //For untyped nulls, all accessors should return null
                         assertNull(booleanValueOrNull)
                         assertNull(longValueOrNull)
@@ -171,12 +177,14 @@ class ValueAccessorTests {
                         assertNull(stringValueOrNull)
                         assertNull(symbolValueOrNull)
                         assertNull(timestampValueOrNull)
-                        assertNull(containerValueOrNull)
-                        assertNull(listValueOrNull)
-                        assertNull(listValueOrNull)
                         assertNull(bytesValueOrNull)
                         assertNull(clobValueOrNull)
                         assertNull(blobValueOrNull)
+
+                        assertNull(asSeqOrNull())
+                        assertNull(asListOrNull())
+                        assertNull(asSexpOrNull())
+                        assertNull(asStructOrNull())
                     }
                     // For typed nulls, only the corresponding *OrNull accessor should return null
                     // (the other accessors should throw, but this is tested in [assertThrowsForWrongType])
@@ -189,9 +197,21 @@ class ValueAccessorTests {
                     STRING -> assertNull(stringValueOrNull).also { assertNull(textValueOrNull) }
                     CLOB -> assertNull(clobValueOrNull).also { assertNull(bytesValueOrNull) }
                     BLOB -> assertNull(blobValueOrNull).also { assertNull(bytesValueOrNull) }
-                    LIST -> assertNull(listValueOrNull).also { assertNull(containerValueOrNull) }
-                    SEXP -> assertNull(sexpValueOrNull).also { assertNull(containerValueOrNull) }
-                    STRUCT -> assertNull(structValueOrNull)
+
+                    LIST -> {
+                        assertNull(asContainerOrNull())
+                        assertNull(asSeqOrNull())
+                        assertNull(asListOrNull())
+                    }
+                    SEXP -> {
+                        assertNull(asContainerOrNull())
+                        assertNull(asSeqOrNull())
+                        assertNull(asSexpOrNull())
+                    }
+                    STRUCT -> {
+                        assertNull(asContainerOrNull())
+                        assertNull(asStructOrNull())
+                    }
                 }
             }
         }
@@ -215,12 +235,13 @@ class ValueAccessorTests {
                         assertThrows<IonElectrolyteException> { stringValue }
                         assertThrows<IonElectrolyteException> { symbolValue }
                         assertThrows<IonElectrolyteException> { timestampValue }
-                        assertThrows<IonElectrolyteException> { containerValue }
-                        assertThrows<IonElectrolyteException> { listValue }
-                        assertThrows<IonElectrolyteException> { listValue }
                         assertThrows<IonElectrolyteException> { bytesValue }
                         assertThrows<IonElectrolyteException> { clobValue }
                         assertThrows<IonElectrolyteException> { blobValue }
+                        assertThrows<IonElectrolyteException> { asContainer() }
+                        assertThrows<IonElectrolyteException> { asSeq() }
+                        assertThrows<IonElectrolyteException> { asList() }
+                        assertThrows<IonElectrolyteException> { asSexp() }
                     }
                     // For typed nulls, only the corresponding * accessor should return null
                     // (the other accessors should throw, but this is tested in [assertThrowsForWrongType]
@@ -233,9 +254,21 @@ class ValueAccessorTests {
                     STRING -> assertThrows<IonElectrolyteException> { stringValue }.also { assertThrows<IonElectrolyteException> { textValue } }
                     CLOB -> assertThrows<IonElectrolyteException> { clobValue }.also { assertThrows<IonElectrolyteException> { bytesValue } }
                     BLOB -> assertThrows<IonElectrolyteException> { blobValue }.also { assertThrows<IonElectrolyteException> { bytesValue } }
-                    LIST -> assertThrows<IonElectrolyteException> { listValue }.also { assertThrows<IonElectrolyteException> { containerValue } }
-                    SEXP -> assertThrows<IonElectrolyteException> { sexpValue }.also { assertThrows<IonElectrolyteException> { containerValue } }
-                    STRUCT -> assertThrows<IonElectrolyteException> { structValue }
+
+                    LIST -> {
+                        assertThrows<IonElectrolyteException> { asContainer() }
+                        assertThrows<IonElectrolyteException> { asSeq() }
+                        assertThrows<IonElectrolyteException> { asList() }
+                    }
+                    SEXP -> {
+                        assertThrows<IonElectrolyteException> { asContainer() }
+                        assertThrows<IonElectrolyteException> { asSeq() }
+                        assertThrows<IonElectrolyteException> { asSexp() }
+                    }
+                    STRUCT -> {
+                        assertThrows<IonElectrolyteException> { asContainer() }
+                        assertThrows<IonElectrolyteException> { asStruct() }
+                    }
                 }
             }
         }
@@ -291,17 +324,21 @@ class ValueAccessorTests {
                     assertThrows<IonElectrolyteException>("blobValue") { blobValue }
                     assertThrows<IonElectrolyteException>("blobValueOrNull") { blobValueOrNull }
                 }
+                // TODO: if(type !in listOf(LIST, SEXP, STRUCT)) {
+                // assertThrows for asContainer() an asContainerOrNull()
+                // }
+
                 if (type != LIST) {
-                    assertThrows<IonElectrolyteException>("listValue") { listValue }
-                    assertThrows<IonElectrolyteException>("listValueOrNull") { listValueOrNull }
+                    assertThrows<IonElectrolyteException>("listValue") { asList() }
+                    assertThrows<IonElectrolyteException>("listValueOrNull") { asListOrNull() }
                 }
                 if (type != SEXP) {
-                    assertThrows<IonElectrolyteException>("sexpValue") { sexpValue }
-                    assertThrows<IonElectrolyteException>("sexpValueOrNull") { sexpValueOrNull }
+                    assertThrows<IonElectrolyteException>("sexpValue") { asSexp() }
+                    assertThrows<IonElectrolyteException>("sexpValueOrNull") { asSexpOrNull() }
                 }
                 if (type != STRUCT) {
-                    assertThrows<IonElectrolyteException>("structValue") { structValue }
-                    assertThrows<IonElectrolyteException>("structValueOrNull") { structValueOrNull }
+                    assertThrows<IonElectrolyteException>("structValue") { asStruct() }
+                    assertThrows<IonElectrolyteException>("structValueOrNull") { asStructOrNull() }
                 }
             }
         }

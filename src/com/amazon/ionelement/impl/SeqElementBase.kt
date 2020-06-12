@@ -13,27 +13,27 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.api
+package com.amazon.ionelement.impl
 
+import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.ionError
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.SeqElement
+import com.amazon.ionelement.api.emptyMetaContainer
 
-/** An immutable Ion struct. */
-interface StructIonElement : IonElement, Iterable<IonStructField> {
+internal abstract class SeqElementBase(
+    override val values: List<IonElement>,
+    override val annotations: List<String> = emptyList(),
+    override val metas: MetaContainer = emptyMetaContainer()
+): IonElementBase(), SeqElement {
 
-    fun first(fieldName: String): IonElement =
-        firstOrNull(fieldName) ?: ionError(metas, "Field named '$fieldName' does not exist")
-
-    fun firstOrNull(fieldName: String): IonElement?
-
-    operator fun get(fieldName: String): Iterable<IonElement>?
-
-    val size: Int
-
-    val fieldNames: List<String>
-
-    val values: List<IonElement>
-
-    val fields: List<IonStructField>
+    override fun writeContentTo(writer: IonWriter) {
+        writer.stepIn(type.toIonType())
+        values.forEach {
+            it.writeTo(writer)
+        }
+        writer.stepOut()
+    }
 }
+
 

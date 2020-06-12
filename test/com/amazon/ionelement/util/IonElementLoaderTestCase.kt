@@ -15,6 +15,7 @@
 
 package com.amazon.ionelement.util
 
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.Element
 
-data class IonElementLoaderTestCase(val textIon: String, val expectedIonElement: IonElement)
+data class IonElementLoaderTestCase(val textIon: String, val expectedElement: Element)
+

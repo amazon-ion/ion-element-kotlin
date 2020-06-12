@@ -15,19 +15,18 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElementContainer
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.SexpElement
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ionelement.api.ElementType
 
 internal class SexpIonElementArray (
-    override val values: List<IonElement>,
+    values: List<IonElement>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): OrderedIonElementArray(), IonElementContainer {
+):  SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
-    override val sexpValueOrNull: IonElementContainer get() = this
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
         SexpIonElementArray(values, annotations, metas)

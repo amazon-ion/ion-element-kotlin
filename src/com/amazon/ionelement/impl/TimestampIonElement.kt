@@ -15,20 +15,20 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.TimestampElement
+import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class TimestampIonElement(
     val value: Timestamp,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase() {
+): IonElementBase(), TimestampElement {
     constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
-    override val timestampValueOrNull: Timestamp get() = value
 
     override val type: ElementType get() = ElementType.TIMESTAMP
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =

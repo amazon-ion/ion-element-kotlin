@@ -15,25 +15,24 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
-import kotlin.math.sign
 
 internal class FloatIonElement(
-    val value: Double,
+    override val doubleValue: Double,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase() {
+) : IonElementBase(), FloatElement {
     override val type: ElementType get() = ElementType.FLOAT
-    override val doubleValueOrNull: Double get() = value
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        FloatIonElement(value, annotations, metas)
+        FloatIonElement(doubleValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeFloat(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -41,7 +40,7 @@ internal class FloatIonElement(
         other as FloatIonElement
 
         // compareTo() distinguishes between 0.0 and -0.0 while `==` operator does not.
-        if (value.compareTo(other.value) != 0) return false
+        if (doubleValue.compareTo(other.doubleValue) != 0) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -49,8 +48,8 @@ internal class FloatIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.compareTo(0.0).hashCode() // <-- causes 0e0 to have a different hash code than -0e0
-        result = 31 * result + value.hashCode()
+        var result = doubleValue.compareTo(0.0).hashCode() // <-- causes 0e0 to have a different hash code than -0e0
+        result = 31 * result + doubleValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result

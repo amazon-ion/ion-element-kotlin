@@ -15,28 +15,27 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElementContainer
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ionelement.api.ElementType
 
-internal class ListIonElementArray (
-    override val values: List<IonElement>,
+internal class ListIonElementBase (
+    values: List<IonElement>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): OrderedIonElementArray(), IonElementContainer {
+): SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
-    override val listValueOrNull: IonElementContainer get() = this
 
     override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        ListIonElementArray(values, annotations, metas)
+        ListIonElementBase(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ListIonElementArray
+        other as ListIonElementBase
 
         if (values != other.values) return false
         if (annotations != other.annotations) return false

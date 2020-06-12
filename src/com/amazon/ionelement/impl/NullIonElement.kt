@@ -15,17 +15,18 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.NullElement
+import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class NullIonElement(
     override val type: ElementType = ElementType.NULL,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase() {
+): IonElementBase(), NullElement {
 
     override val isNull: Boolean get() = true
 

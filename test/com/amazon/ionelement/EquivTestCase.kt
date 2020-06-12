@@ -15,6 +15,7 @@
 
 package com.amazon.ionelement
 
+import com.amazon.ionelement.api.Element
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionStructOf
@@ -63,8 +64,8 @@ data class EquivTestCase(val left: String, val right: String, val isEquiv: Boole
         checkEquivalence(isEquiv, nest(leftElement), nest(rightElement))
     }
 
-    private fun checkEquivalence(equiv: Boolean, leftElement: IonElement, rightElement: IonElement) {
-        fun checkIt(first: IonElement, second: IonElement) {
+    private fun checkEquivalence(equiv: Boolean, leftElement: Element, rightElement: Element) {
+        fun checkIt(first: Element, second: Element) {
             if (equiv) {
                 Assertions.assertEquals(first, second, "Elements should be equivalent")
                 Assertions.assertEquals(first.hashCode(), second.hashCode(), "Elements should not be equivalent")
