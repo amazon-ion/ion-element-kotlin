@@ -36,12 +36,12 @@ class StructIonElementTests {
         // TODO: need to review this and see if it still covers other parts of the modified API.
 
         val structFields = struct.fields
-        assertEquals(3, structFields.size)
+        assertEquals(3, struct.size)
         structFields.assertHasField("a", ionInt(1))
         structFields.assertHasField("b", ionInt(2))
         structFields.assertHasField("b", ionInt(3))
 
-        assertEquals(3, struct.fields.size)
+        assertEquals(3, struct.size)
         val fields = struct.fieldNames
         assertEquals(2, fields.size)
         assertTrue(fields.containsAll(listOf("a", "b")))
@@ -53,13 +53,13 @@ class StructIonElementTests {
         assertEquals(ionInt(1), struct["a"])
         assertEquals(ionInt(2), struct["b"])
 
-        assertEquals(ionInt(1), struct.findOne("a"))
-        assertEquals(ionInt(2), struct.findOne("b"))
+        assertEquals(ionInt(1), struct.getOptional("a"))
+        assertEquals(ionInt(2), struct.getOptional("b"))
 
         val ex = assertThrows<IonElectrolyteException> { struct["z"] }
         assertTrue(ex.message!!.contains("'z'"))
 
-        assertNull(struct.findOne("z"))
+        assertNull(struct.getOptional("z"))
     }
 
     private fun Iterable<IonStructField>.assertHasField(fieldName: String, value: Element) {

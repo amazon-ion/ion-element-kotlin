@@ -39,7 +39,7 @@ class IonElementExtractionInKotlinTests {
                 .map { stockItem: IonElement ->
                     stockItem.asStruct().run {
                         StockItem(
-                            findOne("name")?.textValue ?: "<unknown name>",
+                            getOptional("name")?.textValue ?: "<unknown name>",
                             get("price").decimalValue,
                             get("countInStock").longValue,
                             get("orders").asList().values.map { order ->

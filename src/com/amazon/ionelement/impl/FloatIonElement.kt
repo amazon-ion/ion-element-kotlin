@@ -29,7 +29,7 @@ internal class FloatIonElement(
 ) : IonElementBase(), FloatElement {
     override val type: ElementType get() = ElementType.FLOAT
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         FloatIonElement(doubleValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)

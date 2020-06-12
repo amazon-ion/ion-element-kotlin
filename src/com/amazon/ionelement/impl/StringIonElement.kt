@@ -31,7 +31,7 @@ internal class StringIonElement(
 
     override val stringValue: String get() = textValue
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         StringIonElement(textValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeString(textValue)

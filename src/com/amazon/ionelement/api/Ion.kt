@@ -60,7 +60,7 @@ This is one reason every [Element] implementation must also be an [IonElement].
 
 /** Creates a [NullElement] that represents an Ion `null.null` or a typed `null`.*/
 @JvmOverloads
-fun ionNull(elementType: ElementType = ElementType.NULL): NullElement = ALL_NULLS.getValue(elementType)
+fun ionNull(elementType: ElementType = ElementType.NULL): Element = ALL_NULLS.getValue(elementType)
 
 /** Creates a [StringElement] that represents an Ion `symbol`.*/
 fun ionString(s: String): StringElement = StringIonElement(s)
@@ -80,8 +80,8 @@ fun ionInt(l: Long): IntElement = IntIonElement(l)
 /** Creates an [IntElement] that represents an Ion `BitInteger`.*/
 fun ionInt(bigInt: BigInteger): IntElement = BigIntIonElement(bigInt)
 
-/** Creates a [BooleanElement] that represents an Ion `bool`.*/
-fun ionBool(b: Boolean): BooleanElement = BoolIonElement(b)
+/** Creates a [BoolElement] that represents an Ion `bool`.*/
+fun ionBool(b: Boolean): BoolElement = BoolIonElement(b)
 
 /** Creates a [FloatElement] that represents an Ion `float`.*/
 fun ionFloat(d: Double): FloatElement = FloatIonElement(d)
@@ -113,7 +113,7 @@ fun emptyClob(): ClobElement = EMPTY_CLOB
 fun ionListOf(iterable: Iterable<Element>): ListElement =
     when {
         iterable.none() -> EMPTY_LIST
-        else -> ListIonElementBase(iterable.map { it as IonElement })
+        else -> ListIonElementBase(iterable.map { it.asIonElement() })
     }
 
 /** Creates a [ListElement] that represents an Ion `list`.*/
@@ -124,7 +124,7 @@ fun ionListOf(vararg elements: Element): ListElement =
 fun ionSexpOf(iterable: Iterable<Element>, metas: MetaContainer = emptyMetaContainer()): SexpElement =
     when {
         iterable.none() -> EMPTY_SEXP
-        else -> SexpIonElementArray(iterable.map { it as IonElement }, metas = metas)
+        else -> SexpIonElementArray(iterable.map { it.asIonElement() }, metas = metas)
     }
 
 /** Creates a [SexpElement] that represents an Ion `sexp`.*/
@@ -142,7 +142,7 @@ fun emptyIonStruct(): StructElement = EMPTY_STRUCT
 
 /** Creates an [IonStructField] .*/
 fun field(key: String, value: Element): IonStructField =
-    IonStructFieldImpl(key, value as IonElement)
+    IonStructFieldImpl(key, value.asIonElement())
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
 fun ionStructOf(fields: Iterable<IonStructField>): StructElement =
@@ -157,7 +157,7 @@ fun ionStructOf(vararg fields: IonStructField): StructElement =
 
 /** Creates an [IonElement] that represents an Ion `struct` with the specified fields. */
 fun ionStructOf(vararg fields: Pair<String, Element>): StructElement =
-    ionStructOf(fields.map { field(it.first, it.second as IonElement) })
+    ionStructOf(fields.map { field(it.first, it.second.asIonElement()) })
 
 // Memoized empty instances of our container types.
 private val EMPTY_LIST = ListIonElementBase(emptyList())
@@ -167,4 +167,4 @@ private val EMPTY_BLOB = BlobIonElement(ByteArray(0))
 private val EMPTY_CLOB = ClobIonElement(ByteArray(0))
 
 // Memoized instances of all of our null values.
-private val ALL_NULLS = ElementType.values().map { it to NullIonElement(it) }.toMap()
+private val ALL_NULLS = ElementType.values().map { it to NullIonElement(it) as Element }.toMap()

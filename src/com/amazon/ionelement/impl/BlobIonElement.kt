@@ -33,7 +33,7 @@ internal class BlobIonElement(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         BlobIonElement(bytes, annotations, metas)
 
     override val type: ElementType get() = ElementType.BLOB

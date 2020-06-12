@@ -26,12 +26,15 @@ import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionError
 
 internal class StructIonElementImpl(
-    override val fields: Collection<IonStructField>,
+    private val allFields: List<IonStructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): IonElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
+    override val fields: Iterable<IonStructField> get() = allFields
+
+    override val size = allFields.size
 
     override val values: Collection<IonElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
 
@@ -43,21 +46,18 @@ internal class StructIonElementImpl(
             .toMap()
     }
 
-    override val fieldNames: List<String> get() = fields.map { it.name }.distinct()
+    override val fieldNames: Set<String> get() = fields.map { it.name }.distinct().toSet()
 
     override fun get(fieldName: String): IonElement =
-        fieldsByName[fieldName]?.firstOrNull() ?: fieldMissing(fieldName)
+        fieldsByName[fieldName]?.firstOrNull() ?: ionError(this, "Required struct field '$fieldName' missing")
 
-    private fun fieldMissing(fieldName: String): Nothing {
-        ionError(this, "Required struct field '$fieldName' missing")
-    }
+    override fun getOptional(fieldName: String): IonElement? =
+        fieldsByName[fieldName]?.firstOrNull()
 
     override fun getAll(fieldName: String): Iterable<IonElement> = fieldsByName[fieldName] ?: emptyList()
 
-    override fun findOne(fieldName: String): IonElement? = fieldsByName[fieldName]?.firstOrNull()
-
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        StructIonElementImpl(fields, annotations, metas)
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+        StructIonElementImpl(allFields, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)
@@ -74,7 +74,7 @@ internal class StructIonElementImpl(
         if (annotations != other.annotations) return false
 
         // We might avoid materializing fieldsByName by checking fields.size first
-        if (this.fields.size != other.fields.size) return false
+        if (this.size != other.size) return false
         if (this.fieldsByName.size != other.fieldsByName.size) return false
 
         // If we make it this far we can compare the list of field names in both

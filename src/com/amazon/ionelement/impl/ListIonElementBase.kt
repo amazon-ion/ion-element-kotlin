@@ -28,7 +28,7 @@ internal class ListIonElementBase (
 ): SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         ListIonElementBase(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {

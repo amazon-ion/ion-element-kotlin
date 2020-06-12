@@ -30,7 +30,7 @@ internal class DecimalIonElement(
 ) : IonElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         DecimalIonElement(decimalValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)

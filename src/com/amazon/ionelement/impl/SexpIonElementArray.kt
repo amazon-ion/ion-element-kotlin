@@ -28,7 +28,7 @@ internal class SexpIonElementArray (
 ):  SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         SexpIonElementArray(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {

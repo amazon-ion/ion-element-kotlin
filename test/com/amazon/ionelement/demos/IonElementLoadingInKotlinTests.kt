@@ -24,6 +24,7 @@ import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.toIonElement
 import com.amazon.ionelement.api.toIonValue
+import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.IonElementLoaderTestCase
 import com.amazon.ionelement.util.convertToString

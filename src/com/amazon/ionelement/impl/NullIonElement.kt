@@ -19,18 +19,17 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.NullElement
 import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class NullIonElement(
     override val type: ElementType = ElementType.NULL,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), NullElement {
+): IonElementBase() {
 
     override val isNull: Boolean get() = true
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         NullIonElement(type, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeNull(type.toIonType())

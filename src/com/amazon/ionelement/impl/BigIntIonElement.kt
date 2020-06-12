@@ -42,7 +42,7 @@ internal class BigIntIonElement(
         return bigIntegerValue.longValueExact()
     }
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         BigIntIonElement(bigIntegerValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)

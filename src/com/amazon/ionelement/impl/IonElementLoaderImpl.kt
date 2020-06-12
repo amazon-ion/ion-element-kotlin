@@ -47,6 +47,8 @@ import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.metaContainerOf
 import com.amazon.ionelement.api.toElementType
+import com.amazon.ionelement.api.withAnnotations
+import com.amazon.ionelement.api.withMetas
 
 class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
@@ -180,11 +182,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                         }
                     }
                 }
-            } as IonElement
-            // Note that all factory functions return instances of the narrowed [Element] sub-interfaces.
-            // However, all implementations of [Element] must also implement [IonElement], which is the type that
-            // must be returned from API functions when the Ion type is not guaranteed.
-
+            }.asIonElement()
 
             if (annotations.any()) {
                 element = element.withAnnotations(*annotations)

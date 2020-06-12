@@ -21,7 +21,7 @@ import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ion.system.IonTextWriterBuilder
 import com.amazon.ionelement.api.BlobElement
-import com.amazon.ionelement.api.BooleanElement
+import com.amazon.ionelement.api.BoolElement
 import com.amazon.ionelement.api.ClobElement
 import com.amazon.ionelement.api.ContainerElement
 import com.amazon.ionelement.api.DecimalElement
@@ -46,7 +46,6 @@ import com.amazon.ionelement.api.IonByteArray
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.LobElement
-import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.SeqElement
 import com.amazon.ionelement.api.SexpElement
 import com.amazon.ionelement.api.StringElement
@@ -54,9 +53,7 @@ import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.TextElement
 import com.amazon.ionelement.api.TimestampElement
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionError
-import com.amazon.ionelement.api.metaContainerOf
 import java.math.BigInteger
 
 private val TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard()
@@ -66,9 +63,9 @@ private val TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard()
  */
 internal abstract class IonElementBase : IonElement {
 
-    override val isNull: Boolean get() = false
+    override fun asIonElement(): IonElement = this
 
-    protected abstract fun clone(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): IonElement
+    override val isNull: Boolean get() = false
     protected abstract fun writeContentTo(writer: IonWriter)
 
     override fun writeTo(writer: IonWriter) {
@@ -77,21 +74,6 @@ internal abstract class IonElementBase : IonElement {
         }
         this.writeContentTo(writer)
     }
-
-    override fun withAnnotations(vararg additionalAnnotations: String): IonElement =
-        clone(annotations = this.annotations + additionalAnnotations)
-
-    override fun withoutAnnotations(): IonElement =
-        when {
-            this.annotations.isNotEmpty() -> clone(annotations = emptyList())
-            else -> this
-        }
-
-    override fun withMetas(additionalMetas: MetaContainer): IonElement =
-        clone(metas = metaContainerOf(metas.toList().union(additionalMetas.toList()).toList()))
-
-    override fun withoutMetas(): IonElement =
-        clone(metas = emptyMetaContainer())
 
     override fun toString() = StringBuilder().also { buf ->
         TEXT_WRITER_BUILDER.build(buf).use { writeTo(it) }
@@ -168,8 +150,8 @@ internal abstract class IonElementBase : IonElement {
     }
 
     // The default as*() functions do not need to be overridden by child classes.
-    final override fun asBoolean(): BooleanElement = requireTypeAndCast(BOOL)
-    final override fun asBooleanOrNull(): BooleanElement? = requireTypeAndCastOrNull(BOOL)
+    final override fun asBoolean(): BoolElement = requireTypeAndCast(BOOL)
+    final override fun asBooleanOrNull(): BoolElement? = requireTypeAndCastOrNull(BOOL)
     final override fun asInt(): IntElement = requireTypeAndCast(INT)
     final override fun asIntOrNull(): IntElement? = requireTypeAndCastOrNull(INT)
     final override fun asDecimal(): DecimalElement = requireTypeAndCast(DECIMAL)
@@ -217,7 +199,7 @@ internal abstract class IonElementBase : IonElement {
     override val clobValue: IonByteArray get() = expectedType(CLOB)
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
-    final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BooleanElement>(BOOL)?.booleanValue
+    final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BoolElement>(BOOL)?.booleanValue
     final override val longValueOrNull: Long? get() =  requireTypeAndCastOrNull<IntElement>(INT)?.longValue
     final override val bigIntegerValueOrNull: BigInteger? get() = requireTypeAndCastOrNull<IntElement>(INT)?.bigIntegerValue
     final override val textValueOrNull: String? get() = requireTypeAndCastOrNull<TextElement>(STRING, SYMBOL)?.textValue

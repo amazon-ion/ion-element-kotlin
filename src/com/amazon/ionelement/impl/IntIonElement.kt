@@ -32,7 +32,7 @@ internal class IntIonElement(
     override val integerSize: IntegerSize get() = IntegerSize.LONG
     override val type: ElementType get() = ElementType.INT
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         IntIonElement(longValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)

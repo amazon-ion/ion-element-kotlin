@@ -31,7 +31,7 @@ internal class ClobIonElement(
     override val clobValue: IonByteArray get() = this // IonByteArray impl supplied by super class
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         ClobIonElement(bytes, annotations, metas)
 
     override val type: ElementType get() = ElementType.CLOB

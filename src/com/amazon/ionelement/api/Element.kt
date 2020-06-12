@@ -6,25 +6,25 @@ import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
 
-// QUESTION/TODO:  Verify that we are consistent about using *either* the Kotlin type name or the Ion type name.
-// i.e. Ion uses "float" file Kotlin's equivalent is "Double".  Int vs Long, etc.  I think in some places
-// we use one or the other but the intent is that the only place we use the Ion type name is for members of ElementType.
-// everywhere else should refer to the Kotlin type name.
-// The question here is: is this a good idea or if we should just use the Ion type name everywhere?
-
 /**
- * TODO:  probably length documentation.
- *
- * TODO: when writing documentation, note that every implementation of [Element] must also implement [IonElement].
- * The reason:  has to do with the need for all constructor functions accept [Element] but for the collection elements
- * to return instances of [IonElement].
+ * TODO:  probably lengthy documentation.
  *
  */
 interface Element {
+
+    /**
+     * All [Element] implementations must convertible to [IonElement].
+     *
+     * Since all [Element] implementations in this library also implement [IonElement] this is no more
+     * expensive than a cast.  The purpose of this interface function is to be very clear about the requirement
+     * that all implementations of [Element] are convertible to [IonElement].
+     */
+    fun asIonElement(): IonElement
+
     /** The Ion data type of the current node.  */
     val type: ElementType
 
-    /** This element's Ion metadata. */
+    /** This [Element]'s metadata. */
     val metas: MetaContainer
 
     /** This element's Ion type annotations. */
@@ -33,32 +33,8 @@ interface Element {
     /** Returns true if the current value is `null.null` or any typed null. */
     val isNull: Boolean
 
-    /** Returns a copy of the current node with the specified additional annotations. */
-    fun withAnnotations(vararg additionalAnnotations: String): IonElement
-
-    /** Returns a copy of the current node with the specified additional annotations. */
-    fun withAnnotations(additionalAnnotations: Iterable<String>): IonElement =
-        withAnnotations(*additionalAnnotations.toList().toTypedArray())
-
-    /** Returns a copy of the current node without any annotations.  (Not recursive.) */
-    fun withoutAnnotations(): IonElement
-
-    /**
-     * Returns a copy of the current node with the specified additional metadata, overwriting any metas
-     * that exist with the same keys.
-     */
-    fun withMetas(additionalMetas: MetaContainer): IonElement
-
-    /**
-     * Returns a copy of the current node with the specified additional meta, overwriting any meta
-     * that previously existed with the same key.
-     *
-     * When adding multiple metas, consider [withMetas] instead.
-     */
-    fun withMeta(key: String, value: Any): IonElement = withMetas(metaContainerOf(key to value))
-
-    /** Returns a copy of the current node without any metadata.  (Not recursive.) */
-    fun withoutMetas(): IonElement
+    /** Returns a shallow copy of the current node, replacing the annotations and metas with those specified. */
+    fun copy(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): IonElement
 
     /** Writes the current Ion element to the specified [IonWriter]. */
     fun writeTo(writer: IonWriter)
@@ -68,17 +44,8 @@ interface Element {
 }
 
 
-/**
- * Represents an Ion null value.  (Typed or untyped.)
- *
- * Includes no additional functionality over [Element], but serves to provide additional type safety when
- * working with elements that represnt Ion null values..
- */
-interface NullElement : Element
-
-// TODO: "Bool" or "Boolean"
 /** Represents a Ion bool. */
-interface BooleanElement : Element {
+interface BoolElement : Element {
     val booleanValue: Boolean
 }
 
@@ -125,7 +92,7 @@ interface StringElement : TextElement
  * Represents an Ion symbol.
  *
  * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
- * working with elements that must be Ion strings.
+ * working with elements that must be Ion symbols.
  */
 interface SymbolElement : TextElement
 
@@ -154,7 +121,7 @@ interface ClobElement : LobElement
  *
  * Items within [values] may or may not be in a defined order.  The order is defined for lists and s-expressions,
  * but undefined for structs.
- **/
+ */
 interface ContainerElement : Element {
     val values: Collection<IonElement>
 }
@@ -166,36 +133,6 @@ interface ContainerElement : Element {
  */
 interface SeqElement : ContainerElement {
     override val values: List<IonElement>
-
-    /**
-     * Returns the string representation of the symbol in the first element of this container.
-     *
-     * If the first element is not a symbol or this container has no elements, throws [IonElectrolyteException],
-     */
-    val tag get() = this.head.symbolValue
-
-    /**
-     * Returns the first element of this container.
-     *
-     * If this container has no elements, throws [IonElectrolyteException].
-     */
-    val head: IonElement
-        get() =
-            when (this.values.size) {
-                0 -> ionError(this, "Cannot get head of empty container")
-                else -> this.values.first()
-            }
-
-    /**
-     * Returns a sub-list containing all elements of this container except the first.
-     *
-     * If this container has no elements, throws [IonElectrolyteException].
-     */
-    val tail: List<IonElement> get()  =
-        when (this.values.size) {
-            0 -> ionError(this, "Cannot get tail of empty container")
-            else -> this.values.subList(1, this.values.size)
-        }
 }
 
 /**
@@ -221,37 +158,28 @@ interface SexpElement : SeqElement
  */
 interface StructElement : ContainerElement {
 
+    /** The number of fields in this struct, including those with duplicate names. */
+    val size: Int
+
     /** This struct's unordered collection of fields. */
-    val fields: Collection<IonStructField>
+    val fields: Iterable<IonStructField>
 
     /** A list of the unique field names contained within this struct. */
-    val fieldNames: List<String>
+    val fieldNames: Set<String>
 
     /**
      * Retrieves the value of the first field found with the specified name.
-     * The search order is undefined.
+     *
+     * In the case of multiple fields with the specified name, the caller assume that one is picked at random.
      *
      * @throws IonElectrolyteException If there are no fields with the specified [fieldName].
      */
     operator fun get(fieldName: String): IonElement
 
-    /**
-     * Retrieves the first field found with the specified name or `null` if no such field exists.
-     *
-     * This is the same as [get], except it returns `null` instead of throwing if the field doesn't exist.
-     *
-     * QUESTION/TODO:  I shied a way from the "OrNull" suffix for this one since we use that term for different purpose
-     * in IonElement.  Open to suggestions for other names if this one isn't ideal.
-     */
-    fun findOne(fieldName: String): IonElement?
+    /** The same as [get] but returns a null reference if the field does not exist.  */
+    fun getOptional(fieldName: String): IonElement?
 
-    /**
-     * Retrieves all fields or an empty iterable if there are no field names.
-     *
-     * QUESTION/TODO: is this the correct return type?
-     */
+
+    /** Retrieves all values with a given field name, which may be none if the field does not exist. */
     fun getAll(fieldName: String): Iterable<IonElement>
 }
-
-
-

@@ -31,7 +31,7 @@ internal class SymbolIonElement(
 
     override val symbolValue: String get() = textValue
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         SymbolIonElement(textValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)

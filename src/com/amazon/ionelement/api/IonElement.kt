@@ -100,10 +100,10 @@ import java.math.BigInteger
 interface IonElement : Element {
 
     /** See [IonElement]. */
-    fun asBoolean(): BooleanElement
+    fun asBoolean(): BoolElement
 
     /** See [IonElement]. */
-    fun asBooleanOrNull(): BooleanElement?
+    fun asBooleanOrNull(): BoolElement?
 
     /** See [IonElement]. */
     fun asInt(): IntElement
@@ -197,9 +197,8 @@ interface IonElement : Element {
 
     /**
      * If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElectrolyteException].
-     * QUESTION/TODO: this has a problem similar to [IonType]... we don't use [IntegerSize.INT] in this library.  It's
-     * a smaller problem, but probably worth considering adding a replacement that only has `LONG` and `BIG_INTEGER`
-     * sizes?
+     *
+     * TODO: replace with an enum type that does not include `INT`: https://github.com/amzn/ion-element-kotlin/issues/23
      */
     val integerSize: IntegerSize
 
@@ -274,5 +273,4 @@ interface IonElement : Element {
 
     /** See [IonElement]. */
     val clobValueOrNull: IonByteArray?
-
 }

@@ -31,7 +31,7 @@ internal class TimestampIonElement(
     constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
 
     override val type: ElementType get() = ElementType.TIMESTAMP
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         TimestampIonElement(value, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(value)

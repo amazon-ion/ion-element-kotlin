@@ -30,6 +30,7 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
+import com.amazon.ionelement.api.withAnnotations
 import java.util.Random
 
 val randomSeed = Random().nextLong()
@@ -81,7 +82,7 @@ fun randomIonElement(): IonElement {
                 element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
             }
             else {
-                element as IonElement
+                element.asIonElement()
             }
         }
     }
