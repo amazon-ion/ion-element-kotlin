@@ -50,7 +50,7 @@ val SeqElement.tag get() = this.head.symbolValue
  */
 val SeqElement.head: IonElement
     get() =
-        when (this.values.size) {
+        when (this.size) {
             0 -> ionError(this, "Cannot get head of empty container")
             else -> this.values.first()
         }
@@ -61,8 +61,8 @@ val SeqElement.head: IonElement
  * If this container has no elements, throws [IonElectrolyteException].
  */
 val SeqElement.tail: List<IonElement> get()  =
-    when (this.values.size) {
+    when (this.size) {
         0 -> ionError(this, "Cannot get tail of empty container")
-        else -> this.values.subList(1, this.values.size)
+        else -> this.values.drop(1)//subList(1, this.size)
     }
 

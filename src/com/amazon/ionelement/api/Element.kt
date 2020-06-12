@@ -68,13 +68,10 @@ interface DecimalElement : Element {
 
 /**
  * Represents a Ion float.
- *
- * QUESTION/TODO: "Double" to be consistent with Kotlin or "Float" to be consistent with Ion?
  */
 interface FloatElement : Element {
     val doubleValue: Double
 }
-
 
 /** Represents an Ion string or symbol. */
 interface TextElement : Element {
@@ -100,6 +97,7 @@ interface SymbolElement : TextElement
 interface LobElement : Element {
     val bytesValue:  IonByteArray
 }
+
 /**
  * Represents an Ion blob.
  *
@@ -123,18 +121,19 @@ interface ClobElement : LobElement
  * but undefined for structs.
  */
 interface ContainerElement : Element {
-    val values: Collection<IonElement>
+    /** The number of values in this container. */
+    val size: Int
+
+    val values: Iterable<IonElement>
 }
 
 /**
- * Represents an Ion list or s-expression.
+ * Represents an ordered collection element such as an Ion list or s-expression.
  *
- * Includes common functional list operations such as [head] and [tail].
+ * Includes no additional functionality over [ContainerElement], but serves to provide additional type safety when
+ * working with ordered collection elements.
  */
-interface SeqElement : ContainerElement {
-    override val values: List<IonElement>
-}
-
+interface SeqElement : ContainerElement
 /**
  * Represents an Ion list.
  *
@@ -158,14 +157,11 @@ interface SexpElement : SeqElement
  */
 interface StructElement : ContainerElement {
 
-    /** The number of fields in this struct, including those with duplicate names. */
-    val size: Int
-
     /** This struct's unordered collection of fields. */
     val fields: Iterable<IonStructField>
 
     /** A list of the unique field names contained within this struct. */
-    val fieldNames: Set<String>
+    val fieldNames: Iterable<String>
 
     /**
      * Retrieves the value of the first field found with the specified name.

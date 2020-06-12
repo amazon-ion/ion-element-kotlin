@@ -26,6 +26,8 @@ internal abstract class SeqElementBase(
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): IonElementBase(), SeqElement {
+    override val size: Int
+        get() = values.size
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(type.toIonType())

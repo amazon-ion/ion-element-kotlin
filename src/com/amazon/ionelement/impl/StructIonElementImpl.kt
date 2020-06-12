@@ -46,7 +46,7 @@ internal class StructIonElementImpl(
             .toMap()
     }
 
-    override val fieldNames: Set<String> get() = fields.map { it.name }.distinct().toSet()
+    override val fieldNames: Iterable<String> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.name }.distinct() }
 
     override fun get(fieldName: String): IonElement =
         fieldsByName[fieldName]?.firstOrNull() ?: ionError(this, "Required struct field '$fieldName' missing")
