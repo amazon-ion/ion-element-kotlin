@@ -1,6 +1,12 @@
 package com.amazon.ionelement.api
 
 import com.amazon.ion.IonType
+import com.amazon.ionelement.api.ElementType.BLOB
+import com.amazon.ionelement.api.ElementType.CLOB
+import com.amazon.ionelement.api.ElementType.LIST
+import com.amazon.ionelement.api.ElementType.SEXP
+import com.amazon.ionelement.api.ElementType.STRING
+import com.amazon.ionelement.api.ElementType.SYMBOL
 
 /**
  * Indicates the type of the Ion value represented by an instance of [IonElement].
@@ -15,18 +21,13 @@ enum class ElementType(
 
     /**
      * True if the current [ElementType] is [LIST] or [SEXP].
-     *
-     * TODO: during the implementation of:
-     * - https://github.com/amzn/ion-element-kotlin/issues/11
-     * - https://github.com/amzn/ion-element-kotlin/issues/12
-     * The term "container" may change.
      */
     val isContainer: Boolean,
 
     /** True if the current [ElementType] is [CLOB] or [BLOB]. */
     val isLob: Boolean
 ) {
-    // Other types
+    // Other scalar types
     NULL(false, false, false),
     BOOL(false, false, false),
     INT(false, false, false),
@@ -46,8 +47,7 @@ enum class ElementType(
     LIST(false, true, false),
     SEXP(false, true, false),
 
-    // TODO: with https://github.com/amzn/ion-element-kotlin/issues/12 it may be appropriate to consider structs to be containers.
-    STRUCT(false, false, false);
+    STRUCT(false, true, false);
 
     /** Converts this [ElementType] to [IonType]. */
     fun toIonType() = when(this) {

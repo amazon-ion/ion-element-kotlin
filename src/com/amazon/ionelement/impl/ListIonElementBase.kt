@@ -28,6 +28,8 @@ internal class ListIonElementBase (
 ): SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
+    override val listValues: Iterable<IonElement> get() = values
+
     override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
         ListIonElementBase(values, annotations, metas)
 

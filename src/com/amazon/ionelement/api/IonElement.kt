@@ -118,7 +118,7 @@ interface IonElement : Element {
     fun asDecimalOrNull(): DecimalElement?
 
     /** See [IonElement]. */
-    fun asDouble(): FloatElement
+    fun asFloat(): FloatElement
 
     /** See [IonElement]. */
     fun asDoubleOrNull(): FloatElement?
@@ -273,4 +273,35 @@ interface IonElement : Element {
 
     /** See [IonElement]. */
     val clobValueOrNull: IonByteArray?
+
+    /** See [IonElement]. */
+    val containerValues: Iterable<IonElement>
+
+    /** See [IonElement]. */
+    val containerValuesOrNull: Iterable<IonElement>?
+
+    /** See [IonElement]. */
+    val seqValues: Iterable<IonElement>
+
+    /** See [IonElement]. */
+    val seqValuesOrNull: Iterable<IonElement>?
+
+    /** See [IonElement]. */
+    val listValues: Iterable<IonElement>
+
+    /** See [IonElement]. */
+    val listValuesOrNull: Iterable<IonElement>?
+
+    /** See [IonElement]. */
+    val sexpValues: Iterable<IonElement>
+
+    /** See [IonElement]. */
+    val sexpValuesOrNull: Iterable<IonElement>?
+
+    /** See [IonElement]. */
+    val structFields: Iterable<IonStructField>
+
+    /** See [IonElement]. */
+    val structFieldsOrNull: Iterable<IonStructField>?
+
 }

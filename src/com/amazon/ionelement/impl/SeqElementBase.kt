@@ -26,6 +26,10 @@ internal abstract class SeqElementBase(
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): IonElementBase(), SeqElement {
+
+    override val containerValues: Iterable<IonElement> get() = values
+    override val seqValues: Iterable<IonElement> get() = values
+
     override val size: Int
         get() = values.size
 
