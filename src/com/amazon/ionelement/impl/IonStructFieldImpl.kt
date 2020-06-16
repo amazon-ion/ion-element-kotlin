@@ -15,7 +15,7 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonStructField
 
 /**
@@ -23,5 +23,5 @@ import com.amazon.ionelement.api.IonStructField
  */
 internal data class IonStructFieldImpl(
     override val name: String,
-    override val value: IonElement
+    override val value: AnyElement
 ) : IonStructField

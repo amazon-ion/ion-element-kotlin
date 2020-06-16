@@ -15,62 +15,76 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.Element
 import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.IonStructField
-import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionInt
+import com.amazon.ionelement.util.loadSingleElement
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class StructIonElementTests {
+    val struct = loadSingleElement("{ a: 1, b: 2, b: 3 }").asStruct()
 
     @Test
-    fun fieldAccessorTests() {
-        val struct =  createIonElementLoader().loadSingleElement("{ a: 1, b: 2, b: 3 }").asStruct()
+    fun size() {
+        assertEquals(3, struct.size, "struct size should be 3")
+    }
 
-        // TODO: need to add similar tests for StructElement.values
-        // TODO: need to review this and see if it still covers other parts of the modified API.
-
-        val structFields = struct.fields
-        assertEquals(3, struct.size)
+    @Test
+    fun fields() {
+        val structFields = struct.fields.toList()
+        assertEquals(3, structFields.size)
         structFields.assertHasField("a", ionInt(1))
         structFields.assertHasField("b", ionInt(2))
         structFields.assertHasField("b", ionInt(3))
-
-        assertEquals(3, struct.size)
-
-        // The following tests aren't needed assuming fieldNames doesn't get changed to a [Set<String>]
-//        val fields = struct.fieldNames
-//        assertEquals(2, struct.size)
-        //listOf("a", "b").all { expectedFieldName -> fields.any { fieldName -> fieldName == expectedFieldName }}
-        //assertTrue(fields.containsAll(listOf("a", "b")))
-
-        assertEquals(3, struct.size)
-        //val values = struct.values
-        //assertTrue(values.containsAll(listOf(ionInt(1), ionInt(2), ionInt(3))))
-        assertTrue(
-            listOf(ionInt(1), ionInt(2), ionInt(3))
-                .all { expectedValue -> struct.values.any { it == expectedValue }})
-
-
-        assertEquals(ionInt(1), struct["a"])
-        assertEquals(ionInt(2), struct["b"])
-
-        assertEquals(ionInt(1), struct.getOptional("a"))
-        assertEquals(ionInt(2), struct.getOptional("b"))
-
-        val ex = assertThrows<IonElectrolyteException> { struct["z"] }
-        assertTrue(ex.message!!.contains("'z'"))
-
-        assertNull(struct.getOptional("z"))
     }
 
-    private fun Iterable<IonStructField>.assertHasField(fieldName: String, value: Element) {
-        assertTrue(this.any { it.name == fieldName && it.value == value })
+    @Test
+    fun values() {
+        val values = struct.values.toList()
+        assertEquals(3, values.size, "3 values should be present")
+        assertDoesNotThrow("value 1 should be present") { values.single { it.longValue == 1L } }
+        assertDoesNotThrow("value 2 should be present") { values.single { it.longValue == 2L } }
+        assertDoesNotThrow("value 3 should be present") { values.single { it.longValue == 3L } }
+    }
+
+    @Test
+    fun get() {
+        assertEquals(ionInt(1), struct["a"],
+            "value is returned when field is present")
+
+        val b1 = struct["b"]
+        assertTrue(listOf(ionInt(2), ionInt(3)).any { it == b1 },
+            "any value of the b field is returned (duplicate field name)")
+
+        val ex = assertThrows<IonElectrolyteException>("exception is thrown when field is not present") {
+            struct["z"]
+        }
+        assertTrue(ex.message!!.contains("'z'"),
+            "Exception message must contain the missing field")
+    }
+
+    @Test
+    fun getOptional() {
+        assertEquals(ionInt(1), struct.getOptional("a"),
+            "value is returned when field is present")
+
+        val b2 = struct.getOptional("b")
+        assertTrue(listOf(ionInt(1), ionInt(2)).any { it == b2 },
+            "any value of the b field is returned (duplicate field name)")
+
+        assertNull(struct.getOptional("z"),
+            "null is returned when the field is not present.")
+    }
+
+
+    private fun Iterable<IonStructField>.assertHasField(fieldName: String, value: IonElement) {
+        assertTrue(this.any { it.name == fieldName && it.value == value }, "Must have field '$fieldName'")
     }
 
 }

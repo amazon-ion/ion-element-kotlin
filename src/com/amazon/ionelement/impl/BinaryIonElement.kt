@@ -22,7 +22,7 @@ internal abstract class BinaryIonElement(
     protected val bytes: ByteArray
 ): IonElementBase(), IonByteArray, LobElement {
 
-    override val bytesValue: IonByteArray get() = this
+    override val bytesValue: IonByteArray by lazy (LazyThreadSafetyMode.NONE) { IonByteArrayImpl(bytes) }
 
     // IonByteArray implementation
     override fun size(): Int = bytes.size

@@ -1,16 +1,16 @@
 package com.amazon.ionelement.api
 
 /** Returns a shallow copy of the current node with the specified additional annotations. */
-fun Element.withAnnotations(vararg additionalAnnotations: String): IonElement =
+fun IonElement.withAnnotations(vararg additionalAnnotations: String): AnyElement =
     copy(annotations = this.annotations + additionalAnnotations)
 
 
 /** Returns a shallow copy of the current node with the specified additional annotations. */
-fun Element.withAnnotations(additionalAnnotations: Iterable<String>): IonElement =
+fun IonElement.withAnnotations(additionalAnnotations: Iterable<String>): AnyElement =
     withAnnotations(*additionalAnnotations.toList().toTypedArray())
 
 /** Returns a shallow copy of the current node with all annotations removed.. */
-fun Element.withoutAnnotations(): IonElement =
+fun IonElement.withoutAnnotations(): AnyElement =
     when {
         this.annotations.isNotEmpty() -> copy(annotations = emptyList())
         else -> this.asIonElement()
@@ -20,7 +20,7 @@ fun Element.withoutAnnotations(): IonElement =
  * Returns a shallow copy of the current node with the specified additional metadata, overwriting any metas
  * that already exist with the same keys.
  */
-fun Element.withMetas(additionalMetas: MetaContainer): IonElement =
+fun IonElement.withMetas(additionalMetas: MetaContainer): AnyElement =
     copy(metas = metaContainerOf(metas.toList().union(additionalMetas.toList()).toList()))
 
 /**
@@ -29,12 +29,11 @@ fun Element.withMetas(additionalMetas: MetaContainer): IonElement =
  *
  * When adding multiple metas, consider [withMetas] instead.
  */
-fun Element.withMeta(key: String, value: Any): IonElement = withMetas(metaContainerOf(key to value))
+fun IonElement.withMeta(key: String, value: Any): AnyElement = withMetas(metaContainerOf(key to value))
 
 /** Returns a shallow copy of the current node without any metadata. */
-fun Element.withoutMetas(): IonElement =
+fun IonElement.withoutMetas(): AnyElement =
     copy(metas = emptyMetaContainer(), annotations = annotations)
-
 
 /**
  * Returns the string representation of the symbol in the first element of this container.
@@ -48,7 +47,7 @@ val SeqElement.tag get() = this.head.symbolValue
  *
  * If this container has no elements, throws [IonElectrolyteException].
  */
-val SeqElement.head: IonElement
+val SeqElement.head: AnyElement
     get() =
         when (this.size) {
             0 -> ionError(this, "Cannot get head of empty container")
@@ -60,7 +59,7 @@ val SeqElement.head: IonElement
  *
  * If this container has no elements, throws [IonElectrolyteException].
  */
-val SeqElement.tail: List<IonElement> get()  =
+val SeqElement.tail: List<AnyElement> get()  =
     when (this.size) {
         0 -> ionError(this, "Cannot get tail of empty container")
         else -> this.values.drop(1)//subList(1, this.size)

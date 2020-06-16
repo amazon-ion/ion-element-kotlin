@@ -15,22 +15,22 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class ListIonElementBase (
-    values: List<IonElement>,
+    values: List<AnyElement>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
-    override val listValues: Iterable<IonElement> get() = values
+    override val listValues: Iterable<AnyElement> get() = values
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         ListIonElementBase(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {

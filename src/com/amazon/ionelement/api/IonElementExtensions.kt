@@ -17,9 +17,9 @@ package com.amazon.ionelement.api
 
 
 /** Returns the first element. */
-val List<IonElement>.head get() =
+val List<AnyElement>.head get() =
     this.first()
 
 /** Returns a copy of the list with the first element removed. */
-val List<IonElement>.tail get() = this.subList(1, this.size)
+val List<AnyElement>.tail get() = this.subList(1, this.size)
 

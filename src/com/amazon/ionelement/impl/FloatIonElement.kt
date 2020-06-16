@@ -18,7 +18,7 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.FloatElement
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -29,7 +29,7 @@ internal class FloatIonElement(
 ) : IonElementBase(), FloatElement {
     override val type: ElementType get() = ElementType.FLOAT
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         FloatIonElement(doubleValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)

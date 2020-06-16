@@ -1,307 +1,203 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
 package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonType
+import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
 
 /**
- * Represents an immutable Ion value, its type annotations and metadata.
+ * Represents an immutable Ion element.
  *
- * TODO: include guidance explaining that [IonElement] should be used whenever the type of the Ion data is not
- * guaranteed.  Data type and nullability constraints can be concisely expressed with the `*Value` and `*ValueOrNull`
- * functions.  Type safety is also possible with the `as*[OrNull]` functions.
+ * Specifies the contract that is common to all Ion elements but does not specify the type of data being represented.
  *
- * The table below shows which properties should be used to access the raw values for each of the given [IonType]s.
+ * #### IonElement Hierarchy
  *
- * TODO: the table below is out of date.
+ * The following hierarchy of types that inherit from [IonElement] include functions for accessing values appropriate
+ * to the specific Ion data type.  In this library, types other than [AnyElement] are referred to as "narrow" types.
  *
- * | When the [ElementType] is... | The Valid Accessors Are (others will throw [IonElectrolyteException])      |
- * |------------------------------|----------------------------------------------------------------------------|
- * | [ElementType.NULL]           | ...any function with the `OrNull` suffix.                                  |
- * | [ElementType.BOOL]           | [booleanValue], [booleanValueOrNull], [asBoolean], [asBooleanOrNull]       |
- * | [ElementType.INT]            | [longValue], [longValueOrNull], [bigIntegerValue], [bigIntegerValueOrNull], [asInt], [asIntOrNull] |
- * | [ElementType.STRING]         | [textValue], [textValueOrNull], [stringValue], [stringValueOrNull],         |
- * | [ElementType.SYMBOL]         | [textValue], [textValueOrNull], [symbolValue], [symbolValueOrNull]         |
- * | [ElementType.DECIMAL]        | [decimalValue], [decimalValueOrNull]                                       |
- * | [ElementType.TIMESTAMP]      | [timestampValue], [timestampValueOrNull]                                   |
- * | [ElementType.CLOB]           | [bytesValue], [bytesValueOrNull], [clobValue], [clobValueOrNull]           |
- * | [ElementType.BLOB]           | [bytesValue], [bytesValueOrNull], [blobValue], [blobValueOrNull]           |
- * | [ElementType.LIST]           | [asContainer], [asContainerOrNull], [asSeq], [asSeqOrNull], [asList] [asSexpOrNull]   |
- * | [ElementType.SEXP]           | [asContainer], [asContainerOrNull], [asSeq], [asSeqOrNull], [asSexp] [asSexpOrNull]   |
- * | [ElementType.STRUCT]         | [asContainer], [asContainerOrNull], [asStruct] [asStructOrNull] |
- *
- * These accessors can be chained together in a way that allows data to be mapped to domain objects very easily.  The
- * main benefit of this approach is that data is automatically checked to ensure it's the proper data type and
- * nullability.
- *
- * Given the Ion data:
- *
- * ```
- * stock_item::{
- *      name: "Fantastic Widget",
- *      price: 12.34,
- *      countInStock: 2,
- *      orders: [
- *          { customerId: 123, state: WA },
- *          { customerId: 456, state: "HI" }
- *      ]
- * }
- * stock_item::{ // stock item has no name
- *      price: 23.45,
- *      countInStock: 20,
- *      orders: [
- *          { customerId: 234, state: "VA" },
- *          { customerId: 567, state: MI }
- *      ]
- * }
- * ```
- *
- * The following Kotlin code can be used to deserialize it to a Kotlin class:
- *
- * ```
- * val stockItems = ION.newReader("...").use { reader ->
- *     createIonElementLoader(includeLocations = true)
- *        .loadAllElements(reader)
- *        .map { stockItem: IonElement ->
- *            stockItem.structValue.run {
- *                 StockItem(
- *                     firstOrNull("name")?.textValue ?: "<unknown name>",
- *                     first("price").decimalValue,
- *                     first("countInStock").longValue,
- *                     first("orders").containerValue.map { order ->
- *                         order.structValue.run {
- *                             Order(
- *                                 first("customerId").longValue,
- *                                 first("state").textValue)
- *                         }
- *                    })
- *             }
- *         }
- * }.asSequence().toList()
- * ```
+ * - [IonElement]
+ *     - [AnyElement]
+ *     - [BoolElement]
+ *     - [IntElement]
+ *     - [FloatElement]
+ *     - [DecimalElement]
+ *     - [TimestampElement]
+ *     - [TextElement]
+ *         - [StringElement]
+ *         - [SymbolElement]
+ *     - [LobElement]
+ *         - [BlobElement]
+ *         - [ClobElement]
+ *     - [ContainerElement]
+ *         - [SeqElement]
+ *             - [ListElement]
+ *             - [SexpElement]
+ *         - [StructElement]
  */
-interface IonElement : Element {
-
-    /** See [IonElement]. */
-    fun asBoolean(): BoolElement
-
-    /** See [IonElement]. */
-    fun asBooleanOrNull(): BoolElement?
-
-    /** See [IonElement]. */
-    fun asInt(): IntElement
-
-    /** See [IonElement]. */
-    fun asIntOrNull(): IntElement?
-
-    /** See [IonElement]. */
-    fun asDecimal(): DecimalElement
-
-    /** See [IonElement]. */
-    fun asDecimalOrNull(): DecimalElement?
-
-    /** See [IonElement]. */
-    fun asFloat(): FloatElement
-
-    /** See [IonElement]. */
-    fun asDoubleOrNull(): FloatElement?
-
-    /** See [IonElement]. */
-    fun asText(): TextElement
-
-    /** See [IonElement]. */
-    fun asTextOrNull(): TextElement?
-
-    /** See [IonElement]. */
-    fun asString(): StringElement
-
-    /** See [IonElement]. */
-    fun asStringOrNull(): StringElement?
-
-    /** See [IonElement]. */
-    fun asSymbol(): SymbolElement
-
-    /** See [IonElement]. */
-    fun asSymbolOrNull(): SymbolElement?
-
-    /** See [IonElement]. */
-    fun asTimestamp(): TimestampElement
-
-    /** See [IonElement]. */
-    fun asTimestampOrNull(): TimestampElement?
-
-    /** See [IonElement]. */
-    fun asLob(): LobElement
-
-    /** See [IonElement]. */
-    fun asLobOrNull(): LobElement?
-
-    /** See [IonElement]. */
-    fun asBlob(): BlobElement
-
-    /** See [IonElement]. */
-    fun asBlobOrNull(): BlobElement?
-
-    /** See [IonElement]. */
-    fun asClob(): ClobElement
-
-    /** See [IonElement]. */
-    fun asClobOrNull(): ClobElement?
-
-    /** See [IonElement]. */
-    fun asContainer(): ContainerElement
-
-    /** See [IonElement]. */
-    fun asContainerOrNull(): ContainerElement?
-
-    /** See [IonElement]. */
-    fun asSeq(): SeqElement
-
-    /** See [IonElement]. */
-    fun asSeqOrNull(): SeqElement?
-
-    /** See [IonElement]. */
-    fun asList(): ListElement
-
-    /** See [IonElement]. */
-    fun asListOrNull(): ListElement?
-
-    /** See [IonElement]. */
-    fun asSexp(): SexpElement
-
-    /** See [IonElement]. */
-    fun asSexpOrNull(): SexpElement?
-
-    /** See [IonElement]. */
-    fun asStruct(): StructElement
-
-    /** See [IonElement]. */
-    fun asStructOrNull(): StructElement?
+interface IonElement {
 
     /**
-     * If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElectrolyteException].
+     * All [IonElement] implementations must convertible to [AnyElement].
      *
-     * TODO: replace with an enum type that does not include `INT`: https://github.com/amzn/ion-element-kotlin/issues/23
+     * Since all [IonElement] implementations in this library also implement [AnyElement] this is no more
+     * expensive than a cast.  The purpose of this interface function is to be very clear about the requirement
+     * that all implementations of [IonElement] are convertible to [AnyElement].
      */
-    val integerSize: IntegerSize
+    fun asIonElement(): AnyElement
 
-    /** See [IonElement]. */
+    /** The Ion data type of the current node.  */
+    val type: ElementType
+
+    /** This [IonElement]'s metadata. */
+    val metas: MetaContainer
+
+    /** This element's Ion type annotations. */
+    val annotations: List<String>
+
+    /** Returns true if the current value is `null.null` or any typed null. */
+    val isNull: Boolean
+
+    /** Returns a shallow copy of the current node, replacing the annotations and metas with those specified. */
+    fun copy(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): AnyElement
+
+    /** Writes the current Ion element to the specified [IonWriter]. */
+    fun writeTo(writer: IonWriter)
+
+    /** Converts the current element to Ion text. */
+    override fun toString(): String
+}
+
+
+/** Represents a Ion bool. */
+interface BoolElement : IonElement {
     val booleanValue: Boolean
+}
 
-    /** See [IonElement]. */
-    val booleanValueOrNull: Boolean?
-
-    /** See [IonElement]. */
-    val longValue: Long
-
-    /** See [IonElement]. */
-    val longValueOrNull: Long?
-
-    /** See [IonElement]. */
-    val bigIntegerValue: BigInteger
-
-    /** See [IonElement]. */
-    val bigIntegerValueOrNull: BigInteger?
-
-    /** See [IonElement]. */
-    val textValue: String
-
-    /** See [IonElement]. */
-    val textValueOrNull: String?
-
-    /** See [IonElement]. */
-    val stringValue: String
-
-    /** See [IonElement]. */
-    val stringValueOrNull: String?
-
-    /** See [IonElement]. */
-    val symbolValue: String
-
-    /** See [IonElement]. */
-    val symbolValueOrNull: String?
-
-    /** See [IonElement]. */
-    val decimalValue: Decimal
-
-    /** See [IonElement]. */
-    val decimalValueOrNull: Decimal?
-
-    /** See [IonElement]. */
-    val doubleValue: Double
-
-    /** See [IonElement]. */
-    val doubleValueOrNull: Double?
-
-    /** See [IonElement]. */
+/** Represents a Ion timestamp. */
+interface TimestampElement : IonElement {
     val timestampValue: Timestamp
+}
 
-    /** See [IonElement]. */
-    val timestampValueOrNull: Timestamp?
+/** Represents a Ion int. */
+interface IntElement : IonElement {
+    val integerSize: IntegerSize
+    val longValue: Long
+    val bigIntegerValue: BigInteger
+}
 
-    /** See [IonElement]. */
-    val bytesValue: IonByteArray
+/** Represents a Ion decimal. */
+interface DecimalElement : IonElement {
+    val decimalValue: Decimal
+}
 
-    /** See [IonElement]. */
-    val bytesValueOrNull: IonByteArray?
+/**
+ * Represents a Ion float.
+ */
+interface FloatElement : IonElement {
+    val doubleValue: Double
+}
 
-    /** See [IonElement]. */
-    val blobValue: IonByteArray
+/** Represents an Ion string or symbol. */
+interface TextElement : IonElement {
+    val textValue: String
+}
+/**
+ * Represents an Ion string.
+ *
+ * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
+ * working with elements that must be Ion strings.
+ */
+interface StringElement : TextElement
 
-    /** See [IonElement]. */
-    val blobValueOrNull: IonByteArray?
+/**
+ * Represents an Ion symbol.
+ *
+ * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
+ * working with elements that must be Ion symbols.
+ */
+interface SymbolElement : TextElement
 
-    /** See [IonElement]. */
-    val clobValue: IonByteArray
+/** Represents an Ion clob or blob. */
+interface LobElement : IonElement {
+    val bytesValue:  IonByteArray
+}
 
-    /** See [IonElement]. */
-    val clobValueOrNull: IonByteArray?
+/**
+ * Represents an Ion blob.
+ *
+ * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
+ * working with elements that must be Ion blobs.
+ */
+interface BlobElement : LobElement
 
-    /** See [IonElement]. */
-    val containerValues: Iterable<IonElement>
+/**
+ * Represents an Ion clob.
+ *
+ * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
+ * working with elements that must be Ion clobs.
+ */
+interface ClobElement : LobElement
 
-    /** See [IonElement]. */
-    val containerValuesOrNull: Iterable<IonElement>?
+/**
+ * Represents an Ion list, s-expression or struct.
+ *
+ * Items within [values] may or may not be in a defined order.  The order is defined for lists and s-expressions,
+ * but undefined for structs.
+ */
+interface ContainerElement : IonElement {
+    /** The number of values in this container. */
+    val size: Int
 
-    /** See [IonElement]. */
-    val seqValues: Iterable<IonElement>
+    val values: Iterable<AnyElement>
+}
 
-    /** See [IonElement]. */
-    val seqValuesOrNull: Iterable<IonElement>?
+/**
+ * Represents an ordered collection element such as an Ion list or s-expression.
+ *
+ * Includes no additional functionality over [ContainerElement], but serves to provide additional type safety when
+ * working with ordered collection elements.
+ */
+interface SeqElement : ContainerElement
+/**
+ * Represents an Ion list.
+ *
+ * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
+ * working with elements that must be Ion lists.
+ */
+interface ListElement : SeqElement
 
-    /** See [IonElement]. */
-    val listValues: Iterable<IonElement>
+/**
+ * Represents an Ion s-expression.
+ *
+ * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
+ * working with elements that must be Ion s-expressions.
+ */
+interface SexpElement : SeqElement
 
-    /** See [IonElement]. */
-    val listValuesOrNull: Iterable<IonElement>?
+/**
+ * Represents an Ion struct.
+ *
+ * Includes functions for accessing the fields of a struct.
+ */
+interface StructElement : ContainerElement {
 
-    /** See [IonElement]. */
-    val sexpValues: Iterable<IonElement>
+    /** This struct's unordered collection of fields. */
+    val fields: Iterable<IonStructField>
 
-    /** See [IonElement]. */
-    val sexpValuesOrNull: Iterable<IonElement>?
+    /**
+     * Retrieves the value of the first field found with the specified name.
+     *
+     * In the case of multiple fields with the specified name, the caller assume that one is picked at random.
+     *
+     * @throws IonElectrolyteException If there are no fields with the specified [fieldName].
+     */
+    operator fun get(fieldName: String): AnyElement
 
-    /** See [IonElement]. */
-    val structFields: Iterable<IonStructField>
+    /** The same as [get] but returns a null reference if the field does not exist.  */
+    fun getOptional(fieldName: String): AnyElement?
 
-    /** See [IonElement]. */
-    val structFieldsOrNull: Iterable<IonStructField>?
 
+    /** Retrieves all values with a given field name. Returns an empty iterable if the field does not exist. */
+    fun getAll(fieldName: String): Iterable<AnyElement>
 }

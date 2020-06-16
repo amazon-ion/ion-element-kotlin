@@ -16,7 +16,7 @@
 package com.amazon.ionelement.demos
 
 import com.amazon.ionelement.api.IonElectrolyteException
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.IonTextLocation
 import com.amazon.ionelement.api.createIonElementLoader
@@ -34,7 +34,7 @@ class UnexpectedTypesTest {
     data class TestCase(
         val ionText: String,
         val expectedIonLocation: IonLocation,
-        val block: (IonElement) -> Unit)
+        val block: (AnyElement) -> Unit)
 
 
     @ParameterizedTest

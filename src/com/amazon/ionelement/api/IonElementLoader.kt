@@ -23,7 +23,7 @@ interface IonElementLoader {
      *
      * Throws an [IllegalArgumentException] if there are multiple top level elements.
      */
-    fun loadSingleElement(ionText: String): IonElement
+    fun loadSingleElement(ionText: String): AnyElement
 
     /**
      * Reads the next element from the specified [IonReader].
@@ -33,7 +33,7 @@ interface IonElementLoader {
      * If there are additional elements to be read after reading the next element,
      * throws an [IllegalArgumentException].
      */
-    fun loadSingleElement(ionReader: IonReader): IonElement
+    fun loadSingleElement(ionReader: IonReader): AnyElement
 
     /**
      * Reads all elements remaining to be read from the [IonReader].
@@ -43,7 +43,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [loadCurrentElement].
      */
-    fun loadAllElements(ionReader: IonReader): List<IonElement>
+    fun loadAllElements(ionReader: IonReader): List<AnyElement>
 
     /**
      * Reads all of the elements in the specified Ion text data.
@@ -51,7 +51,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [processAll] or [loadCurrentElement].
      */
-    fun loadAllElements(ionText: String): List<IonElement>
+    fun loadAllElements(ionText: String): List<AnyElement>
 
     /**
      * Reads the current element from the specified [IonReader].  Does not close the [IonReader].
@@ -61,5 +61,5 @@ interface IonElementLoader {
      * This method can be utilized to fetch and process the elements one by one and can help avoid high memory
      * consumption when processing large amounts of Ion data.
      */
-    fun loadCurrentElement(ionReader: IonReader): IonElement
+    fun loadCurrentElement(ionReader: IonReader): AnyElement
 }

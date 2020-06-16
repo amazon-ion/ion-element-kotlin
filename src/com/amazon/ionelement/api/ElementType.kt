@@ -6,12 +6,13 @@ import com.amazon.ionelement.api.ElementType.CLOB
 import com.amazon.ionelement.api.ElementType.LIST
 import com.amazon.ionelement.api.ElementType.SEXP
 import com.amazon.ionelement.api.ElementType.STRING
+import com.amazon.ionelement.api.ElementType.STRUCT
 import com.amazon.ionelement.api.ElementType.SYMBOL
 
 /**
- * Indicates the type of the Ion value represented by an instance of [IonElement].
+ * Indicates the type of the Ion value represented by an instance of [AnyElement].
  *
- * [ElementType] has all the same members as `ion-java`'s [IonType] except for [IonType.DATAGRAM] because [IonElement]
+ * [ElementType] has all the same members as `ion-java`'s [IonType] except for [IonType.DATAGRAM] because [AnyElement]
  * has no notion of datagrams.  It also exposes [isText], [isContainer] and [isLob] as properties instead of as static
  * functions.
  */
@@ -20,34 +21,43 @@ enum class ElementType(
     val isText: Boolean,
 
     /**
-     * True if the current [ElementType] is [LIST] or [SEXP].
+     * True if the current [ElementType] is [LIST] or [SEXP] or [STRUCT].
+     *
+     * Ordering of the child elements cannot be guaranteed for [STRUCT] elements.
      */
     val isContainer: Boolean,
+
+    /**
+     * True if the current [ElementType] is [LIST] or [SEXP].
+     *
+     * Ordering of the child elements is guaranteed.
+     */
+    val isSeq: Boolean,
 
     /** True if the current [ElementType] is [CLOB] or [BLOB]. */
     val isLob: Boolean
 ) {
     // Other scalar types
-    NULL(false, false, false),
-    BOOL(false, false, false),
-    INT(false, false, false),
-    FLOAT(false, false, false),
-    DECIMAL(false, false, false),
-    TIMESTAMP(false, false, false),
+    NULL(false, false, false, false),
+    BOOL(false, false, false, false),
+    INT(false, false, false, false),
+    FLOAT(false, false, false, false),
+    DECIMAL(false, false, false,false),
+    TIMESTAMP(false, false, false, false),
 
     // String-valued types
-    SYMBOL(true, false, false),
-    STRING(true, false, false),
+    SYMBOL(true, false, false, false),
+    STRING(true, false, false, false),
 
     // Binary-valued types
-    CLOB(false, false, true),
-    BLOB(false, false, true),
+    CLOB(false, false, false, true),
+    BLOB(false, false, false, true),
 
     // Container types
-    LIST(false, true, false),
-    SEXP(false, true, false),
+    LIST(false, true, true, false),
+    SEXP(false, true, true, false),
 
-    STRUCT(false, true, false);
+    STRUCT(false, true, false, false);
 
     /** Converts this [ElementType] to [IonType]. */
     fun toIonType() = when(this) {
@@ -70,7 +80,7 @@ enum class ElementType(
 /**
  * Converts the receiver [IonType] to [ElementType].
  *
- * @throws [IllegalStateException] if the receiver is [IonType.DATAGRAM] because [IonElement] has no notion of
+ * @throws [IllegalStateException] if the receiver is [IonType.DATAGRAM] because [AnyElement] has no notion of
  * datagrams.
  */
 fun IonType.toElementType() = when(this) {

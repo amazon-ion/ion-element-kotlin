@@ -17,7 +17,7 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.emptyMetaContainer
@@ -31,7 +31,7 @@ internal class SymbolIonElement(
 
     override val symbolValue: String get() = textValue
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         SymbolIonElement(textValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)

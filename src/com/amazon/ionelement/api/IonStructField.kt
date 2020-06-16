@@ -15,13 +15,11 @@
 
 package com.amazon.ionelement.api
 
-import com.amazon.ionelement.api.IonElement
-
 /**
  * A field within an Ion struct.
  */
 interface IonStructField {
     val name: String
-    val value: IonElement
+    val value: AnyElement
 }
 

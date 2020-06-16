@@ -16,7 +16,7 @@
 package com.amazon.ionelement.demos
 
 import com.amazon.ion.Decimal
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.Order
@@ -36,7 +36,7 @@ class IonElementExtractionInKotlinTests {
         val stockItems = ION.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
             createIonElementLoader(includeLocations = true)
                 .loadAllElements(reader)
-                .map { stockItem: IonElement ->
+                .map { stockItem: AnyElement ->
                     stockItem.asStruct().run {
                         StockItem(
                             getOptional("name")?.textValue ?: "<unknown name>",

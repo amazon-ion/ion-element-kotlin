@@ -20,12 +20,12 @@ import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ion.system.IonTextWriterBuilder
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.BlobElement
 import com.amazon.ionelement.api.BoolElement
 import com.amazon.ionelement.api.ClobElement
 import com.amazon.ionelement.api.ContainerElement
 import com.amazon.ionelement.api.DecimalElement
-import com.amazon.ionelement.api.Element
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.ElementType.BLOB
 import com.amazon.ionelement.api.ElementType.BOOL
@@ -60,11 +60,14 @@ import java.math.BigInteger
 private val TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard()
 
 /**
- * TODO: explain how to implement this class.
+ * Provides most of the implementation of [AnyElement] to any of the narrowed types of [IonElement].
+ *
+ * The only function that must be overridden by any derived narrowing implementation of [IonElement] is the non-null
+ * value accessor function that corresponds to the narrowed Ion type.
  */
-internal abstract class IonElementBase : IonElement {
+internal abstract class IonElementBase : AnyElement {
 
-    override fun asIonElement(): IonElement = this
+    override fun asIonElement(): AnyElement = this
 
     override val isNull: Boolean get() = false
     protected abstract fun writeContentTo(writer: IonWriter)
@@ -82,7 +85,7 @@ internal abstract class IonElementBase : IonElement {
 
     override val integerSize: IntegerSize get() = ionError(this, "integerSize not valid for this Element")
 
-    private inline fun <reified T: Element> requireTypeAndCastOrNull(allowedType: ElementType): T? {
+    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType): T? {
         if(this.type == NULL) {
             return null
         }
@@ -109,7 +112,7 @@ internal abstract class IonElementBase : IonElement {
         ionError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
     }
 
-    private inline fun <reified T: Element> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType): T? {
+    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType): T? {
         if(this.type == NULL) {
             return null
         }
@@ -124,7 +127,7 @@ internal abstract class IonElementBase : IonElement {
         }
     }
 
-    private inline fun <reified T: Element> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T? {
+    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T? {
         if(this.type == NULL) {
             return null
         }
@@ -139,17 +142,17 @@ internal abstract class IonElementBase : IonElement {
         }
     }
 
-    private inline fun <reified T: Element> requireTypeAndCast(allowedType: ElementType): T {
+    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType) ?: ionError(this, "Required non-null value of type $allowedType but found a $this")
         return this as T
     }
 
-    private inline fun <reified T: Element> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType): T {
+    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType, allowedType2) ?: ionError(this, "Required non-null value of type $allowedType or $allowedType2 but found a $this")
         return this as T
     }
 
-    private inline fun <reified T: Element> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T {
+    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType, allowedType2, allowedType3) ?: ionError(this, "Required non-null value of type $allowedType, $allowedType2 or $allowedType3 but found a $this")
         return this as T
     }
@@ -162,7 +165,7 @@ internal abstract class IonElementBase : IonElement {
     final override fun asDecimal(): DecimalElement = requireTypeAndCast(DECIMAL)
     final override fun asDecimalOrNull(): DecimalElement? = requireTypeAndCastOrNull(DECIMAL)
     final override fun asFloat(): FloatElement = requireTypeAndCast(FLOAT)
-    final override fun asDoubleOrNull(): FloatElement? = requireTypeAndCastOrNull(FLOAT)
+    final override fun asFloatOrNull(): FloatElement? = requireTypeAndCastOrNull(FLOAT)
     final override fun asText(): TextElement = requireTypeAndCast(STRING, SYMBOL)
     final override fun asTextOrNull(): TextElement? = requireTypeAndCastOrNull(STRING, SYMBOL)
     final override fun asString(): StringElement = requireTypeAndCast(STRING)
@@ -202,10 +205,10 @@ internal abstract class IonElementBase : IonElement {
     override val bytesValue: IonByteArray get() = expectedType(BLOB, CLOB)
     override val blobValue: IonByteArray get() = expectedType(BLOB)
     override val clobValue: IonByteArray get() = expectedType(CLOB)
-    override val containerValues: Iterable<IonElement> get() = expectedType(LIST, SEXP, STRUCT)
-    override val seqValues: Iterable<IonElement> get() = expectedType(LIST, SEXP)
-    override val listValues: Iterable<IonElement> get() = expectedType(LIST)
-    override val sexpValues: Iterable<IonElement> get() = expectedType(SEXP)
+    override val containerValues: Iterable<AnyElement> get() = expectedType(LIST, SEXP, STRUCT)
+    override val seqValues: Iterable<AnyElement> get() = expectedType(LIST, SEXP)
+    override val listValues: Iterable<AnyElement> get() = expectedType(LIST)
+    override val sexpValues: Iterable<AnyElement> get() = expectedType(SEXP)
     override val structFields: Iterable<IonStructField> get() = expectedType(STRUCT)
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
@@ -221,10 +224,10 @@ internal abstract class IonElementBase : IonElement {
     final override val bytesValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<LobElement>(BLOB, CLOB)?.bytesValue
     final override val blobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<BlobElement>(BLOB)?.bytesValue
     final override val clobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<ClobElement>(CLOB)?.bytesValue
-    final override val containerValuesOrNull: Iterable<IonElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP, STRUCT)?.values
-    final override val seqValuesOrNull: Iterable<IonElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP)?.values
-    final override val listValuesOrNull: Iterable<IonElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST)?.values
-    final override val sexpValuesOrNull: Iterable<IonElement>? get() = requireTypeAndCastOrNull<ContainerElement>(SEXP)?.values
+    final override val containerValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP, STRUCT)?.values
+    final override val seqValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP)?.values
+    final override val listValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST)?.values
+    final override val sexpValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(SEXP)?.values
     final override val structFieldsOrNull: Iterable<IonStructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
 }
 

@@ -16,8 +16,8 @@
 package com.amazon.ionelement.util
 
 import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.field
 import com.amazon.ionelement.api.ionBlob
 import com.amazon.ionelement.api.ionBool
@@ -46,9 +46,9 @@ private const val MAX_RANDOM_STRING_LENGTH = 25
 private const val CHARACTERS = "_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 private const val MAX_LOB_SIZE = 64
 
-fun randomIonElement(): IonElement {
+fun randomIonElement(): AnyElement {
 
-    fun innerRandomElement(depth: Int): IonElement {
+    fun innerRandomElement(depth: Int): AnyElement {
         val thisDepth = depth + 1
         return when {
             // If we haven't exceeded MAX_DEPTH, we have a COLLECTION_CHANCE% chance of returning a collection.

@@ -17,8 +17,8 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.IonStructField
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StructElement
@@ -33,29 +33,28 @@ internal class StructIonElementImpl(
 
     override val type: ElementType get() = ElementType.STRUCT
     override val size = allFields.size
-    override val values: Collection<IonElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
+    override val values: Collection<AnyElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
+    override val containerValues: Iterable<AnyElement> get() = values
     override val structFields: Iterable<IonStructField> get() = fields
     override val fields: Iterable<IonStructField> get() = allFields
 
     /** Lazily calculated map of field names and lists of their values. */
-    private val fieldsByName: Map<String, List<IonElement>> by lazy(LazyThreadSafetyMode.NONE) {
+    private val fieldsByName: Map<String, List<AnyElement>> by lazy(LazyThreadSafetyMode.NONE) {
         fields
             .groupBy { it.name }
             .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value } }
             .toMap()
     }
 
-    override val fieldNames: Iterable<String> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.name }.distinct() }
-
-    override fun get(fieldName: String): IonElement =
+    override fun get(fieldName: String): AnyElement =
         fieldsByName[fieldName]?.firstOrNull() ?: ionError(this, "Required struct field '$fieldName' missing")
 
-    override fun getOptional(fieldName: String): IonElement? =
+    override fun getOptional(fieldName: String): AnyElement? =
         fieldsByName[fieldName]?.firstOrNull()
 
-    override fun getAll(fieldName: String): Iterable<IonElement> = fieldsByName[fieldName] ?: emptyList()
+    override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         StructIonElementImpl(allFields, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) {
@@ -87,13 +86,13 @@ internal class StructIonElementImpl(
         // times in one group also appears n times in the other group.
 
         this.fieldsByName.forEach { thisFieldGroup ->
-            val thisSubGroup: Map<IonElement, Int> = thisFieldGroup.value.groupingBy { it }.eachCount()
+            val thisSubGroup: Map<AnyElement, Int> = thisFieldGroup.value.groupingBy { it }.eachCount()
 
             // [otherGroup] should never be null due to the `if` statement above.
             val otherGroup = other.fieldsByName[thisFieldGroup.key]
                              ?: error("unexpectedly missing other field named '${thisFieldGroup.key}'")
 
-            val otherSubGroup: Map<IonElement, Int> = otherGroup.groupingBy { it }.eachCount()
+            val otherSubGroup: Map<AnyElement, Int> = otherGroup.groupingBy { it }.eachCount()
 
             // Simple equality should work from here
             if(thisSubGroup != otherSubGroup) {

@@ -19,7 +19,7 @@ import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.DecimalElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -30,7 +30,7 @@ internal class DecimalIonElement(
 ) : IonElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IonElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         DecimalIonElement(decimalValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
