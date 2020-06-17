@@ -78,12 +78,12 @@ fun randomIonElement(): AnyElement {
                 }
             }
         }.let { element ->
-            if(random.nextDouble() < ANNOTATION_CHANCE) {
-                element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
-            }
-            else {
-                element.asAnyElement()
-            }
+            when {
+                random.nextDouble() < ANNOTATION_CHANCE ->
+                    element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
+                else ->
+                    element
+            }.asAnyElement()
         }
     }
 

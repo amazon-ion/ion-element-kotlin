@@ -54,7 +54,7 @@ internal class StructIonElementImpl(
 
     override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
         StructIonElementImpl(allFields, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) {

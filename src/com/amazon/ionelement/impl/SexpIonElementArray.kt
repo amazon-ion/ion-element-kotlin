@@ -30,7 +30,7 @@ internal class SexpIonElementArray (
 
     override val sexpValues: Iterable<AnyElement> get() = seqValues
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
         SexpIonElementArray(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {

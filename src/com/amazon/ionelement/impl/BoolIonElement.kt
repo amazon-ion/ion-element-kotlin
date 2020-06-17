@@ -16,7 +16,6 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.BoolElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
@@ -29,7 +28,7 @@ internal class BoolIonElement(
 ): AnyElementBase(), BoolElement {
     override val type: ElementType get() = ElementType.BOOL
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement =
         BoolIonElement(booleanValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)

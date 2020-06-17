@@ -30,7 +30,7 @@ internal class ListIonElementBase (
 
     override val listValues: Iterable<AnyElement> get() = values
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): ListElement =
         ListIonElementBase(values, annotations, metas)
 
     override fun equals(other: Any?): Boolean {

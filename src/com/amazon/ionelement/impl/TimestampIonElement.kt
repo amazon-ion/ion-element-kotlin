@@ -18,7 +18,6 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.TimestampElement
 import com.amazon.ionelement.api.emptyMetaContainer
@@ -31,7 +30,7 @@ internal class TimestampIonElement(
     constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
 
     override val type: ElementType get() = ElementType.TIMESTAMP
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement =
         TimestampIonElement(value, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(value)

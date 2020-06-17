@@ -19,7 +19,6 @@ import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -32,7 +31,7 @@ internal class IntIonElement(
     override val integerSize: IntegerSize get() = IntegerSize.LONG
     override val type: ElementType get() = ElementType.INT
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
         IntIonElement(longValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)

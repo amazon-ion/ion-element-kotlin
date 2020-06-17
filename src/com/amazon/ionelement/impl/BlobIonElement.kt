@@ -16,7 +16,6 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.BlobElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonByteArray
@@ -33,7 +32,7 @@ internal class BlobIonElement(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): BlobElement =
         BlobIonElement(bytes, annotations, metas)
 
     override val type: ElementType get() = ElementType.BLOB

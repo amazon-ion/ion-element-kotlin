@@ -19,7 +19,6 @@ import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionError
@@ -42,7 +41,7 @@ internal class BigIntIonElement(
         return bigIntegerValue.longValueExact()
     }
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
         BigIntIonElement(bigIntegerValue, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)
