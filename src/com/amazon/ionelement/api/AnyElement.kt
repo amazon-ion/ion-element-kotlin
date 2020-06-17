@@ -349,9 +349,9 @@ interface AnyElement : IonElement {
     val sexpValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val structFields: Collection<IonStructField>
+    val structFields: Collection<StructField>
 
     /** See [AnyElement]. */
-    val structFieldsOrNull: Collection<IonStructField>?
+    val structFieldsOrNull: Collection<StructField>?
 
 }

@@ -16,12 +16,12 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.StructField
 
 /**
  * Provides an interface for storing an Ion `struct`'s field and its value.
  */
-internal data class IonStructFieldImpl(
+internal data class StructFieldImpl(
     override val name: String,
     override val value: AnyElement
-) : IonStructField
+) : StructField

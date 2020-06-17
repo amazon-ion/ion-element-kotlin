@@ -18,7 +18,7 @@ package com.amazon.ionelement.api
 /**
  * A field within an Ion struct.
  */
-interface IonStructField {
+interface StructField {
     val name: String
     val value: AnyElement
 }

@@ -44,7 +44,7 @@ import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IonByteArray
 import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.LobElement
 import com.amazon.ionelement.api.SeqElement
@@ -209,7 +209,7 @@ internal abstract class AnyElementBase : AnyElement {
     override val seqValues: List<AnyElement> get() = errIfNotTyped(LIST, SEXP)
     override val listValues: List<AnyElement> get() = errIfNotTyped(LIST)
     override val sexpValues: List<AnyElement> get() = errIfNotTyped(SEXP)
-    override val structFields: Collection<IonStructField> get() = errIfNotTyped(STRUCT)
+    override val structFields: Collection<StructField> get() = errIfNotTyped(STRUCT)
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
     final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BoolElement>(BOOL)?.booleanValue
@@ -228,6 +228,6 @@ internal abstract class AnyElementBase : AnyElement {
     final override val seqValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SeqElement>(LIST, SEXP)?.values
     final override val listValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<ListElement>(LIST)?.values
     final override val sexpValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SexpElement>(SEXP)?.values
-    final override val structFieldsOrNull: Collection<IonStructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
+    final override val structFieldsOrNull: Collection<StructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
 }
 
