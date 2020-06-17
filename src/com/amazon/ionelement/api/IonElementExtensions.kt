@@ -63,30 +63,30 @@ inline fun <reified T: IonElement> T.withoutMetas(): T =
 /**
  * Returns the string representation of the symbol in the first element of this container.
  *
- * If the first element is not a symbol or this container has no elements, throws [IonElectrolyteException],
+ * If the first element is not a symbol or this container has no elements, throws [IonElementException],
  */
 val SeqElement.tag get() = this.head.symbolValue
 
 /**
  * Returns the first element of this container.
  *
- * If this container has no elements, throws [IonElectrolyteException].
+ * If this container has no elements, throws [IonElementException].
  */
 val SeqElement.head: AnyElement
     get() =
         when (this.size) {
-            0 -> ionError(this, "Cannot get head of empty container")
+            0 -> constraintError(this, "Cannot get head of empty container")
             else -> this.values.first()
         }
 
 /**
  * Returns a sub-list containing all elements of this container except the first.
  *
- * If this container has no elements, throws [IonElectrolyteException].
+ * If this container has no elements, throws [IonElementException].
  */
 val SeqElement.tail: List<AnyElement> get()  =
     when (this.size) {
-        0 -> ionError(this, "Cannot get tail of empty container")
+        0 -> constraintError(this, "Cannot get tail of empty container")
         else -> this.values.subList(1, this.size)
     }
 

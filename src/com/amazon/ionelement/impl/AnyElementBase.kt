@@ -54,7 +54,7 @@ import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.TextElement
 import com.amazon.ionelement.api.TimestampElement
-import com.amazon.ionelement.api.ionError
+import com.amazon.ionelement.api.constraintError
 import java.math.BigInteger
 
 private val TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard()
@@ -83,7 +83,7 @@ internal abstract class AnyElementBase : AnyElement {
         TEXT_WRITER_BUILDER.build(buf).use { writeTo(it) }
     }.toString()
 
-    override val integerSize: IntegerSize get() = ionError(this, "integerSize not valid for this Element")
+    override val integerSize: IntegerSize get() = constraintError(this, "integerSize not valid for this Element")
 
     private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType): T? {
         if(this.type == NULL) {
@@ -101,15 +101,15 @@ internal abstract class AnyElementBase : AnyElement {
     }
 
     private fun errIfNotTyped(allowedType: ElementType): Nothing {
-        ionError(this, "Expected an element of type $allowedType but found an element of type ${this.type}")
+        constraintError(this, "Expected an element of type $allowedType but found an element of type ${this.type}")
     }
 
     private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType): Nothing  {
-        ionError(this, "Expected an element of type $allowedType or $allowedType2 but found an element of type ${this.type}")
+        constraintError(this, "Expected an element of type $allowedType or $allowedType2 but found an element of type ${this.type}")
     }
 
     private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): Nothing  {
-        ionError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
+        constraintError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
     }
 
     private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType): T? {
@@ -133,7 +133,7 @@ internal abstract class AnyElementBase : AnyElement {
         }
 
         if(this.type != allowedType && this.type != allowedType2 && this.type != allowedType3)
-            ionError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
+            constraintError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
 
         return when {
             // this could still be a typed null
@@ -143,17 +143,17 @@ internal abstract class AnyElementBase : AnyElement {
     }
 
     private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType): T {
-        requireTypeAndCastOrNull<T>(allowedType) ?: ionError(this, "Required non-null value of type $allowedType but found a $this")
+        requireTypeAndCastOrNull<T>(allowedType) ?: constraintError(this, "Required non-null value of type $allowedType but found a $this")
         return this as T
     }
 
     private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType): T {
-        requireTypeAndCastOrNull<T>(allowedType, allowedType2) ?: ionError(this, "Required non-null value of type $allowedType or $allowedType2 but found a $this")
+        requireTypeAndCastOrNull<T>(allowedType, allowedType2) ?: constraintError(this, "Required non-null value of type $allowedType or $allowedType2 but found a $this")
         return this as T
     }
 
     private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T {
-        requireTypeAndCastOrNull<T>(allowedType, allowedType2, allowedType3) ?: ionError(this, "Required non-null value of type $allowedType, $allowedType2 or $allowedType3 but found a $this")
+        requireTypeAndCastOrNull<T>(allowedType, allowedType2, allowedType3) ?: constraintError(this, "Required non-null value of type $allowedType, $allowedType2 or $allowedType3 but found a $this")
         return this as T
     }
 

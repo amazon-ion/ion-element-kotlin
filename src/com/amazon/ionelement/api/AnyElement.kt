@@ -49,8 +49,8 @@ import java.math.BigInteger
  * - An expectation of the Ion type of the given element
  * - An expectation of the nullability of the given element
  *
- * If either of these expectations is violated an [IonElectrolyteException] is thrown.  If the given element
- * has a [IonLocation] in its metadata, it included with the [IonElectrolyteException] which can be used to
+ * If either of these expectations is violated an [IonElementException] is thrown.  If the given element
+ * has a [IonLocation] in its metadata, it included with the [IonElementException] which can be used to
  * generate error an message that points to the specific location of the failure within text (i.e. line & column) or
  * binary Ion data (i.e. byte offset).
  *
@@ -246,7 +246,7 @@ interface AnyElement : IonElement {
     fun asStructOrNull(): StructElement?
 
     /**
-     * If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElectrolyteException].
+     * If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElementException].
      *
      * TODO: replace with an enum type that does not include `INT`: https://github.com/amzn/ion-element-kotlin/issues/23
      */

@@ -15,16 +15,25 @@
 
 package com.amazon.ionelement.api
 
-import com.amazon.ionelement.api.IonLocation
-import com.amazon.ionelement.api.locationToString
-
 /**
- * Exception for IonElectrolyte.
- *
- * Includes the [IonLocation] in the message if the [location] property if it was included at construction time.
+ * Base exception which includes the [location] in the message if the if it was included at construction time.
  */
-class IonElectrolyteException @JvmOverloads constructor(
+open class IonElementException(
     val location: IonLocation?,
     val description: String,
     cause: Throwable? = null
 ) : Error(locationToString(location) + ": $description", cause)
+
+/** Exception thrown by [IonElementLoader]. */
+class IonElementLoaderException(
+    location: IonLocation?,
+    description: String,
+    cause: Throwable? = null
+) : IonElementException(location, description, cause)
+
+/** Exception thrown by [IonElement] accessor functions to indicate a type or nullness constraint has been violated. */
+class IonElementConstraintException(
+    location: IonLocation?,
+    description: String,
+    cause: Throwable? = null
+) : IonElementException(location, description, cause)

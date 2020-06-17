@@ -15,7 +15,7 @@
 
 package com.amazon.ionelement.demos
 
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.IonTextLocation
@@ -26,7 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
 /**
- * Demonstrates throwing of [IonElectrolyteException] when an unexpected data type or nulliness is encountered.
+ * Demonstrates throwing of [IonElementException] when an unexpected data type or nulliness is encountered.
  */
 class UnexpectedTypesTest {
     private val loader = createIonElementLoader(includeLocations = true)
@@ -41,7 +41,7 @@ class UnexpectedTypesTest {
     @MethodSource("parametersForIonElectrolyteExceptionTest")
     fun ionElectrolyteExceptionTest(tc: TestCase) {
         val ionElement = loader.loadSingleElement(tc.ionText)
-        val ex = assertThrows<IonElectrolyteException> { tc.block(ionElement) }
+        val ex = assertThrows<IonElementException> { tc.block(ionElement) }
         assertEquals(tc.expectedIonLocation, ex.location)
     }
 
