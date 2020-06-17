@@ -16,7 +16,11 @@
 package com.amazon.ionelement.api
 
 import com.amazon.ion.IonReader
+import com.amazon.ionelement.impl.IonElementLoaderImpl
 
+/**
+ * Provides a several functions for loading Ion data from an [IonReader].
+ */
 interface IonElementLoader {
     /**
      * Reads a single element from the specified Ion text data.
@@ -43,7 +47,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [loadCurrentElement].
      */
-    fun loadAllElements(ionReader: IonReader): List<AnyElement>
+    fun loadAllElements(ionReader: IonReader): Iterable<AnyElement>
 
     /**
      * Reads all of the elements in the specified Ion text data.
@@ -51,7 +55,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [processAll] or [loadCurrentElement].
      */
-    fun loadAllElements(ionText: String): List<AnyElement>
+    fun loadAllElements(ionText: String): Iterable<AnyElement>
 
     /**
      * Reads the current element from the specified [IonReader].  Does not close the [IonReader].
@@ -63,3 +67,42 @@ interface IonElementLoader {
      */
     fun loadCurrentElement(ionReader: IonReader): AnyElement
 }
+
+/**
+ * Specifies options for [IonElementLoader].
+ *
+ * While there is only one property here currently, new properties may be added to this class without breaking
+ * source compatibility with prior versions of this library.
+ */
+data class IonElementLoaderOptions(
+    /**
+     * Set to true to cause `IonLocation` to be stored in the [IonElement.metas] collection of all elements loaded.
+     *
+     * This is `false` by default because it has a performance penalty.
+     */
+    val includeLocationMeta: Boolean = false
+)
+
+/** Creates an [IonElementLoader] implementation with the specified [options]. */
+fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()) =
+    IonElementLoaderImpl(options)
+
+/** Provides syntactically lighter way of invoking [IonElementLoader.loadSingleElement]. */
+fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
+    createIonElementLoader(options).loadSingleElement(ionText)
+
+/** Provides syntactically lighter method of invoking [IonElementLoader.loadSingleElement]. */
+fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
+    createIonElementLoader(options).loadSingleElement(ionReader)
+
+/** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+fun loadAllElements(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
+    createIonElementLoader(options).loadAllElements(ionText)
+
+/** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+fun loadAllElements(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
+    createIonElementLoader(options).loadAllElements(ionReader)
+
+/** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+fun loadCurrentElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+    createIonElementLoader(options).loadCurrentElement(ionReader)

@@ -18,16 +18,8 @@ package com.amazon.ionelement.api
 
 import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
-import com.amazon.ionelement.impl.IonElementLoaderImpl
 
-/**
- * Creates an [IonElementLoader] implementation.
- *
- * The default of [includeLocations] is false since there is a non-zero performance penalty associated
- * with creating [MetaContainer] instances populated with [IonLocation] instances.
- */
-fun createIonElementLoader(includeLocations: Boolean = false) =
-    IonElementLoaderImpl(includeLocations)
+
 
 /**
  * Bridge function that converts from an immutable [AnyElement] to a mutable [IonValue].

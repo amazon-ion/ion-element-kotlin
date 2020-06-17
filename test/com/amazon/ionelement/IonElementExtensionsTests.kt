@@ -3,6 +3,7 @@ package com.amazon.ionelement
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.head
 import com.amazon.ionelement.api.ionInt
+import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.api.metaContainerOf
 import com.amazon.ionelement.api.tail
 import com.amazon.ionelement.api.withAnnotations
@@ -10,7 +11,6 @@ import com.amazon.ionelement.api.withMeta
 import com.amazon.ionelement.api.withMetas
 import com.amazon.ionelement.api.withoutAnnotations
 import com.amazon.ionelement.api.withoutMetas
-import com.amazon.ionelement.util.loadSingleElement
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals

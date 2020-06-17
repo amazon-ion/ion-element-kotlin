@@ -37,9 +37,8 @@ stock_item::{ // stock item has no name
 """
 
 val ion = IonSystemBuilder.standard().build
-val stockItems = ion.newReader(stockItemsIonText).use { reader ->
-    createIonElementLoader(includeLocations = true)
-        .loadAllElements(reader)
+val stockItems = ion.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
+   loadAllElements(reader)
         .map { stockItem: AnyElement ->
             stockItem.asStruct().run {
                 StockItem(

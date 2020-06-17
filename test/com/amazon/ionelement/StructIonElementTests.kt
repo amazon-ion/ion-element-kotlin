@@ -19,7 +19,7 @@ import com.amazon.ionelement.api.IonElectrolyteException
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.IonStructField
 import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.util.loadSingleElement
+import com.amazon.ionelement.api.loadSingleElement
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
