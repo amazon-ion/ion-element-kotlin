@@ -65,9 +65,9 @@ private val TEXT_WRITER_BUILDER = IonTextWriterBuilder.standard()
  * The only function that must be overridden by any derived narrowing implementation of [IonElement] is the non-null
  * value accessor function that corresponds to the narrowed Ion type.
  */
-internal abstract class IonElementBase : AnyElement {
+internal abstract class AnyElementBase : AnyElement {
 
-    override fun asIonElement(): AnyElement = this
+    override fun asAnyElement(): AnyElement = this
 
     override val isNull: Boolean get() = false
     protected abstract fun writeContentTo(writer: IonWriter)
@@ -91,7 +91,7 @@ internal abstract class IonElementBase : AnyElement {
         }
 
         if(this.type != allowedType)
-            expectedType(allowedType)
+            errIfNotTyped(allowedType)
 
         return when {
             // this could still be a typed null
@@ -100,15 +100,15 @@ internal abstract class IonElementBase : AnyElement {
         }
     }
 
-    private fun expectedType(allowedType: ElementType): Nothing {
+    private fun errIfNotTyped(allowedType: ElementType): Nothing {
         ionError(this, "Expected an element of type $allowedType but found an element of type ${this.type}")
     }
 
-    private fun expectedType(allowedType: ElementType, allowedType2: ElementType): Nothing  {
+    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType): Nothing  {
         ionError(this, "Expected an element of type $allowedType or $allowedType2 but found an element of type ${this.type}")
     }
 
-    private fun expectedType(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): Nothing  {
+    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): Nothing  {
         ionError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
     }
 
@@ -118,7 +118,7 @@ internal abstract class IonElementBase : AnyElement {
         }
 
         if(this.type != allowedType && this.type != allowedType2)
-            expectedType(allowedType, allowedType2)
+            errIfNotTyped(allowedType, allowedType2)
 
         return when {
             // this could still be a typed null
@@ -191,25 +191,25 @@ internal abstract class IonElementBase : AnyElement {
     final override fun asStruct(): StructElement = requireTypeAndCast(STRUCT)
     final override fun asStructOrNull(): StructElement? = requireTypeAndCastOrNull(STRUCT)
 
-    // These are overridden in the implementation of the type-specific elements.
-    // The default implementation throws, complaining about an unexpected type.
-    override val booleanValue: Boolean get() = expectedType(BOOL)
-    override val longValue: Long get() = expectedType(INT)
-    override val bigIntegerValue: BigInteger get() = expectedType(INT)
-    override val textValue: String get() = expectedType(STRING, SYMBOL)
-    override val stringValue: String get() = expectedType(STRING)
-    override val symbolValue: String get() = expectedType(SYMBOL)
-    override val decimalValue: Decimal get() = expectedType(DECIMAL)
-    override val doubleValue: Double get() = expectedType(FLOAT)
-    override val timestampValue: Timestamp get() = expectedType(TIMESTAMP)
-    override val bytesValue: IonByteArray get() = expectedType(BLOB, CLOB)
-    override val blobValue: IonByteArray get() = expectedType(BLOB)
-    override val clobValue: IonByteArray get() = expectedType(CLOB)
-    override val containerValues: Iterable<AnyElement> get() = expectedType(LIST, SEXP, STRUCT)
-    override val seqValues: Iterable<AnyElement> get() = expectedType(LIST, SEXP)
-    override val listValues: Iterable<AnyElement> get() = expectedType(LIST)
-    override val sexpValues: Iterable<AnyElement> get() = expectedType(SEXP)
-    override val structFields: Iterable<IonStructField> get() = expectedType(STRUCT)
+    // These are overridden in the narrow implementations of [IonElement].
+    // The default implementations here throw, complaining about an unexpected type.
+    override val booleanValue: Boolean get() = errIfNotTyped(BOOL)
+    override val longValue: Long get() = errIfNotTyped(INT)
+    override val bigIntegerValue: BigInteger get() = errIfNotTyped(INT)
+    override val textValue: String get() = errIfNotTyped(STRING, SYMBOL)
+    override val stringValue: String get() = errIfNotTyped(STRING)
+    override val symbolValue: String get() = errIfNotTyped(SYMBOL)
+    override val decimalValue: Decimal get() = errIfNotTyped(DECIMAL)
+    override val doubleValue: Double get() = errIfNotTyped(FLOAT)
+    override val timestampValue: Timestamp get() = errIfNotTyped(TIMESTAMP)
+    override val bytesValue: IonByteArray get() = errIfNotTyped(BLOB, CLOB)
+    override val blobValue: IonByteArray get() = errIfNotTyped(BLOB)
+    override val clobValue: IonByteArray get() = errIfNotTyped(CLOB)
+    override val containerValues: Iterable<AnyElement> get() = errIfNotTyped(LIST, SEXP, STRUCT)
+    override val seqValues: Iterable<AnyElement> get() = errIfNotTyped(LIST, SEXP)
+    override val listValues: Iterable<AnyElement> get() = errIfNotTyped(LIST)
+    override val sexpValues: Iterable<AnyElement> get() = errIfNotTyped(SEXP)
+    override val structFields: Iterable<IonStructField> get() = errIfNotTyped(STRUCT)
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
     final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BoolElement>(BOOL)?.booleanValue

@@ -20,7 +20,7 @@ import com.amazon.ionelement.api.LobElement
 
 internal abstract class BinaryIonElement(
     protected val bytes: ByteArray
-): IonElementBase(), IonByteArray, LobElement {
+): AnyElementBase(), IonByteArray, LobElement {
 
     override val bytesValue: IonByteArray by lazy (LazyThreadSafetyMode.NONE) { IonByteArrayImpl(bytes) }
 

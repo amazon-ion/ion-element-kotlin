@@ -25,7 +25,7 @@ internal class NullIonElement(
     override val type: ElementType = ElementType.NULL,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase() {
+): AnyElementBase() {
 
     override val isNull: Boolean get() = true
 

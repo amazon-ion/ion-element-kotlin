@@ -22,5 +22,5 @@ internal abstract class TextIonElement(
     override val textValue: String,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase()
+): AnyElementBase()
 

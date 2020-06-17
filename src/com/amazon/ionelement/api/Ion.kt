@@ -41,35 +41,35 @@ import java.math.BigInteger
 // Currently, this is only present on [ionSexpOf] overloads.
 // https://github.com/amzn/ion-element-kotlin/issues/6
 
-/** Creates a [IonElement] that represents an Ion `null.null` or a typed `null`.*/
+/** Creates an [IonElement] that represents an Ion `null.null` or a typed `null`. */
 @JvmOverloads
 fun ionNull(elementType: ElementType = ElementType.NULL): IonElement = ALL_NULLS.getValue(elementType)
 
-/** Creates a [StringElement] that represents an Ion `symbol`.*/
+/** Creates a [StringElement] that represents an Ion `symbol`. */
 fun ionString(s: String): StringElement = StringIonElement(s)
 
-/** Creates a [SymbolElement] that represents an Ion `symbol`.*/
+/** Creates a [SymbolElement] that represents an Ion `symbol`. */
 fun ionSymbol(s: String): SymbolElement = SymbolIonElement(s)
 
-/** Creates a [TimestampElement] that represents an Ion `timestamp`.*/
+/** Creates a [TimestampElement] that represents an Ion `timestamp`. */
 fun ionTimestamp(s: String): TimestampElement = TimestampIonElement(Timestamp.valueOf(s))
 
-/** Creates a [TimestampElement] that represents an Ion `timestamp`.*/
+/** Creates a [TimestampElement] that represents an Ion `timestamp`. */
 fun ionTimestamp(timestamp: Timestamp): TimestampElement = TimestampIonElement(timestamp)
 
-/** Creates an [IntElement] that represents an Ion `int`.*/
+/** Creates an [IntElement] that represents an Ion `int`. */
 fun ionInt(l: Long): IntElement = IntIonElement(l)
 
-/** Creates an [IntElement] that represents an Ion `BitInteger`.*/
+/** Creates an [IntElement] that represents an Ion `BitInteger`. */
 fun ionInt(bigInt: BigInteger): IntElement = BigIntIonElement(bigInt)
 
-/** Creates a [BoolElement] that represents an Ion `bool`.*/
+/** Creates a [BoolElement] that represents an Ion `bool`. */
 fun ionBool(b: Boolean): BoolElement = BoolIonElement(b)
 
-/** Creates a [FloatElement] that represents an Ion `float`.*/
+/** Creates a [FloatElement] that represents an Ion `float`. */
 fun ionFloat(d: Double): FloatElement = FloatIonElement(d)
 
-/** Creates a [DecimalElement] that represents an Ion `decimall`.*/
+/** Creates a [DecimalElement] that represents an Ion `decimall`. */
 fun ionDecimal(bigDecimal: Decimal): DecimalElement = DecimalIonElement(bigDecimal)
 
 /**
@@ -92,40 +92,40 @@ fun ionClob(bytes: ByteArray): ClobElement = ClobIonElement(bytes.clone())
 /** Returns the empty [ClobElement] singleton. */
 fun emptyClob(): ClobElement = EMPTY_CLOB
 
-/** Creates a [ListElement] that represents an Ion `list`.*/
+/** Creates a [ListElement] that represents an Ion `list`. */
 fun ionListOf(iterable: Iterable<IonElement>): ListElement =
     when {
         iterable.none() -> EMPTY_LIST
-        else -> ListIonElementBase(iterable.map { it.asIonElement() })
+        else -> ListIonElementBase(iterable.map { it.asAnyElement() })
     }
 
-/** Creates a [ListElement] that represents an Ion `list`.*/
+/** Creates a [ListElement] that represents an Ion `list`. */
 fun ionListOf(vararg elements: IonElement): ListElement =
     ionListOf(elements.asIterable())
 
-/** Creates a [SexpElement] that represents an Ion `sexp`.*/
+/** Returns a [ListElement] representing an empty Ion `list`. */
+fun emptyIonList(): ListElement = EMPTY_LIST
+
+/** Creates an [SexpElement] that represents an Ion `sexp`. */
 fun ionSexpOf(iterable: Iterable<IonElement>, metas: MetaContainer = emptyMetaContainer()): SexpElement =
     when {
         iterable.none() -> EMPTY_SEXP
-        else -> SexpIonElementArray(iterable.map { it.asIonElement() }, metas = metas)
+        else -> SexpIonElementArray(iterable.map { it.asAnyElement() }, metas = metas)
     }
 
-/** Creates a [SexpElement] that represents an Ion `sexp`.*/
+/** Creates a [SexpElement] that represents an Ion `sexp`. */
 fun ionSexpOf(vararg elements: IonElement, metas: MetaContainer = emptyMetaContainer()): SexpElement =
     ionSexpOf(elements.asIterable(), metas)
 
-/** Returns a [ListElement] representing an empty Ion `list` .*/
-fun emptyIonList(): ListElement = EMPTY_LIST
-
-/** Returns a [SexpElement] representing an empty Ion `sexp` .*/
+/** Returns a [SexpElement] representing an empty Ion `sexp`. */
 fun emptyIonSexp(): SexpElement = EMPTY_SEXP
 
-/** Returns a [StructElement] representing an empty Ion `struct` .*/
+/** Returns a [StructElement] representing an empty Ion `struct`. */
 fun emptyIonStruct(): StructElement = EMPTY_STRUCT
 
-/** Creates an [IonStructField] .*/
+/** Creates an [IonStructField] . */
 fun field(key: String, value: IonElement): IonStructField =
-    IonStructFieldImpl(key, value.asIonElement())
+    IonStructFieldImpl(key, value.asAnyElement())
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
 fun ionStructOf(fields: Iterable<IonStructField>): StructElement =
@@ -140,7 +140,7 @@ fun ionStructOf(vararg fields: IonStructField): StructElement =
 
 /** Creates an [AnyElement] that represents an Ion `struct` with the specified fields. */
 fun ionStructOf(vararg fields: Pair<String, IonElement>): StructElement =
-    ionStructOf(fields.map { field(it.first, it.second.asIonElement()) })
+    ionStructOf(fields.map { field(it.first, it.second.asAnyElement()) })
 
 // Memoized empty instances of our container types.
 private val EMPTY_LIST = ListIonElementBase(emptyList())

@@ -27,7 +27,7 @@ internal class DecimalIonElement(
     override val decimalValue: Decimal,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase(), DecimalElement {
+) : AnyElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =

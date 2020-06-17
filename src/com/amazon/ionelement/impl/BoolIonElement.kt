@@ -26,7 +26,7 @@ internal class BoolIonElement(
     override val booleanValue: Boolean,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), BoolElement {
+): AnyElementBase(), BoolElement {
     override val type: ElementType get() = ElementType.BOOL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =

@@ -27,7 +27,7 @@ internal class IntIonElement(
     override val longValue: Long,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase(), IntElement {
+) : AnyElementBase(), IntElement {
     // It is also possible to return IntegerSize.INT, but why would we I do not know...
     override val integerSize: IntegerSize get() = IntegerSize.LONG
     override val type: ElementType get() = ElementType.INT

@@ -26,7 +26,7 @@ internal class FloatIonElement(
     override val doubleValue: Double,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase(), FloatElement {
+) : AnyElementBase(), FloatElement {
     override val type: ElementType get() = ElementType.FLOAT
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =

@@ -29,7 +29,7 @@ internal class StructIonElementImpl(
     private val allFields: List<IonStructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), StructElement {
+): AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
     override val size = allFields.size

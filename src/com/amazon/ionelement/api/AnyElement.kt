@@ -44,45 +44,69 @@ import java.math.BigInteger
  * - Value accessors (the `*Value` and `*ValueOrNull` properties)
  * - Narrowing functions (`as*()` and `as*OrNull()`
  *
- * Each of those categories also include nullable and non-nullable variations of those types.
- *
  * Use of the accessor functions allow for concise expression of two purposes simultaneously:
  *
  * - An expectation of the Ion type of the given element
  * - An expectation of the nullability of the given element
  *
- * If either of these expectations is violated and [IonElectrolyteException] is thrown.  If the given element
+ * If either of these expectations is violated an [IonElectrolyteException] is thrown.  If the given element
  * has a [IonLocation] in its metadata, it included with the [IonElectrolyteException] which can be used to
- * generate helpful error messages which point to the specific location of the failure within text or binary Ion data.
+ * generate error an message that points to the specific location of the failure within text (i.e. line & column) or
+ * binary Ion data (i.e. byte offset).
  *
- * Examples:
+ * Value Accessor Examples:
  *
  * ```
  * val e: AnyElement = loadSingleElement("1")
- * // throws if e is not an ion null and an [INT].
  * val value: Long = e.longValue
+ * // e.longValue throws if e is null or not an INT
  * ```
  *
  * ```
  * val e: AnyElement = loadSingleElement("[1, 2]")
- * // throws if e is null or not a list or if any of its elements are null or not an INT
- * val value: List<Long> = e.listValues.map { it.longValue }
+ * val values: List<Long> = e.listValues.map { it.longValue }
+ * // e.listValues.map { it.longValue } throws if:
+ * //  - e is null or not a list
+ * //  - any child element in e is null or not an int
  * ```
  *
  * ```
  * val e: AnyElement = loadSingleElement("some_symbol")
- * // throws if e is not an ion null and an [SYMBOL] or [STRING].
  * val value: String = e.textValue
+ * // throws if (e is null) or (not a STRING or SYMBOL).
+ * ```
+ *
+ * Narrowing Function Examples:
+ *
+ * ```
+ * val e: AnyElement = loadSingleElement("1")
+ * val n: IntElement = e.asInt()
+ * // e.asInt() throws if e is null or not an INT
+ * ```
+ *
+ * ```
+ * val e: AnyElement = loadSingleElement("[1, 2]")
+ * val l: ListElement = e.asList()
+ * // e.asList() throws if e is null or not a list
+ *
+ * val values: List<IntElement> = l.values.map { it.asInt() }
+ * // l.values.map { it.asInt() } throws if: any child element in l is null or not an int
+ * ```
+ *
+ * ```
+ * val e: AnyElement = loadSingleElement("some_symbol")
+ * val t: String = e.textValue
+ * // throws if (e is null) or (not a STRING or SYMBOL).
  * ```
  *
  * #### Deciding which accessor function to use
  *
  * **Note:  for the sake of brevity, the following section omits the nullable narrowing functions (`as*OrNull`) and
- * nullable value accessors (`*OrNull`).  These should be used wherever an Ion-null value is allowed.
+ * nullable value accessors (`*OrNull`).  These should be used whenever an Ion-null value is allowed.
  *
- * The table below shows which properties should be used to access the raw values for each [ElementType].
+ * The table below shows which accessor functions can be used for each [ElementType].
  *
- * | [ElementType]    | Value accessors                                 | Narrowing Functions                    |
+ * | [ElementType]    | Value Accessors                                 | Narrowing Functions                    |
  * |------------------------------|------------------------------------------------------------------------------|
  * | [NULL]           | (any with `OrNull` suffix)                      | (any with `OrNull` suffix)             |
  * | [BOOL]           | [booleanValue]                                  | [asBoolean]                            |
@@ -98,8 +122,8 @@ import java.math.BigInteger
  * | [STRUCT]         | [containerValues], [structFields]               | [asContainer], [asStruct]              |
  *
  * Notes:
- * - The value returned from [containerValues] when the [type] is [STRUCT] is the values within the struct,
- * without their field names.
+ * - The value returned from [containerValues] when the [type] is [STRUCT] is the values within the struct without
+ * their field names.
  */
 interface AnyElement : IonElement {
 

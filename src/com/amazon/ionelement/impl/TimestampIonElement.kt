@@ -27,7 +27,7 @@ internal class TimestampIonElement(
     val value: Timestamp,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), TimestampElement {
+): AnyElementBase(), TimestampElement {
     constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
 
     override val type: ElementType get() = ElementType.TIMESTAMP

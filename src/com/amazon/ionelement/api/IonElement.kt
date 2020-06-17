@@ -13,8 +13,9 @@ import java.math.BigInteger
  *
  * #### IonElement Hierarchy
  *
- * The following hierarchy of types that inherit from [IonElement] include functions for accessing values appropriate
- * to the specific Ion data type.  In this library, types other than [AnyElement] are referred to as "narrow" types.
+ * Each type in the following hierarchy extends [IonElement] by adding strongly typed accessor functions that
+ * correspond to one or more Ion data types.  Except for [AnyElement], the types inheriting from [IonElement] are
+ * referred to as "narrow types".
  *
  * - [IonElement]
  *     - [AnyElement]
@@ -44,7 +45,7 @@ interface IonElement {
      * expensive than a cast.  The purpose of this interface function is to be very clear about the requirement
      * that all implementations of [IonElement] are convertible to [AnyElement].
      */
-    fun asIonElement(): AnyElement
+    fun asAnyElement(): AnyElement
 
     /** The Ion data type of the current node.  */
     val type: ElementType
@@ -102,6 +103,7 @@ interface FloatElement : IonElement {
 interface TextElement : IonElement {
     val textValue: String
 }
+
 /**
  * Represents an Ion string.
  *

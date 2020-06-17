@@ -29,7 +29,7 @@ internal class BigIntIonElement(
     override val bigIntegerValue: BigInteger,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase(), IntElement {
+) : AnyElementBase(), IntElement {
 
     override val type: ElementType get() = ElementType.INT
 

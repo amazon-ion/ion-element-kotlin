@@ -182,7 +182,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                         }
                     }
                 }
-            }.asIonElement()
+            }.asAnyElement()
 
             if (annotations.any()) {
                 element = element.withAnnotations(*annotations)

@@ -82,7 +82,7 @@ fun randomIonElement(): AnyElement {
                 element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
             }
             else {
-                element.asIonElement()
+                element.asAnyElement()
             }
         }
     }
