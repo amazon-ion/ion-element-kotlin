@@ -18,7 +18,7 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.BlobElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonByteArray
+import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -28,7 +28,7 @@ internal class BlobIonElement(
     override val metas: MetaContainer = emptyMetaContainer()
 ) : BinaryIonElement(bytes), BlobElement {
 
-    override val blobValue: IonByteArray get() = bytesValue
+    override val blobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 

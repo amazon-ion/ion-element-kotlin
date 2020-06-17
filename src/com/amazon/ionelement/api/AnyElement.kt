@@ -307,22 +307,22 @@ interface AnyElement : IonElement {
     val timestampValueOrNull: Timestamp?
 
     /** See [AnyElement]. */
-    val bytesValue: IonByteArray
+    val bytesValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val bytesValueOrNull: IonByteArray?
+    val bytesValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
-    val blobValue: IonByteArray
+    val blobValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val blobValueOrNull: IonByteArray?
+    val blobValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
-    val clobValue: IonByteArray
+    val clobValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val clobValueOrNull: IonByteArray?
+    val clobValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
     val containerValues: Collection<AnyElement>

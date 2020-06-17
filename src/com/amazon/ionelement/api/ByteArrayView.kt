@@ -15,10 +15,8 @@
 
 package com.amazon.ionelement.api
 
-/**
- * An immutable wrapper over a [byte[]].
- */
-interface IonByteArray : Iterable<Byte> {
+/** An immutable wrapper over a [byte[]]. */
+interface ByteArrayView : Iterable<Byte> {
     fun size(): Int
     operator fun get(index: Int): Byte
 

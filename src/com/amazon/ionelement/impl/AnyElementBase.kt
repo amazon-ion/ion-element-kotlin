@@ -42,7 +42,7 @@ import com.amazon.ionelement.api.ElementType.SYMBOL
 import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.IonByteArray
+import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.IonStructField
 import com.amazon.ionelement.api.ListElement
@@ -202,9 +202,9 @@ internal abstract class AnyElementBase : AnyElement {
     override val decimalValue: Decimal get() = errIfNotTyped(DECIMAL)
     override val doubleValue: Double get() = errIfNotTyped(FLOAT)
     override val timestampValue: Timestamp get() = errIfNotTyped(TIMESTAMP)
-    override val bytesValue: IonByteArray get() = errIfNotTyped(BLOB, CLOB)
-    override val blobValue: IonByteArray get() = errIfNotTyped(BLOB)
-    override val clobValue: IonByteArray get() = errIfNotTyped(CLOB)
+    override val bytesValue: ByteArrayView get() = errIfNotTyped(BLOB, CLOB)
+    override val blobValue: ByteArrayView get() = errIfNotTyped(BLOB)
+    override val clobValue: ByteArrayView get() = errIfNotTyped(CLOB)
     override val containerValues: Collection<AnyElement> get() = errIfNotTyped(LIST, SEXP, STRUCT)
     override val seqValues: List<AnyElement> get() = errIfNotTyped(LIST, SEXP)
     override val listValues: List<AnyElement> get() = errIfNotTyped(LIST)
@@ -221,9 +221,9 @@ internal abstract class AnyElementBase : AnyElement {
     final override val decimalValueOrNull: Decimal? get() = requireTypeAndCastOrNull<DecimalElement>(DECIMAL)?.decimalValue
     final override val doubleValueOrNull: Double? get() = requireTypeAndCastOrNull<FloatElement>(FLOAT)?.doubleValue
     final override val timestampValueOrNull: Timestamp? get() = requireTypeAndCastOrNull<TimestampElement>(TIMESTAMP)?.timestampValue
-    final override val bytesValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<LobElement>(BLOB, CLOB)?.bytesValue
-    final override val blobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<BlobElement>(BLOB)?.bytesValue
-    final override val clobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<ClobElement>(CLOB)?.bytesValue
+    final override val bytesValueOrNull: ByteArrayView? get() = requireTypeAndCastOrNull<LobElement>(BLOB, CLOB)?.bytesValue
+    final override val blobValueOrNull: ByteArrayView? get() = requireTypeAndCastOrNull<BlobElement>(BLOB)?.bytesValue
+    final override val clobValueOrNull: ByteArrayView? get() = requireTypeAndCastOrNull<ClobElement>(CLOB)?.bytesValue
     final override val containerValuesOrNull: Collection<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP, STRUCT)?.values
     final override val seqValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SeqElement>(LIST, SEXP)?.values
     final override val listValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<ListElement>(LIST)?.values
