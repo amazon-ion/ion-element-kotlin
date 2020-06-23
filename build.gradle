@@ -25,6 +25,7 @@ plugins {
 
 group = "com.amazon.ion"
 version = "0.2.0-SNAPSHOT"
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 repositories {
     mavenCentral()
@@ -136,6 +137,12 @@ signing {
     // This works because when not required, the signing task will be skipped
     // if signing.keyId, signing.password, signing.secretKeyRingFile, etc are
     // not present in gradle.properties.
-    required { !gradle.taskGraph.hasTask(":publishToMavenLocal") }
+    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
     sign publishing.publications.maven
 }
+
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
+}
+
+
