@@ -6,8 +6,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
 
-// TODO:  review all changes of Iterable to Collection or List and make sure the appropriate type is selected.
-
 /**
  * Represents an immutable Ion element.
  *
