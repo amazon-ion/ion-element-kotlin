@@ -6,6 +6,8 @@ import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
 
+// TODO:  review all changes of Iterable to Collection or List and make sure the appropriate type is selected.
+
 /**
  * Represents an immutable Ion element.
  *
@@ -166,7 +168,7 @@ interface ContainerElement : IonElement {
     /** The number of values in this container. */
     val size: Int
 
-    val values: Iterable<AnyElement>
+    val values: Collection<AnyElement>
 
     override fun copy(annotations: List<String>, metas: MetaContainer): ContainerElement
 }
@@ -179,6 +181,9 @@ interface ContainerElement : IonElement {
  */
 interface SeqElement : ContainerElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): SeqElement
+
+    /** Narrows the return type of [ContainerElement.values] to [List<AnyElement>]. */
+    override val values: List<AnyElement>
 }
 /**
  * Represents an Ion list.
@@ -208,7 +213,7 @@ interface SexpElement : SeqElement {
 interface StructElement : ContainerElement {
 
     /** This struct's unordered collection of fields. */
-    val fields: Iterable<IonStructField>
+    val fields: Collection<IonStructField>
 
     /**
      * Retrieves the value of the first field found with the specified name.

@@ -27,8 +27,8 @@ internal abstract class SeqElementBase(
     override val metas: MetaContainer = emptyMetaContainer()
 ): AnyElementBase(), SeqElement {
 
-    override val containerValues: Iterable<AnyElement> get() = values
-    override val seqValues: Iterable<AnyElement> get() = values
+    override val containerValues: List<AnyElement> get() = values
+    override val seqValues: List<AnyElement> get() = values
 
     override val size: Int
         get() = values.size

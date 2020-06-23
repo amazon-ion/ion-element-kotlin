@@ -191,7 +191,7 @@ internal abstract class AnyElementBase : AnyElement {
     final override fun asStruct(): StructElement = requireTypeAndCast(STRUCT)
     final override fun asStructOrNull(): StructElement? = requireTypeAndCastOrNull(STRUCT)
 
-    // These are overridden in the narrow implementations of [IonElement].
+    // The type-specific methods in this group must be overridden in the narrow implementations of [IonElement].
     // The default implementations here throw, complaining about an unexpected type.
     override val booleanValue: Boolean get() = errIfNotTyped(BOOL)
     override val longValue: Long get() = errIfNotTyped(INT)
@@ -205,11 +205,11 @@ internal abstract class AnyElementBase : AnyElement {
     override val bytesValue: IonByteArray get() = errIfNotTyped(BLOB, CLOB)
     override val blobValue: IonByteArray get() = errIfNotTyped(BLOB)
     override val clobValue: IonByteArray get() = errIfNotTyped(CLOB)
-    override val containerValues: Iterable<AnyElement> get() = errIfNotTyped(LIST, SEXP, STRUCT)
-    override val seqValues: Iterable<AnyElement> get() = errIfNotTyped(LIST, SEXP)
-    override val listValues: Iterable<AnyElement> get() = errIfNotTyped(LIST)
-    override val sexpValues: Iterable<AnyElement> get() = errIfNotTyped(SEXP)
-    override val structFields: Iterable<IonStructField> get() = errIfNotTyped(STRUCT)
+    override val containerValues: Collection<AnyElement> get() = errIfNotTyped(LIST, SEXP, STRUCT)
+    override val seqValues: List<AnyElement> get() = errIfNotTyped(LIST, SEXP)
+    override val listValues: List<AnyElement> get() = errIfNotTyped(LIST)
+    override val sexpValues: List<AnyElement> get() = errIfNotTyped(SEXP)
+    override val structFields: Collection<IonStructField> get() = errIfNotTyped(STRUCT)
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
     final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BoolElement>(BOOL)?.booleanValue
@@ -224,10 +224,10 @@ internal abstract class AnyElementBase : AnyElement {
     final override val bytesValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<LobElement>(BLOB, CLOB)?.bytesValue
     final override val blobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<BlobElement>(BLOB)?.bytesValue
     final override val clobValueOrNull: IonByteArray? get() = requireTypeAndCastOrNull<ClobElement>(CLOB)?.bytesValue
-    final override val containerValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP, STRUCT)?.values
-    final override val seqValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP)?.values
-    final override val listValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST)?.values
-    final override val sexpValuesOrNull: Iterable<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(SEXP)?.values
-    final override val structFieldsOrNull: Iterable<IonStructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
+    final override val containerValuesOrNull: Collection<AnyElement>? get() = requireTypeAndCastOrNull<ContainerElement>(LIST, SEXP, STRUCT)?.values
+    final override val seqValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SeqElement>(LIST, SEXP)?.values
+    final override val listValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<ListElement>(LIST)?.values
+    final override val sexpValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SexpElement>(SEXP)?.values
+    final override val structFieldsOrNull: Collection<IonStructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
 }
 

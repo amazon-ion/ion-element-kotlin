@@ -83,17 +83,15 @@ val SeqElement.head: AnyElement
  * Returns a sub-list containing all elements of this container except the first.
  *
  * If this container has no elements, throws [IonElectrolyteException].
- *
- * TODO: [drop] is potentially a O(n - 1) operation and therefore not particularly performant.
  */
 val SeqElement.tail: List<AnyElement> get()  =
     when (this.size) {
         0 -> ionError(this, "Cannot get tail of empty container")
-        else -> this.values.drop(1)//subList(1, this.size)
+        else -> this.values.subList(1, this.size)
     }
 
 /** Returns the first element. */
-val Iterable<AnyElement>.head get() =
+val List<AnyElement>.head get() =
     this.first()
 
 /** Returns a copy of the list with the first element removed. */

@@ -34,9 +34,9 @@ internal class StructIonElementImpl(
     override val type: ElementType get() = ElementType.STRUCT
     override val size = allFields.size
     override val values: Collection<AnyElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
-    override val containerValues: Iterable<AnyElement> get() = values
-    override val structFields: Iterable<IonStructField> get() = fields
-    override val fields: Iterable<IonStructField> get() = allFields
+    override val containerValues: Collection<AnyElement> get() = values
+    override val structFields: Collection<IonStructField> get() = fields
+    override val fields: Collection<IonStructField> get() = allFields
 
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<AnyElement>> by lazy(LazyThreadSafetyMode.NONE) {

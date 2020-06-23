@@ -28,7 +28,7 @@ internal class SexpIonElementArray (
 ):  SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
 
-    override val sexpValues: Iterable<AnyElement> get() = seqValues
+    override val sexpValues: List<AnyElement> get() = seqValues
 
     override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
         SexpIonElementArray(values, annotations, metas)

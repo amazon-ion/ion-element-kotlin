@@ -33,11 +33,11 @@ import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import java.math.BigInteger
 
 /**
- * Represents an Ion element of an unknown type.
+ * Represents an Ion element whose type is not known at compile-time.
  *
- * This type is used whenever the type of Ion data is not guaranteed.  For example, it is returned by all of the
- * [IonElementLoader] functions and is the data type for children of [ListElement], [SexpElement] and [StructElement].
- * If the type of an Ion element is known in advance, it is generally better to use the narrowed [IonElement] instead.
+ * [IonElement] is returned by all of the [IonElementLoader] functions and is the data type for children of [ListElement],
+ * [SexpElement] and [StructElement]. If the type of an Ion element is known in advance, one can use the narrowed
+ * [IonElement] APIs that can be asserted at runtime.
  *
  * Two categories of methods are present on this type:
  *
@@ -303,33 +303,33 @@ interface AnyElement : IonElement {
     val clobValueOrNull: IonByteArray?
 
     /** See [AnyElement]. */
-    val containerValues: Iterable<AnyElement>
+    val containerValues: Collection<AnyElement>
 
     /** See [AnyElement]. */
-    val containerValuesOrNull: Iterable<AnyElement>?
+    val containerValuesOrNull: Collection<AnyElement>?
 
     /** See [AnyElement]. */
-    val seqValues: Iterable<AnyElement>
+    val seqValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val seqValuesOrNull: Iterable<AnyElement>?
+    val seqValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val listValues: Iterable<AnyElement>
+    val listValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val listValuesOrNull: Iterable<AnyElement>?
+    val listValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val sexpValues: Iterable<AnyElement>
+    val sexpValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val sexpValuesOrNull: Iterable<AnyElement>?
+    val sexpValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val structFields: Iterable<IonStructField>
+    val structFields: Collection<IonStructField>
 
     /** See [AnyElement]. */
-    val structFieldsOrNull: Iterable<IonStructField>?
+    val structFieldsOrNull: Collection<IonStructField>?
 
 }
