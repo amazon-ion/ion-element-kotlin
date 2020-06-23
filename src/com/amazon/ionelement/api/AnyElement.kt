@@ -124,6 +124,28 @@ import java.math.BigInteger
  * Notes:
  * - The value returned from [containerValues] when the [type] is [STRUCT] is the values within the struct without
  * their field names.
+ *
+ * #### Equality
+ *
+ * Any accessor function returning [Collection<AnyElement>] or [List<AnyElement]] uses the definition of equality for
+ * the [Object.equals] and [Object.hashCode] functions that is defined by [List<T>].  This is different than equality
+ * as defined by the Ion specification.
+ *
+ * For example:
+ *
+ * ```
+ * val list: AnyElement = loadSingleElement("[1, 2, 3]").asAnyElement()
+ * val sexp: AnyElement = loadsingleElement("(1 2 3)").asAnyElement()
+ *
+ * // The following is `true` because equality is defined by `List<T>`.
+ * sexp.values.equals(list.sexp.values)
+ *
+ * // The following is false because equality is defined by the Ion specification which specifies that lists and
+ * // s-expressions are not equivalent.
+ * sexp.equals(list)
+ * ```
+ *
+ * @see [IonElement]
  */
 interface AnyElement : IonElement {
 

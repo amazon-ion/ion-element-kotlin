@@ -35,6 +35,34 @@ import java.math.BigInteger
  *             - [ListElement]
  *             - [SexpElement]
  *         - [StructElement]
+ *
+ * #### Equivalence
+ *
+ * All implementations of [IonElement] implement [Object.equals] and [Object.hashCode] according to the Ion
+ * specification.
+ *
+ * Collections returned from the following properties implement [Object.equals] and [Object.hashCode] according to the
+ * requirements of [List<T>], wherein order is significant.
+ *
+ * - [ContainerElement.values]
+ * - [SeqElement.values]
+ * - [ListElement.values]
+ * - [SexpElement.values]
+ * - [StructElement.values]
+
+ * Be aware that this can yield inconsistent results when working with structs, due to their unordered nature.
+ *
+ * ```
+ * val s = loadSingleElement("{ a: 1, b: 2 }").asStruct()
+ * val l = loadSingleElement("[1, 2]").asList()
+ *
+ * // The following has an undefined result because the order of values returned by [StructElement.values] is not
+ * // guaranteed:
+ *
+ * s.values.equals(l.values)
+ * ```
+ *
+ * When in doubt, prefer use of [Object.equals] and [Object.hashCode] on the [IonElement] instance.
  */
 interface IonElement {
 
@@ -161,6 +189,12 @@ interface ClobElement : LobElement {
  *
  * Items within [values] may or may not be in a defined order.  The order is defined for lists and s-expressions,
  * but undefined for structs.
+ *
+ * #### Equality
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
  */
 interface ContainerElement : IonElement {
     /** The number of values in this container. */
@@ -176,6 +210,12 @@ interface ContainerElement : IonElement {
  *
  * Includes no additional functionality over [ContainerElement], but serves to provide additional type safety when
  * working with ordered collection elements.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
  */
 interface SeqElement : ContainerElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): SeqElement
@@ -188,6 +228,12 @@ interface SeqElement : ContainerElement {
  *
  * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
  * working with elements that must be Ion lists.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
  */
 interface ListElement : SeqElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): ListElement
@@ -198,6 +244,12 @@ interface ListElement : SeqElement {
  *
  * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
  * working with elements that must be Ion s-expressions.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
  */
 interface SexpElement : SeqElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement
@@ -207,6 +259,12 @@ interface SexpElement : SeqElement {
  * Represents an Ion struct.
  *
  * Includes functions for accessing the fields of a struct.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
  */
 interface StructElement : ContainerElement {
 
