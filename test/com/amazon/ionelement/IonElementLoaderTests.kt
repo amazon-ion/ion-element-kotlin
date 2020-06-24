@@ -34,6 +34,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
+/**
+ * Basic examples of what instantiating instances of IonElement looks like from Kotlin.
+ *
+ * Also demonstrates converting to and from the mutable DOM.
+ */
 class IonElementLoaderTests {
     @ParameterizedTest
     @MethodSource("parametersForDemoTest")
