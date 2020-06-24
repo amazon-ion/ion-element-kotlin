@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/amzn/ion-element-kotlin.svg?branch=master)](https://travis-ci.org/amzn/ion-element-kotlin)
+
 # Ion Element
 
 `IonElement` is an immutable in-memory representation of [Amazon Ion](http://amzn.github.io/ion-docs/) which has an API
