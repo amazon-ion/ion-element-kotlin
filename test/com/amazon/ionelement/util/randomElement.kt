@@ -15,7 +15,9 @@
 
 package com.amazon.ionelement.util
 
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.AnyElement
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.field
 import com.amazon.ionelement.api.ionBlob
 import com.amazon.ionelement.api.ionBool
@@ -28,9 +30,8 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
-import com.amazon.ion.Timestamp
-import com.amazon.ionelement.api.ElementType
-import java.util.*
+import com.amazon.ionelement.api.withAnnotations
+import java.util.Random
 
 val randomSeed = Random().nextLong()
 private val random = Random(randomSeed)
@@ -45,9 +46,9 @@ private const val MAX_RANDOM_STRING_LENGTH = 25
 private const val CHARACTERS = "_____abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 private const val MAX_LOB_SIZE = 64
 
-fun randomIonElement(): IonElement {
+fun randomIonElement(): AnyElement {
 
-    fun innerRandomElement(depth: Int): IonElement {
+    fun innerRandomElement(depth: Int): AnyElement {
         val thisDepth = depth + 1
         return when {
             // If we haven't exceeded MAX_DEPTH, we have a COLLECTION_CHANCE% chance of returning a collection.
@@ -77,12 +78,12 @@ fun randomIonElement(): IonElement {
                 }
             }
         }.let { element ->
-            if(random.nextDouble() < ANNOTATION_CHANCE) {
-                element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
-            }
-            else {
-                element
-            }
+            when {
+                random.nextDouble() < ANNOTATION_CHANCE ->
+                    element.withAnnotations((1..random.nextInt(MAX_ANNOTATIONS)).map { randomString() })
+                else ->
+                    element
+            }.asAnyElement()
         }
     }
 

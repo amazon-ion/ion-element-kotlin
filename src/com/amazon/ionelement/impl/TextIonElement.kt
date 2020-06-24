@@ -19,9 +19,8 @@ import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
 internal abstract class TextIonElement(
+    override val textValue: String,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase() {
-    abstract val value: String
-    override val textValueOrNull: String get() = value
-}
+): AnyElementBase()
+

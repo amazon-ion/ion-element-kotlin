@@ -15,37 +15,33 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
-import java.math.BigInteger
+import com.amazon.ionelement.api.IntElement
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class IntIonElement(
-    val value: Long,
+    override val longValue: Long,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase() {
-    override val type: ElementType get() = ElementType.INT
-    override val longValueOrNull: Long get() = value
-    override val bigIntegerValueOrNull: BigInteger? get() = BigInteger.valueOf(value)
-
+) : AnyElementBase(), IntElement {
     // It is also possible to return IntegerSize.INT, but why would we I do not know...
     override val integerSize: IntegerSize get() = IntegerSize.LONG
+    override val type: ElementType get() = ElementType.INT
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        IntIonElement(value, annotations, metas)
+    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
+        IntIonElement(longValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeInt(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as IntIonElement
 
-        if (value != other.value) return false
+        if (longValue != other.longValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -53,7 +49,7 @@ internal class IntIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.hashCode()
+        var result = longValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result

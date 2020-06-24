@@ -15,22 +15,23 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.ClobElement
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IonByteArray
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
 
 internal class ClobIonElement(
-    override val bytes: ByteArray,
+    bytes: ByteArray,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : BinaryIonElement() {
-    override val clobValueOrNull: IonByteArray? get() = this
-    override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
+) : BinaryIonElement(bytes), ClobElement {
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
+    override val clobValue: IonByteArray get() = bytesValue
+
+    override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
+    override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement =
         ClobIonElement(bytes, annotations, metas)
 
     override val type: ElementType get() = ElementType.CLOB

@@ -15,45 +15,47 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.IonStructField
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.StructIonElement
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.StructElement
+import com.amazon.ionelement.api.emptyMetaContainer
+import com.amazon.ionelement.api.ionError
 
 internal class StructIonElementImpl(
-    override val fields: List<IonStructField>,
+    private val allFields: List<IonStructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): IonElementBase(), StructIonElement {
-
-    override fun iterator(): Iterator<IonStructField> = fields.iterator()
+): AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
-    override val structValueOrNull: StructIonElement get() = this
-
-    override fun firstOrNull(fieldName: String): IonElement? =
-        get(fieldName)?.firstOrNull()
-
-    override fun get(fieldName: String): Iterable<IonElement>? = fieldsByName[fieldName] ?: emptyList()
+    override val size = allFields.size
+    override val values: Collection<AnyElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
+    override val containerValues: Collection<AnyElement> get() = values
+    override val structFields: Collection<IonStructField> get() = fields
+    override val fields: Collection<IonStructField> get() = allFields
 
     /** Lazily calculated map of field names and lists of their values. */
-    private val fieldsByName: Map<String, List<IonElement>> by lazy(LazyThreadSafetyMode.NONE) {
+    private val fieldsByName: Map<String, List<AnyElement>> by lazy(LazyThreadSafetyMode.NONE) {
         fields
             .groupBy { it.name }
             .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value } }
             .toMap()
     }
 
-    override val size: Int get() = fields.size
-    override val fieldNames: List<String> get() = fields.map { it.name }.distinct()
-    override val values: List<IonElement> get() = fields.map { it.value }
+    override fun get(fieldName: String): AnyElement =
+        fieldsByName[fieldName]?.firstOrNull() ?: ionError(this, "Required struct field '$fieldName' missing")
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        StructIonElementImpl(fields, annotations, metas)
+    override fun getOptional(fieldName: String): AnyElement? =
+        fieldsByName[fieldName]?.firstOrNull()
+
+    override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
+
+    override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
+        StructIonElementImpl(allFields, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)
@@ -70,7 +72,7 @@ internal class StructIonElementImpl(
         if (annotations != other.annotations) return false
 
         // We might avoid materializing fieldsByName by checking fields.size first
-        if (this.fields.size != other.fields.size) return false
+        if (this.size != other.size) return false
         if (this.fieldsByName.size != other.fieldsByName.size) return false
 
         // If we make it this far we can compare the list of field names in both
@@ -84,13 +86,13 @@ internal class StructIonElementImpl(
         // times in one group also appears n times in the other group.
 
         this.fieldsByName.forEach { thisFieldGroup ->
-            val thisSubGroup: Map<IonElement, Int> = thisFieldGroup.value.groupingBy { it }.eachCount()
+            val thisSubGroup: Map<AnyElement, Int> = thisFieldGroup.value.groupingBy { it }.eachCount()
 
             // [otherGroup] should never be null due to the `if` statement above.
             val otherGroup = other.fieldsByName[thisFieldGroup.key]
                              ?: error("unexpectedly missing other field named '${thisFieldGroup.key}'")
 
-            val otherSubGroup: Map<IonElement, Int> = otherGroup.groupingBy { it }.eachCount()
+            val otherSubGroup: Map<AnyElement, Int> = otherGroup.groupingBy { it }.eachCount()
 
             // Simple equality should work from here
             if(thisSubGroup != otherSubGroup) {

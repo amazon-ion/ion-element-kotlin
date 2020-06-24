@@ -24,3 +24,4 @@ interface IonByteArray : Iterable<Byte> {
 
     fun copyOfBytes(): ByteArray
 }
+

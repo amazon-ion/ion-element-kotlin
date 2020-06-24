@@ -1,107 +1,84 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
 package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
-import com.amazon.ionelement.api.IonByteArray
-import com.amazon.ionelement.api.IonElementContainer
-import com.amazon.ionelement.api.StructIonElement
 import java.math.BigInteger
 
 /**
- * Represents an immutable Ion value, its type annotations and metadata.
+ * Represents an immutable Ion element.
  *
- * The table below shows which properties should be used to access the raw values for each of the given [IonType]s.
+ * Specifies the contract that is common to all Ion elements but does not specify the type of data being represented.
  *
- * | When the [ElementType] is... | The Valid Accessors Are (others will throw [IonElectrolyteException])      |
- * |------------------------------|----------------------------------------------------------------------------|
- * | [ElementType.NULL]           | ...any function with the `OrNull` suffix.                                  |
- * | [ElementType.BOOL]           | [booleanValue], [booleanValueOrNull]                                       |
- * | [ElementType.INT]            | [longValue], [longValueOrNull], [bigIntegerValue], [bigIntegerValueOrNull] |
- * | [ElementType.STRING]         | [textValue], [textValueOrNull], [stringValue], [stringValueOrNull]         |
- * | [ElementType.SYMBOL]         | [textValue], [textValueOrNull], [symbolValue], [symbolValueOrNull]         |
- * | [ElementType.DECIMAL]        | [decimalValue], [decimalValueOrNull]                                       |
- * | [ElementType.TIMESTAMP]      | [timestampValue], [timestampValueOrNull]                                   |
- * | [ElementType.CLOB]           | [bytesValue], [bytesValueOrNull], [clobValue], [clobValueOrNull]           |
- * | [ElementType.BLOB]           | [bytesValue], [bytesValueOrNull], [blobValue], [blobValueOrNull]           |
- * | [ElementType.LIST]           | [containerValue], [containerValueOrNull], [listValue], [listValueOrNull]   |
- * | [ElementType.SEXP]           | [containerValue], [containerValueOrNull], [sexpValue], [sexpValueOrNull]   |
- * | [ElementType.STRUCT]         | [structValue], [structValueOrNull]                                         |
+ * #### IonElement Hierarchy
  *
- * These accessors can be chained together in a way that allows data to be mapped to domain objects very easily.  The
- * main benefit of this approach is that data is automatically checked to ensure it's the proper data type and
- * nullability.
+ * Each type in the following hierarchy extends [IonElement] by adding strongly typed accessor functions that
+ * correspond to one or more Ion data types.  Except for [AnyElement], the types inheriting from [IonElement] are
+ * referred to as "narrow types".
  *
- * Given the Ion data:
+ * - [IonElement]
+ *     - [AnyElement]
+ *     - [BoolElement]
+ *     - [IntElement]
+ *     - [FloatElement]
+ *     - [DecimalElement]
+ *     - [TimestampElement]
+ *     - [TextElement]
+ *         - [StringElement]
+ *         - [SymbolElement]
+ *     - [LobElement]
+ *         - [BlobElement]
+ *         - [ClobElement]
+ *     - [ContainerElement]
+ *         - [SeqElement]
+ *             - [ListElement]
+ *             - [SexpElement]
+ *         - [StructElement]
  *
- * ```
- * stock_item::{
- *      name: "Fantastic Widget",
- *      price: 12.34,
- *      countInStock: 2,
- *      orders: [
- *          { customerId: 123, state: WA },
- *          { customerId: 456, state: "HI" }
- *      ]
- * }
- * stock_item::{ // stock item has no name
- *      price: 23.45,
- *      countInStock: 20,
- *      orders: [
- *          { customerId: 234, state: "VA" },
- *          { customerId: 567, state: MI }
- *      ]
- * }
- * ```
+ * #### Equivalence
  *
- * The following Kotlin code can be used to deserialize it to a Kotlin class:
+ * All implementations of [IonElement] implement [Object.equals] and [Object.hashCode] according to the Ion
+ * specification.
+ *
+ * Collections returned from the following properties implement [Object.equals] and [Object.hashCode] according to the
+ * requirements of [List<T>], wherein order is significant.
+ *
+ * - [ContainerElement.values]
+ * - [SeqElement.values]
+ * - [ListElement.values]
+ * - [SexpElement.values]
+ * - [StructElement.values]
+
+ * Be aware that this can yield inconsistent results when working with structs, due to their unordered nature.
  *
  * ```
- * val stockItems = ION.newReader("...").use { reader ->
- *     createIonElementLoader(includeLocations = true)
- *        .loadAllElements(reader)
- *        .map { stockItem: IonElement ->
- *            stockItem.structValue.run {
- *                 StockItem(
- *                     firstOrNull("name")?.textValue ?: "<unknown name>",
- *                     first("price").decimalValue,
- *                     first("countInStock").longValue,
- *                     first("orders").containerValue.map { order ->
- *                         order.structValue.run {
- *                             Order(
- *                                 first("customerId").longValue,
- *                                 first("state").textValue)
- *                         }
- *                    })
- *             }
- *         }
- * }.asSequence().toList()
+ * val s = loadSingleElement("{ a: 1, b: 2 }").asStruct()
+ * val l = loadSingleElement("[1, 2]").asList()
+ *
+ * // The following has an undefined result because the order of values returned by [StructElement.values] is not
+ * // guaranteed:
+ *
+ * s.values.equals(l.values)
  * ```
  *
+ * When in doubt, prefer use of [Object.equals] and [Object.hashCode] on the [IonElement] instance.
  */
 interface IonElement {
+
+    /**
+     * All [IonElement] implementations must convertible to [AnyElement].
+     *
+     * Since all [IonElement] implementations in this library also implement [AnyElement] this is no more
+     * expensive than a cast.  The purpose of this interface function is to be very clear about the requirement
+     * that all implementations of [IonElement] are convertible to [AnyElement].
+     */
+    fun asAnyElement(): AnyElement
 
     /** The Ion data type of the current node.  */
     val type: ElementType
 
-    /** This element's Ion metadata. */
+    /** This [IonElement]'s metadata. */
     val metas: MetaContainer
 
     /** This element's Ion type annotations. */
@@ -110,145 +87,205 @@ interface IonElement {
     /** Returns true if the current value is `null.null` or any typed null. */
     val isNull: Boolean
 
-    /** Returns a copy of the current node with the specified additional annotations. */
-    fun withAnnotations(vararg additionalAnnotations: String): IonElement
-
-    /** Returns a copy of the current node with the specified additional annotations. */
-    fun withAnnotations(additionalAnnotations: Iterable<String>): IonElement =
-        withAnnotations(*additionalAnnotations.toList().toTypedArray())
-
-    /** Returns a copy of the current node without any annotations.  (Not recursive.) */
-    fun withoutAnnotations(): IonElement
-
-    /**
-     * Returns a copy of the current node with the specified additional metadata, overwriting any metas
-     * that exist with the same keys.
-     */
-    fun withMetas(additionalMetas: MetaContainer): IonElement
-
-    /**
-     * Returns a copy of the current node with the specified additional meta, overwriting any meta
-     * that previously existed with the same key.
-     *
-     * When adding multiple metas, consider [withMetas] instead.
-     */
-    fun withMeta(key: String, value: Any): IonElement = withMetas(metaContainerOf(key to value))
-
-    /** Returns a copy of the current node without any metadata.  (Not recursive.) */
-    fun withoutMetas(): IonElement
-
-    /** If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElectrolyteException]. */
-    val integerSize: IntegerSize get() = ionError(this, "integerSize not valid for this value")
-
-    /** See [IonElement]. */
-    val booleanValue: Boolean get() = handleNull { booleanValueOrNull }
-
-    /** See [IonElement]. */
-    val booleanValueOrNull: Boolean? get() = expectNullOr(ElementType.BOOL).run { null }
-
-    /** See [IonElement]. */
-    val longValue: Long get() = handleNull { longValueOrNull }
-
-    /** See [IonElement]. */
-    val longValueOrNull: Long? get() = expectNullOr(ElementType.INT).run { null }
-
-    /** See [IonElement]. */
-    val bigIntegerValue: BigInteger get() = handleNull { bigIntegerValueOrNull }
-
-    /** See [IonElement]. */
-    val bigIntegerValueOrNull: BigInteger? get() = expectNullOr(ElementType.INT).run { null }
-
-    /** See [IonElement]. */
-    val textValue: String get() = handleNull { textValueOrNull }
-
-    /** See [IonElement]. */
-    val textValueOrNull: String? get() = expectNullOr(ElementType.STRING, ElementType.SYMBOL).run { null }
-
-    /** See [IonElement]. */
-    val stringValue: String get() = handleNull { stringValueOrNull }
-
-    /** See [IonElement]. */
-    val stringValueOrNull: String? get() = expectNullOr(ElementType.STRING).run { null }
-
-    /** See [IonElement]. */
-    val symbolValue: String get() = handleNull { symbolValueOrNull }
-
-    /** See [IonElement]. */
-    val symbolValueOrNull: String? get() = expectNullOr(ElementType.SYMBOL).run { null }
-
-    /** See [IonElement]. */
-    val decimalValue: Decimal get() = handleNull { decimalValueOrNull }
-
-    /** See [IonElement]. */
-    val decimalValueOrNull: Decimal? get() = expectNullOr(ElementType.DECIMAL).run { null }
-
-    /** See [IonElement]. */
-    val doubleValue: Double get()  = handleNull { doubleValueOrNull }
-
-    /** See [IonElement]. */
-    val doubleValueOrNull: Double? get() = expectNullOr(ElementType.FLOAT).run { null }
-
-    /** See [IonElement]. */
-    val timestampValue: Timestamp get() = handleNull { timestampValueOrNull }
-
-    /** See [IonElement]. */
-    val timestampValueOrNull: Timestamp? get() = expectNullOr(ElementType.TIMESTAMP).run { null }
-
-    /** See [IonElement]. */
-    val bytesValue: IonByteArray get() = handleNull { bytesValueOrNull }
-
-    /** See [IonElement]. */
-    val bytesValueOrNull: IonByteArray? get() = expectNullOr(ElementType.BLOB, ElementType.CLOB).run { null }
-
-    /** See [IonElement]. */
-    val blobValue: IonByteArray get() = handleNull { blobValueOrNull }
-
-    /** See [IonElement]. */
-    val blobValueOrNull: IonByteArray? get() = expectNullOr(ElementType.BLOB).run { null }
-
-    /** See [IonElement]. */
-    val clobValue: IonByteArray get() = handleNull { clobValueOrNull }
-
-    /** See [IonElement]. */
-    val clobValueOrNull: IonByteArray? get() = expectNullOr(ElementType.CLOB).run { null }
-
-    /** See [IonElement]. */
-    val containerValue: IonElementContainer get() = handleNull { containerValueOrNull }
-
-    /** See [IonElement]. */
-    val containerValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.LIST, ElementType.SEXP).run { null }
-
-    /** See [IonElement]. */
-    val listValue: IonElementContainer get() = handleNull { listValueOrNull }
-
-    /** See [IonElement]. */
-    val listValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.LIST).run { null }
-
-    /** See [IonElement]. */
-    val sexpValue: IonElementContainer get() = handleNull { sexpValueOrNull }
-
-    /** See [IonElement]. */
-    val sexpValueOrNull: IonElementContainer? get() = expectNullOr(ElementType.SEXP).run { null }
-
-    /** See [IonElement]. */
-    val structValue: StructIonElement get() = handleNull { structValueOrNull }
-
-    /** See [IonElement]. */
-    val structValueOrNull: StructIonElement? get() = expectNullOr(ElementType.STRUCT).run { null }
-
+    /** Returns a shallow copy of the current node, replacing the annotations and metas with those specified. */
+    fun copy(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): IonElement
 
     /** Writes the current Ion element to the specified [IonWriter]. */
     fun writeTo(writer: IonWriter)
 
     /** Converts the current element to Ion text. */
     override fun toString(): String
+}
 
-    /** Throws an [IonElectrolyteException] if the current instance was not [ElementType.NULL] or in [expectedTypes]. */
-    private fun expectNullOr(vararg expectedTypes: ElementType) {
-        if (this.type != ElementType.NULL && !expectedTypes.contains(type)) {
-            ionError(this, "Expected Ion value of type ${expectedTypes.joinToString(",")} but found a value of type $type")
-        }
-    }
 
-    private fun <T> handleNull(block: IonElement.() -> T?): T = block() ?: ionError(this, "Unexpected Ion null value")
+/** Represents a Ion bool. */
+interface BoolElement : IonElement {
+    val booleanValue: Boolean
+    override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement
+}
+
+/** Represents a Ion timestamp. */
+interface TimestampElement : IonElement {
+    val timestampValue: Timestamp
+    override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement
+}
+
+/** Represents a Ion int. */
+interface IntElement : IonElement {
+    val integerSize: IntegerSize
+    val longValue: Long
+    val bigIntegerValue: BigInteger
+    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement
+}
+
+/** Represents a Ion decimal. */
+interface DecimalElement : IonElement {
+    val decimalValue: Decimal
+    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement
+}
+
+/**
+ * Represents a Ion float.
+ */
+interface FloatElement : IonElement {
+    val doubleValue: Double
+    override fun copy(annotations: List<String>, metas: MetaContainer): FloatElement
+}
+
+/** Represents an Ion string or symbol. */
+interface TextElement : IonElement {
+    val textValue: String
+    override fun copy(annotations: List<String>, metas: MetaContainer): TextElement
+}
+
+/**
+ * Represents an Ion string.
+ *
+ * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
+ * working with elements that must be Ion strings.
+ */
+interface StringElement : TextElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): StringElement
+}
+
+/**
+ * Represents an Ion symbol.
+ *
+ * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
+ * working with elements that must be Ion symbols.
+ */
+interface SymbolElement : TextElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElement
+}
+
+/** Represents an Ion clob or blob. */
+interface LobElement : IonElement {
+    val bytesValue:  IonByteArray
+    override fun copy(annotations: List<String>, metas: MetaContainer): LobElement
+}
+
+/**
+ * Represents an Ion blob.
+ *
+ * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
+ * working with elements that must be Ion blobs.
+ */
+interface BlobElement : LobElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): BlobElement
+}
+
+/**
+ * Represents an Ion clob.
+ *
+ * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
+ * working with elements that must be Ion clobs.
+ */
+interface ClobElement : LobElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement
+}
+
+/**
+ * Represents an Ion list, s-expression or struct.
+ *
+ * Items within [values] may or may not be in a defined order.  The order is defined for lists and s-expressions,
+ * but undefined for structs.
+ *
+ * #### Equality
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
+ */
+interface ContainerElement : IonElement {
+    /** The number of values in this container. */
+    val size: Int
+
+    val values: Collection<AnyElement>
+
+    override fun copy(annotations: List<String>, metas: MetaContainer): ContainerElement
+}
+
+/**
+ * Represents an ordered collection element such as an Ion list or s-expression.
+ *
+ * Includes no additional functionality over [ContainerElement], but serves to provide additional type safety when
+ * working with ordered collection elements.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
+ */
+interface SeqElement : ContainerElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): SeqElement
+
+    /** Narrows the return type of [ContainerElement.values] to [List<AnyElement>]. */
+    override val values: List<AnyElement>
+}
+/**
+ * Represents an Ion list.
+ *
+ * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
+ * working with elements that must be Ion lists.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
+ */
+interface ListElement : SeqElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): ListElement
+}
+
+/**
+ * Represents an Ion s-expression.
+ *
+ * Includes no additional functionality over [SeqElement], but serves to provide additional type safety when
+ * working with elements that must be Ion s-expressions.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
+ */
+interface SexpElement : SeqElement {
+    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement
+}
+
+/**
+ * Represents an Ion struct.
+ *
+ * Includes functions for accessing the fields of a struct.
+ *
+ * #### Equivalence
+ *
+ * See the note about equivalence in the documentation for [IonElement].
+ *
+ * @see [IonElement]
+ */
+interface StructElement : ContainerElement {
+
+    /** This struct's unordered collection of fields. */
+    val fields: Collection<IonStructField>
+
+    /**
+     * Retrieves the value of the first field found with the specified name.
+     *
+     * In the case of multiple fields with the specified name, the caller assume that one is picked at random.
+     *
+     * @throws IonElectrolyteException If there are no fields with the specified [fieldName].
+     */
+    operator fun get(fieldName: String): AnyElement
+
+    /** The same as [get] but returns a null reference if the field does not exist.  */
+    fun getOptional(fieldName: String): AnyElement?
+
+
+    /** Retrieves all values with a given field name. Returns an empty iterable if the field does not exist. */
+    fun getAll(fieldName: String): Iterable<AnyElement>
+
+    override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
 }

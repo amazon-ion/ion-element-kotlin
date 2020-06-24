@@ -16,8 +16,11 @@
 package com.amazon.ionelement
 
 import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionStructOf
+import com.amazon.ionelement.api.withAnnotations
+import com.amazon.ionelement.api.withMeta
 import org.junit.jupiter.api.Assertions
 
 data class EquivTestCase(val left: String, val right: String, val isEquiv: Boolean) {
@@ -59,7 +62,7 @@ data class EquivTestCase(val left: String, val right: String, val isEquiv: Boole
         checkEquivalence(isEquiv, leftElement.withMeta("foo", 1), rightElement)
 
         // Nesting the values within a struct should not change the result
-        fun nest(ie: IonElement) = ionStructOf("nested" to ie)
+        fun nest(ie: AnyElement) = ionStructOf("nested" to ie)
         checkEquivalence(isEquiv, nest(leftElement), nest(rightElement))
     }
 

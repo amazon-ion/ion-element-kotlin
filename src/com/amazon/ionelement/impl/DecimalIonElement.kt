@@ -15,25 +15,24 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.DecimalElement
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class DecimalIonElement(
-    val value: Decimal,
+    override val decimalValue: Decimal,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : IonElementBase() {
+) : AnyElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
-    override val decimalValueOrNull: Decimal get() = value
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        DecimalIonElement(value, annotations, metas)
+    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement =
+        DecimalIonElement(decimalValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -41,7 +40,7 @@ internal class DecimalIonElement(
         other as DecimalIonElement
 
         // `==` considers `0d0` and `-0d0` to be equivalent.  `Decimal.equals` does not.
-        if (!Decimal.equals(value, other.value)) return false
+        if (!Decimal.equals(decimalValue, other.decimalValue)) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -49,8 +48,8 @@ internal class DecimalIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.isNegativeZero.hashCode()
-        result = 31 * result + value.hashCode()
+        var result = decimalValue.isNegativeZero.hashCode()
+        result = 31 * result + decimalValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result

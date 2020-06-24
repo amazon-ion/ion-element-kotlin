@@ -15,12 +15,12 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ion.IonValue
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ion.system.IonSystemBuilder
 import com.amazon.ion.system.IonTextWriterBuilder
+import com.amazon.ionelement.api.AnyElement
+import com.amazon.ionelement.api.createIonElementLoader
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -107,23 +107,23 @@ class ComplianceTests {
     fun equivTests(testFile: Path) {
         println(testFile)
         // read each value in the file as IonElement
-        val topLevelValues: List<IonElement> = readFileAsIonElements(testFile)
+        val topLevelValues: List<AnyElement> = readFileAsIonElements(testFile)
 
         // Every top level value is a list or s-exp value containing values that should be equivalent
         topLevelValues.forEach { equivalenceGroup ->
             if(equivalenceGroup.annotations.contains("embedded_documents")) {
-                val documents = equivalenceGroup.containerValueOrNull?.map {
+                val documents = equivalenceGroup.asSeqOrNull()?.values?.map {
                     loader.loadAllElements(it.stringValueOrNull ?: error("Unexpected null encountered"))
                 } ?: error("Unexpected null encountered")
 
-                documents.forEach { i: List<IonElement> ->
-                    documents.forEach { n: List<IonElement> ->
+                documents.forEach { i: List<AnyElement> ->
+                    documents.forEach { n: List<AnyElement> ->
                         assertEquals(i, n, "$i and $n must be equivalent")
                         assertEquals(i.hashCode(), n.hashCode(), "Equivalent values must have equal hash codes")
                     }
                 }
             } else {
-                val seqEquivalenceGroup = equivalenceGroup.containerValueOrNull ?: error("Unexpected null encountered")
+                val seqEquivalenceGroup = equivalenceGroup.asSeqOrNull()?.values ?: error("Unexpected null encountered")
                 seqEquivalenceGroup.forEach { i ->
                     seqEquivalenceGroup.forEach { n ->
                         assertEquivalence(i, n)
@@ -133,7 +133,7 @@ class ComplianceTests {
         }
     }
 
-    private fun assertEquivalence(i: IonElement, n: IonElement) {
+    private fun assertEquivalence(i: AnyElement, n: AnyElement) {
         assertEquals(i, n, "$i and $n must be equivalent")
         assertEquals(i.hashCode(), n.hashCode(), "Equivalent values must have equal hash codes")
     }
@@ -154,7 +154,7 @@ class ComplianceTests {
         }
     }
 
-    private fun readFileAsIonElements(path: Path): List<IonElement> =
+    private fun readFileAsIonElements(path: Path): List<AnyElement> =
         Files.newInputStream(path).use { stream ->
             IonReaderBuilder.standard().build(stream).use { reader ->
                 loader.loadAllElements(reader)
@@ -182,7 +182,7 @@ class ComplianceTests {
     private fun readStringAsIonValues(ionText: String) =
         readStreamAsIonValues(ByteArrayInputStream(ionText.toByteArray()))
 
-    private fun writeIonElementToString(immutableIonValue: List<IonElement>): String =
+    private fun writeIonElementToString(immutableIonValue: List<AnyElement>): String =
         ByteArrayOutputStream().let { stream ->
             IonTextWriterBuilder.standard().build(stream).use { writer ->
                 immutableIonValue.forEach { it.writeTo(writer) }

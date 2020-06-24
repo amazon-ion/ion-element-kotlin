@@ -16,10 +16,9 @@
 @file:JvmName("IonUtils")
 package com.amazon.ionelement.api
 
-import com.amazon.ionelement.impl.IonElementLoaderImpl
 import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.impl.IonElementLoaderImpl
 
 /**
  * Creates an [IonElementLoader] implementation.
@@ -31,11 +30,11 @@ fun createIonElementLoader(includeLocations: Boolean = false) =
     IonElementLoaderImpl(includeLocations)
 
 /**
- * Bridge function that converts from an immutable [IonElement] to a mutable [IonValue].
+ * Bridge function that converts from an immutable [AnyElement] to a mutable [IonValue].
  *
  * New code that doesn't need to integrate with existing uses of the mutable DOM should not use this.
  */
-fun IonElement.toIonValue(ion: IonSystem): IonValue {
+fun AnyElement.toIonValue(ion: IonSystem): IonValue {
     val datagram = ion.newDatagram()
     ion.newWriter(datagram).use { writer ->
         this.writeTo(writer)
@@ -44,11 +43,11 @@ fun IonElement.toIonValue(ion: IonSystem): IonValue {
 }
 
 /**
- * Bridge function that converts from the mutable [IonValue] to an [IonElement].
+ * Bridge function that converts from the mutable [IonValue] to an [AnyElement].
  *
  * New code that does not need to integrate with uses of the mutable DOM should not use this.
  */
-fun IonValue.toIonElement(): IonElement =
+fun IonValue.toIonElement(): AnyElement =
     this.system.newReader(this).use { reader->
         createIonElementLoader().loadSingleElement(reader)
     }

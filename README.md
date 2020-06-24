@@ -40,22 +40,22 @@ val ion = IonSystemBuilder.standard().build
 val stockItems = ion.newReader(stockItemsIonText).use { reader ->
     createIonElementLoader(includeLocations = true)
         .loadAllElements(reader)
-        .map { stockItem: IonElement ->
-            stockItem.structValue.run {
+        .map { stockItem: AnyElement ->
+            stockItem.asStruct().run {
                 StockItem(
-                    firstOrNull("name")?.textValue ?: "<unknown name>",
-                    first("price").decimalValue,
-                    first("countInStock").longValue,
-                    first("orders").containerValue.map { order ->
-                        order.structValue.run {
+                    getOptional("name")?.textValue ?: "<unknown name>",
+                    get("price").decimalValue,
+                    get("countInStock").longValue,
+                    get("orders").asList().values.map { order ->
+                        order.asStruct().run {
                             Order(
-                                first("customerId").longValue,
-                                first("state").textValue)
+                                get("customerId").longValue,
+                                get("state").textValue)
                         }
                     })
             }
         }
-}.asSequence().toList()
+}
 ```
 
 ## Building

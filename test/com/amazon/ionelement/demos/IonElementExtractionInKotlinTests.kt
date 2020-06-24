@@ -15,13 +15,13 @@
 
 package com.amazon.ionelement.demos
 
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ion.Decimal
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.Order
 import com.amazon.ionelement.util.StockItem
 import com.amazon.ionelement.util.TOP_LEVEL_STRUCTS_ION_TEXT
-import com.amazon.ion.Decimal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -36,17 +36,17 @@ class IonElementExtractionInKotlinTests {
         val stockItems = ION.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
             createIonElementLoader(includeLocations = true)
                 .loadAllElements(reader)
-                .map { stockItem: IonElement ->
-                    stockItem.structValue.run {
+                .map { stockItem: AnyElement ->
+                    stockItem.asStruct().run {
                         StockItem(
-                            firstOrNull("name")?.textValue ?: "<unknown name>",
-                            first("price").decimalValue,
-                            first("countInStock").longValue,
-                            first("orders").containerValue.map { order ->
-                                order.structValue.run {
+                            getOptional("name")?.textValue ?: "<unknown name>",
+                            get("price").decimalValue,
+                            get("countInStock").longValue,
+                            get("orders").asList().values.map { order ->
+                                order.asStruct().run {
                                     Order(
-                                        first("customerId").longValue,
-                                        first("state").textValue)
+                                        get("customerId").longValue,
+                                        get("state").textValue)
                                 }
                             })
                     }

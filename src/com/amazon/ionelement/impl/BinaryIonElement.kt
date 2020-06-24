@@ -16,18 +16,13 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.IonByteArray
+import com.amazon.ionelement.api.LobElement
 
-internal abstract class BinaryIonElement: IonElementBase(), IonByteArray {
-    protected abstract val bytes: ByteArray
+internal abstract class BinaryIonElement(
+    protected val bytes: ByteArray
+): AnyElementBase(), LobElement {
 
-    override val bytesValueOrNull: IonByteArray get() = this
-
-    // IonByteArray implementation
-    override fun size(): Int = bytes.size
-    override fun get(index: Int): Byte = bytes[index]
-    override fun iterator(): Iterator<Byte> = bytes.iterator()
-
-    override fun copyOfBytes(): ByteArray = bytes.clone()
+    override val bytesValue: IonByteArray = IonByteArrayImpl(bytes)
 
     override fun equals(other: Any?): Boolean {
         return when {
@@ -39,7 +34,6 @@ internal abstract class BinaryIonElement: IonElementBase(), IonByteArray {
             // Metas are intentionally omitted here.
             else -> true
         }
-
     }
 
     override fun hashCode(): Int {

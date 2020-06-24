@@ -15,32 +15,32 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.SymbolElement
+import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class SymbolIonElement(
-    override val value: String,
+    value: String,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): TextIonElement() {
+): TextIonElement(value), SymbolElement {
     override val type: ElementType get() = ElementType.SYMBOL
 
-    override val symbolValueOrNull: String get() = value
+    override val symbolValue: String get() = textValue
 
-    override fun clone(annotations: List<String>, metas: MetaContainer): IonElement =
-        SymbolIonElement(value, annotations, metas)
+    override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElement =
+        SymbolIonElement(textValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as SymbolIonElement
 
-        if (value != other.value) return false
+        if (textValue != other.textValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omittted!
 
@@ -48,7 +48,7 @@ internal class SymbolIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = value.hashCode()
+        var result = textValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omittted!
         return result

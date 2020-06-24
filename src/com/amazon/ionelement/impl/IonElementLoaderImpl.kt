@@ -15,10 +15,18 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.IntegerSize
+import com.amazon.ion.IonException
+import com.amazon.ion.IonReader
+import com.amazon.ion.IonType
+import com.amazon.ion.OffsetSpan
+import com.amazon.ion.SpanProvider
+import com.amazon.ion.TextSpan
+import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.ION_LOCATION_META_TAG
 import com.amazon.ionelement.api.IonBinaryLocation
 import com.amazon.ionelement.api.IonElectrolyteException
-import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonElementLoader
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.IonStructField
@@ -38,15 +46,9 @@ import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.metaContainerOf
-import com.amazon.ion.IntegerSize
-import com.amazon.ion.IonException
-import com.amazon.ion.IonReader
-import com.amazon.ion.IonType
-import com.amazon.ion.OffsetSpan
-import com.amazon.ion.SpanProvider
-import com.amazon.ion.TextSpan
-import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.toElementType
+import com.amazon.ionelement.api.withAnnotations
+import com.amazon.ionelement.api.withMetas
 
 class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
@@ -74,12 +76,12 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
             }
         }
 
-    override fun loadSingleElement(ionText: String): IonElement =
+    override fun loadSingleElement(ionText: String): AnyElement =
         IonReaderBuilder.standard().build(ionText).use { ionReader ->
             loadSingleElement(ionReader)
         }
 
-    override fun loadSingleElement(ionReader: IonReader): IonElement {
+    override fun loadSingleElement(ionReader: IonReader): AnyElement {
         return handleReaderException(ionReader) {
             ionReader.next()
             loadCurrentElement(ionReader).also {
@@ -89,24 +91,24 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
         }
     }
 
-    override fun loadAllElements(ionReader: IonReader): List<IonElement> {
+    override fun loadAllElements(ionReader: IonReader): List<AnyElement> {
         return handleReaderException(ionReader) {
-            mutableListOf<IonElement>().also { fields ->
+            mutableListOf<AnyElement>().also { fields ->
                 ionReader.forEachValue { fields.add(loadCurrentElement(ionReader)) }
             }
         }
     }
 
-    override fun loadAllElements(ionText: String): List<IonElement> =
+    override fun loadAllElements(ionText: String): List<AnyElement> =
         IonReaderBuilder.standard().build(ionText).use { ionReader ->
-            return ArrayList<IonElement>().also { list ->
+            return ArrayList<AnyElement>().also { list ->
                 ionReader.forEachValue {
                     list.add(loadCurrentElement(ionReader))
                 }
             }.toList()
         }
 
-    override fun loadCurrentElement(ionReader: IonReader): IonElement {
+    override fun loadCurrentElement(ionReader: IonReader): AnyElement {
         return handleReaderException(ionReader) {
             require(ionReader.type != null) { "The IonReader was not positioned at an element." }
 
@@ -125,7 +127,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                 else -> emptyMetaContainer()
             }
 
-            var element = when {
+            var element: AnyElement = when {
                 ionReader.type == IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
                 ionReader.isNullValue -> ionNull(valueType.toElementType())
                 else -> {
@@ -180,7 +182,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                         }
                     }
                 }
-            }
+            }.asAnyElement()
 
             if (annotations.any()) {
                 element = element.withAnnotations(*annotations)
