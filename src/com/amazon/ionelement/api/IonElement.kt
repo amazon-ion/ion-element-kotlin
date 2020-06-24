@@ -1,7 +1,6 @@
 package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
-import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
@@ -110,10 +109,34 @@ interface TimestampElement : IonElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement
 }
 
+
+/** Indicates the size of the integer element. */
+enum class IntElementSize {
+    /** For integer values representable by a [Long]. */
+    LONG,
+    /** For values larger than [Long.MAX_VALUE] or smaller than [Long.MIN_VALUE]. */
+    BIG_INTEGER
+}
+
 /** Represents a Ion int. */
 interface IntElement : IonElement {
-    val integerSize: IntegerSize
+
+    /** The size of this [IntElement]. */
+    val integerSize: IntElementSize
+
+    /**
+     * Use this property to access the integer value of this [IntElement] when [integerSize] is [IntElementSize.LONG].
+     *
+     * @throws IonElementConstraintException if [integerSize] is [IntElementSize.BIG_INTEGER].
+     */
     val longValue: Long
+
+    /**
+     * This property may always be used to access the integer value of this [IntElement] regardless of [integerSize].
+     *
+     * However, if it is expected that all values will fall between [Long.MIN_VALUE] and [Long.MAX_VALUE], then
+     * [longValue] should be used instead for maximum performance.
+     */
     val bigIntegerValue: BigInteger
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement
 }

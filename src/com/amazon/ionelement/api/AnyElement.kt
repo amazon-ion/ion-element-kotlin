@@ -16,7 +16,6 @@
 package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
-import com.amazon.ion.IntegerSize
 import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType.BLOB
 import com.amazon.ionelement.api.ElementType.BOOL
@@ -247,11 +246,9 @@ interface AnyElement : IonElement {
     fun asStructOrNull(): StructElement?
 
     /**
-     * If this is an Ion integer, returns its [IntegerSize] otherwise, throws [IonElementException].
-     *
-     * TODO: replace with an enum type that does not include `INT`: https://github.com/amzn/ion-element-kotlin/issues/23
+     * If this is an Ion integer, returns its [IntElementSize] otherwise, throws [IonElementConstraintException].
      */
-    val integerSize: IntegerSize
+    val integerSize: IntElementSize
 
     /** See [AnyElement]. */
     val booleanValue: Boolean
