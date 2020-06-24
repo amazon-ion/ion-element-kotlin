@@ -160,7 +160,7 @@ interface SymbolElement : TextElement {
 
 /** Represents an Ion clob or blob. */
 interface LobElement : IonElement {
-    val bytesValue:  IonByteArray
+    val bytesValue:  ByteArrayView
     override fun copy(annotations: List<String>, metas: MetaContainer): LobElement
 }
 

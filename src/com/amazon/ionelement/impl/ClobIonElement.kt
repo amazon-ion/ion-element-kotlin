@@ -18,7 +18,7 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ClobElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonByteArray
+import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -28,7 +28,7 @@ internal class ClobIonElement(
     override val metas: MetaContainer = emptyMetaContainer()
 ) : BinaryIonElement(bytes), ClobElement {
 
-    override val clobValue: IonByteArray get() = bytesValue
+    override val clobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
     override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement =
