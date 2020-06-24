@@ -27,7 +27,7 @@ import com.amazon.ionelement.impl.ClobIonElement
 import com.amazon.ionelement.impl.DecimalIonElement
 import com.amazon.ionelement.impl.FloatIonElement
 import com.amazon.ionelement.impl.IntIonElement
-import com.amazon.ionelement.impl.IonStructFieldImpl
+import com.amazon.ionelement.impl.StructFieldImpl
 import com.amazon.ionelement.impl.ListIonElementBase
 import com.amazon.ionelement.impl.NullIonElement
 import com.amazon.ionelement.impl.SexpIonElementArray
@@ -123,19 +123,19 @@ fun emptyIonSexp(): SexpElement = EMPTY_SEXP
 /** Returns a [StructElement] representing an empty Ion `struct`. */
 fun emptyIonStruct(): StructElement = EMPTY_STRUCT
 
-/** Creates an [IonStructField] . */
-fun field(key: String, value: IonElement): IonStructField =
-    IonStructFieldImpl(key, value.asAnyElement())
+/** Creates a [StructField] . */
+fun field(key: String, value: IonElement): StructField =
+    StructFieldImpl(key, value.asAnyElement())
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
-fun ionStructOf(fields: Iterable<IonStructField>): StructElement =
+fun ionStructOf(fields: Iterable<StructField>): StructElement =
     when {
         fields.none() -> EMPTY_STRUCT
         else -> StructIonElementImpl(fields.toList())
     }
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
-fun ionStructOf(vararg fields: IonStructField): StructElement =
+fun ionStructOf(vararg fields: StructField): StructElement =
     ionStructOf(fields.asIterable())
 
 /** Creates an [AnyElement] that represents an Ion `struct` with the specified fields. */
