@@ -276,7 +276,7 @@ interface StructElement : ContainerElement {
      *
      * In the case of multiple fields with the specified name, the caller assume that one is picked at random.
      *
-     * @throws IonElectrolyteException If there are no fields with the specified [fieldName].
+     * @throws IonElementException If there are no fields with the specified [fieldName].
      */
     operator fun get(fieldName: String): AnyElement
 

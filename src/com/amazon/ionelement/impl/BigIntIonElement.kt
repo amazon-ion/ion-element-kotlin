@@ -21,7 +21,7 @@ import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ionelement.api.ionError
+import com.amazon.ionelement.api.constraintError
 import java.math.BigInteger
 
 internal class BigIntIonElement(
@@ -36,7 +36,7 @@ internal class BigIntIonElement(
 
     override val longValue: Long get() {
         if(bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
-            ionError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
+            constraintError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
         }
         return bigIntegerValue.longValueExact()
     }

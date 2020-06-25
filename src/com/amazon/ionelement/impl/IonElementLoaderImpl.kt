@@ -26,8 +26,9 @@ import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ION_LOCATION_META_TAG
 import com.amazon.ionelement.api.IonBinaryLocation
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonElementLoader
+import com.amazon.ionelement.api.IonElementLoaderException
 import com.amazon.ionelement.api.IonElementLoaderOptions
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.StructField
@@ -52,11 +53,17 @@ import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.api.withMetas
 
 class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
+
+    /**
+     * Catches an [IonException] occurring in [block] and throws an [IonElementLoaderException] with
+     * the current [IonLocation] of the fault, if one is available.  Note that depending on the state of the
+     * [IonReader], a location may in fact not be available.
+     */
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
         try {
             return block()
         } catch(e: IonException) {
-            throw IonElectrolyteException(
+            throw IonElementException(
                 location = ionReader.currentLocation(),
                 description = "IonException occurred, likely due to malformed Ion data (see cause)",
                 cause = e)

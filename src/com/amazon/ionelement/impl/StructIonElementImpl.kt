@@ -23,7 +23,7 @@ import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ionelement.api.ionError
+import com.amazon.ionelement.api.constraintError
 
 internal class StructIonElementImpl(
     private val allFields: List<StructField>,
@@ -47,7 +47,7 @@ internal class StructIonElementImpl(
     }
 
     override fun get(fieldName: String): AnyElement =
-        fieldsByName[fieldName]?.firstOrNull() ?: ionError(this, "Required struct field '$fieldName' missing")
+        fieldsByName[fieldName]?.firstOrNull() ?: constraintError(this, "Required struct field '$fieldName' missing")
 
     override fun getOptional(fieldName: String): AnyElement? =
         fieldsByName[fieldName]?.firstOrNull()

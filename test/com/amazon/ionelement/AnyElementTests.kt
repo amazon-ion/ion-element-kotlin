@@ -31,7 +31,7 @@ import com.amazon.ionelement.api.ElementType.STRING
 import com.amazon.ionelement.api.ElementType.STRUCT
 import com.amazon.ionelement.api.ElementType.SYMBOL
 import com.amazon.ionelement.api.ElementType.TIMESTAMP
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.impl.IonByteArrayImpl
@@ -108,7 +108,7 @@ class AnyElementTests {
         }
 
         private fun checkThrows(block: () -> Unit) {
-            assertThrows<IonElectrolyteException> { block() }
+            assertThrows<IonElementException> { block() }
         }
 
         /** Asserts the null and non-null value accessor properties return the expected values. */

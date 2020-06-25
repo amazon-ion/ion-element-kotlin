@@ -19,13 +19,17 @@ import com.amazon.ion.IonReader
 import com.amazon.ionelement.impl.IonElementLoaderImpl
 
 /**
- * Provides a several functions for loading Ion data from an [IonReader].
+ * Provides several functions for loading [IonElement] instances.
+ *
+ * All functions wrap any [com.amazon.ion.IonException] in an instance of [IonElementLoaderException], including the
+ * current [IonLocation] if one is available.  Note that depending on the state of the [IonReader], a location
+ * may not be available.
  */
 interface IonElementLoader {
     /**
      * Reads a single element from the specified Ion text data.
      *
-     * Throws an [IllegalArgumentException] if there are multiple top level elements.
+     * Throws an [IonElementLoaderException] if there are multiple top level elements.
      */
     fun loadSingleElement(ionText: String): AnyElement
 
@@ -35,7 +39,7 @@ interface IonElementLoader {
      * Expects [ionReader] to be positioned *before* the element to be read.
      *
      * If there are additional elements to be read after reading the next element,
-     * throws an [IllegalArgumentException].
+     * throws an [IonElementLoaderException].
      */
     fun loadSingleElement(ionReader: IonReader): AnyElement
 
@@ -45,7 +49,7 @@ interface IonElementLoader {
      * Expects [ionReader] to be positioned *before* the first element to be read.
      *
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
-     * Instead, prefer [loadCurrentElement].
+     * Instead, prefer [IonElementLoaderException].
      */
     fun loadAllElements(ionReader: IonReader): Iterable<AnyElement>
 

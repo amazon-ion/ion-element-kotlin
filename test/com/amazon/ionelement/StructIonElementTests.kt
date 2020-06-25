@@ -15,7 +15,7 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElectrolyteException
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ionInt
@@ -62,7 +62,7 @@ class StructIonElementTests {
         assertTrue(listOf(ionInt(2), ionInt(3)).any { it == b1 },
             "any value of the b field is returned (duplicate field name)")
 
-        val ex = assertThrows<IonElectrolyteException>("exception is thrown when field is not present") {
+        val ex = assertThrows<IonElementException>("exception is thrown when field is not present") {
             struct["z"]
         }
         assertTrue(ex.message!!.contains("'z'"),

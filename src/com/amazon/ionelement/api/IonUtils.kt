@@ -44,12 +44,12 @@ fun IonValue.toIonElement(): AnyElement =
         createIonElementLoader().loadSingleElement(reader)
     }
 
-/** Throws an [IonElectrolyteException], including the [IonLocation] (if available). */
-fun ionError(blame: IonElement, description: String): Nothing {
-    ionError(blame.metas, description)
+/** Throws an [IonElementException], including the [IonLocation] (if available). */
+internal fun constraintError(blame: IonElement, description: String): Nothing {
+    constraintError(blame.metas, description)
 }
 
-/** Throws an [IonElectrolyteException], including the [IonLocation] (if available). */
-fun ionError(metas: MetaContainer, description: String): Nothing {
-    throw IonElectrolyteException(metas.location, description)
+/** Throws an [IonElementException], including the [IonLocation] (if available). */
+internal fun constraintError(metas: MetaContainer, description: String): Nothing {
+    throw IonElementConstraintException(metas.location, description)
 }
