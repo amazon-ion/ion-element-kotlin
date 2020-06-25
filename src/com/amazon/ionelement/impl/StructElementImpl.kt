@@ -19,13 +19,13 @@ import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StructElement
-import com.amazon.ionelement.api.emptyMetaContainer
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.constraintError
+import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class StructIonElementImpl(
+internal class StructElementImpl(
     private val allFields: List<StructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
@@ -55,7 +55,7 @@ internal class StructIonElementImpl(
     override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
-        StructIonElementImpl(allFields, annotations, metas)
+        StructElementImpl(allFields, annotations, metas)
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)
@@ -68,7 +68,7 @@ internal class StructIonElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is StructIonElementImpl) return false
+        if (other !is StructElementImpl) return false
         if (annotations != other.annotations) return false
 
         // We might avoid materializing fieldsByName by checking fields.size first

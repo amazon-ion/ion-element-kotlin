@@ -34,7 +34,7 @@ import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.loadSingleElement
-import com.amazon.ionelement.impl.IonByteArrayImpl
+import com.amazon.ionelement.impl.ByteArrayViewImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -89,8 +89,8 @@ class AnyElementTests {
             TestCase("\"a string\"", STRING, "a string"),
             TestCase("a_symbol", SYMBOL, "a_symbol"),
 
-            TestCase("{{ YSBibG9i }}", BLOB, IonByteArrayImpl(Charsets.UTF_8.encode("a blob").array())),
-            TestCase("{{ \"a clob\" }}", CLOB, IonByteArrayImpl(Charsets.UTF_8.encode("a clob").array())),
+            TestCase("{{ YSBibG9i }}", BLOB, ByteArrayViewImpl(Charsets.UTF_8.encode("a blob").array())),
+            TestCase("{{ \"a clob\" }}", CLOB, ByteArrayViewImpl(Charsets.UTF_8.encode("a clob").array())),
 
             // Containers
             TestCase("[1]", LIST, listOf(ionInt(1))),

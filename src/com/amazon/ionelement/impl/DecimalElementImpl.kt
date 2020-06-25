@@ -15,30 +15,32 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.BoolElement
+import com.amazon.ionelement.api.DecimalElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class BoolIonElement(
-    override val booleanValue: Boolean,
+internal class DecimalElementImpl(
+    override val decimalValue: Decimal,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): AnyElementBase(), BoolElement {
-    override val type: ElementType get() = ElementType.BOOL
+) : AnyElementBase(), DecimalElement {
+    override val type get() = ElementType.DECIMAL
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement =
-        BoolIonElement(booleanValue, annotations, metas)
+    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement =
+        DecimalElementImpl(decimalValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
+    override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as BoolIonElement
+        other as DecimalElementImpl
 
-        if (booleanValue != other.booleanValue) return false
+        // `==` considers `0d0` and `-0d0` to be equivalent.  `Decimal.equals` does not.
+        if (!Decimal.equals(decimalValue, other.decimalValue)) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -46,10 +48,10 @@ internal class BoolIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = booleanValue.hashCode()
+        var result = decimalValue.isNegativeZero.hashCode()
+        result = 31 * result + decimalValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result
     }
-
 }

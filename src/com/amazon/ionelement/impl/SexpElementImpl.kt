@@ -15,43 +15,41 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.SexpElement
 import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class IntIonElement(
-    override val longValue: Long,
+internal class SexpElementImpl (
+    values: List<AnyElement>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : AnyElementBase(), IntElement {
-    override val integerSize: IntElementSize get() = IntElementSize.LONG
-    override val type: ElementType get() = ElementType.INT
+):  SeqElementBase(values), SexpElement {
+    override val type: ElementType get() = ElementType.SEXP
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
-        IntIonElement(longValue, annotations, metas)
+    override val sexpValues: List<AnyElement> get() = seqValues
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
+    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
+        SexpElementImpl(values, annotations, metas)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as IntIonElement
+        other as SexpElementImpl
 
-        if (longValue != other.longValue) return false
+        if (values != other.values) return false
         if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
+        // Note: [metas] intentionally omitted!
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = longValue.hashCode()
+        var result = values.hashCode()
         result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
+        // Note: [metas] intentionally omitted!
         return result
     }
 }
-

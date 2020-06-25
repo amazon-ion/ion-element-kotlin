@@ -18,16 +18,16 @@ package com.amazon.ionelement.impl
 import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.LobElement
 
-internal abstract class BinaryIonElement(
+internal abstract class LobElementBase(
     protected val bytes: ByteArray
 ): AnyElementBase(), LobElement {
 
-    override val bytesValue: ByteArrayView = IonByteArrayImpl(bytes) 
+    override val bytesValue: ByteArrayView = ByteArrayViewImpl(bytes)
 
     override fun equals(other: Any?): Boolean {
         return when {
             this === other -> true
-            other !is BinaryIonElement -> false
+            other !is LobElementBase -> false
             type != other.type -> false
             !bytes.contentEquals(other.bytes) -> false
             annotations != other.annotations -> false

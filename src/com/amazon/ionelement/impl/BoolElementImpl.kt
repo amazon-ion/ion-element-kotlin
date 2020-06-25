@@ -16,41 +16,40 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
+import com.amazon.ionelement.api.BoolElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class SymbolIonElement(
-    value: String,
+internal class BoolElementImpl(
+    override val booleanValue: Boolean,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-): TextIonElement(value), SymbolElement {
-    override val type: ElementType get() = ElementType.SYMBOL
+): AnyElementBase(), BoolElement {
+    override val type: ElementType get() = ElementType.BOOL
 
-    override val symbolValue: String get() = textValue
+    override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement =
+        BoolElementImpl(booleanValue, annotations, metas)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElement =
-        SymbolIonElement(textValue, annotations, metas)
-
-    override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)
+    override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as SymbolIonElement
+        other as BoolElementImpl
 
-        if (textValue != other.textValue) return false
+        if (booleanValue != other.booleanValue) return false
         if (annotations != other.annotations) return false
-        // Note: metas intentionally omittted!
+        // Note: metas intentionally omitted!
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = textValue.hashCode()
+        var result = booleanValue.hashCode()
         result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omittted!
+        // Note: metas intentionally omitted!
         return result
     }
+
 }
