@@ -20,7 +20,8 @@ import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ion.system.IonSystemBuilder
 import com.amazon.ion.system.IonTextWriterBuilder
 import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.createIonElementLoader
+import com.amazon.ionelement.api.loadAllElements
+import com.amazon.ionelement.util.INCLUDE_LOCATION_META
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -40,7 +41,6 @@ val GOOD_DIR: Path = Paths.get(TESTS_ROOT_DIR, "good")
 
 class ComplianceTests {
     companion object {
-        val loader = createIonElementLoader(true)
 
         private val SKIP_LIST = listOf(
             // These seems to be known issues in ion-java and fail in [IonReader], before we get to it.
@@ -113,7 +113,7 @@ class ComplianceTests {
         topLevelValues.forEach { equivalenceGroup ->
             if(equivalenceGroup.annotations.contains("embedded_documents")) {
                 val documents = equivalenceGroup.asSeqOrNull()?.values?.map {
-                    loader.loadAllElements(it.stringValueOrNull ?: error("Unexpected null encountered"))
+                    loadAllElements(it.stringValue, INCLUDE_LOCATION_META).toList()
                 } ?: error("Unexpected null encountered")
 
                 documents.forEach { i: List<AnyElement> ->
@@ -157,7 +157,7 @@ class ComplianceTests {
     private fun readFileAsIonElements(path: Path): List<AnyElement> =
         Files.newInputStream(path).use { stream ->
             IonReaderBuilder.standard().build(stream).use { reader ->
-                loader.loadAllElements(reader)
+                loadAllElements(reader, INCLUDE_LOCATION_META).toList()
             }
         }
 

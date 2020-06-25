@@ -33,8 +33,8 @@ import com.amazon.ionelement.api.ElementType.SYMBOL
 import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.IonElectrolyteException
 import com.amazon.ionelement.api.ionInt
+import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.impl.IonByteArrayImpl
-import com.amazon.ionelement.util.loadSingleElement
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test

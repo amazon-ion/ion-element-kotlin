@@ -15,10 +15,10 @@
 
 @file:JvmName("TestUtils")
 package com.amazon.ionelement.util
-
-import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ion.IonValue
 import com.amazon.ion.system.IonSystemBuilder
+
+import com.amazon.ionelement.api.IonElementLoaderOptions
 
 @JvmField
 val ION = IonSystemBuilder.standard().build()
@@ -31,4 +31,10 @@ fun convertToString(ionValue: IonValue): String {
     return builder.toString()
 }
 
- fun loadSingleElement(ionText: String) = createIonElementLoader(true).loadSingleElement(ionText)
+/**
+ * A convenience instance of [IonElementLoaderOptions] with all the defaults except with
+ * [IonElementLoaderOptions.includeLocationMeta] set to `true`.
+ *
+ * This is to support this somewhat commonly used scenario.
+ */
+val INCLUDE_LOCATION_META = IonElementLoaderOptions(includeLocationMeta = true)

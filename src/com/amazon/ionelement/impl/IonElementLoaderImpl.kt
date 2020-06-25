@@ -23,11 +23,12 @@ import com.amazon.ion.OffsetSpan
 import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
+import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ION_LOCATION_META_TAG
 import com.amazon.ionelement.api.IonBinaryLocation
 import com.amazon.ionelement.api.IonElectrolyteException
-import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonElementLoader
+import com.amazon.ionelement.api.IonElementLoaderOptions
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.IonTextLocation
@@ -50,7 +51,7 @@ import com.amazon.ionelement.api.toElementType
 import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.api.withMetas
 
-class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
+class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
         try {
             return block()
@@ -117,7 +118,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
             val annotations = ionReader.typeAnnotations!!
 
             val metas = when {
-                includeLocations -> {
+                options.includeLocationMeta -> {
                     val location = ionReader.currentLocation()
                     when {
                         location != null -> metaContainerOf(ION_LOCATION_META_TAG to location)

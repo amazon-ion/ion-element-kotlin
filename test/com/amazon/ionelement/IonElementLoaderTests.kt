@@ -13,7 +13,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.demos
+package com.amazon.ionelement
 
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionBool
@@ -22,10 +22,12 @@ import com.amazon.ionelement.api.ionListOf
 import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionTimestamp
+import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.api.toIonElement
 import com.amazon.ionelement.api.toIonValue
 import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.util.ION
+import com.amazon.ionelement.util.INCLUDE_LOCATION_META
 import com.amazon.ionelement.util.IonElementLoaderTestCase
 import com.amazon.ionelement.util.convertToString
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,14 +38,13 @@ import org.junit.jupiter.params.provider.MethodSource
  * Basic examples of what instantiating instances of IonElement looks like from Kotlin.
  *
  * Also demonstrates converting to and from the mutable DOM.
- * */
-class IonElementLoadingInKotlinTests {
+ */
+class IonElementLoaderTests {
     @ParameterizedTest
     @MethodSource("parametersForDemoTest")
     fun kotlinIdiomaticTest(tc: IonElementLoaderTestCase) {
         val parsedIonValue = ION.singleValue(tc.textIon)
-        val parsedIonElement = createIonElementLoader(includeLocations = true)
-            .loadSingleElement(tc.textIon)
+        val parsedIonElement = loadSingleElement(tc.textIon, INCLUDE_LOCATION_META)
 
         // Text generated from both should match
         assertEquals(convertToString(parsedIonValue), parsedIonElement.toString())

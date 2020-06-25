@@ -17,7 +17,8 @@ package com.amazon.ionelement.demos
 
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.createIonElementLoader
+import com.amazon.ionelement.api.loadAllElements
+import com.amazon.ionelement.util.INCLUDE_LOCATION_META
 import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.Order
 import com.amazon.ionelement.util.StockItem
@@ -34,8 +35,7 @@ class IonElementExtractionInKotlinTests {
     @Test
     fun extractFromStructsDemo() {
         val stockItems = ION.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
-            createIonElementLoader(includeLocations = true)
-                .loadAllElements(reader)
+           loadAllElements(reader, INCLUDE_LOCATION_META)
                 .map { stockItem: AnyElement ->
                     stockItem.asStruct().run {
                         StockItem(
