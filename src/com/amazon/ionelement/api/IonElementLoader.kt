@@ -21,7 +21,7 @@ import com.amazon.ion.IonReader
  * Provides several functions for loading [IonElement] instances.
  *
  * All functions wrap any [com.amazon.ion.IonException] in an instance of [IonElementLoaderException], including the
- * current [IonLocation] if if one is available.  Note that depending on the state of the [IonReader], a location
+ * current [IonLocation] if one is available.  Note that depending on the state of the [IonReader], a location
  * may not be available.
  */
 interface IonElementLoader {

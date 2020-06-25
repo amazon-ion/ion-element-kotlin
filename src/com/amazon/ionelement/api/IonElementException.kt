@@ -16,7 +16,7 @@
 package com.amazon.ionelement.api
 
 /**
- * Base exception which includes the [location] in the message if the if it was included at construction time.
+ * Base exception which includes the [location] in the message if it was included at construction time.
  */
 open class IonElementException(
     val location: IonLocation?,

@@ -36,8 +36,8 @@ import java.math.BigInteger
  * Represents an Ion element whose type is not known at compile-time.
  *
  * [IonElement] is returned by all of the [IonElementLoader] functions and is the data type for children of [ListElement],
- * [SexpElement] and [StructElement]. If the type of an Ion element is known in advance, one can use the narrowed
- * [IonElement] APIs that can be asserted at runtime.
+ * [SexpElement] and [StructElement]. If the type of an Ion element is known at compile-time, the type may be easily
+ * asserted at runtime and a narrower [IonElement] interface may be obtained instead.
  *
  * Two categories of methods are present on this type:
  *
@@ -49,10 +49,10 @@ import java.math.BigInteger
  * - An expectation of the Ion type of the given element
  * - An expectation of the nullability of the given element
  *
- * If either of these expectations is violated an [IonElementException] is thrown.  If the given element
- * has a [IonLocation] in its metadata, it included with the [IonElementException] which can be used to
- * generate error an message that points to the specific location of the failure within text (i.e. line & column) or
- * binary Ion data (i.e. byte offset).
+ * If either of these expectations is violated an [IonElementConstraintException] is thrown.  If the given element
+ * has an [IonLocation] in its metadata, it is included with the [IonElementConstraintException] which can be used to
+ * generate error an message that points to the specific location of the failure within the Ion-text document
+ * (i.e. line & column) or within the Ion-binary document (i.e. byte offset).
  *
  * Value Accessor Examples:
  *
@@ -102,7 +102,8 @@ import java.math.BigInteger
  * #### Deciding which accessor function to use
  *
  * **Note:  for the sake of brevity, the following section omits the nullable narrowing functions (`as*OrNull`) and
- * nullable value accessors (`*OrNull`).  These should be used whenever an Ion-null value is allowed.
+ * nullable value accessors (`*ValueOrNull` and `*ValuesOrNull`).  These should be used whenever an Ion-null value is
+ * allowed.
  *
  * The table below shows which accessor functions can be used for each [ElementType].
  *
