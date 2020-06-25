@@ -125,17 +125,14 @@ interface IntElement : IonElement {
     val integerSize: IntElementSize
 
     /**
-     * Use this property to access the integer value of this [IntElement] when [integerSize] is [IntElementSize.LONG].
+     * Use this property to access the integer value of this [IntElement] when its value fits in a [Long].
      *
      * @throws IonElementConstraintException if [integerSize] is [IntElementSize.BIG_INTEGER].
      */
     val longValue: Long
 
     /**
-     * This property may always be used to access the integer value of this [IntElement] regardless of [integerSize].
-     *
-     * However, if it is expected that all values will fall between [Long.MIN_VALUE] and [Long.MAX_VALUE], then
-     * [longValue] should be used instead for maximum performance.
+     * This property may be used to access the integer value of this [IntElement] if its value does not fit in a [Long].
      */
     val bigIntegerValue: BigInteger
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement
