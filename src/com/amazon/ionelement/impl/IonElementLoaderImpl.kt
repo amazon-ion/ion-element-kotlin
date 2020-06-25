@@ -29,8 +29,9 @@ import com.amazon.ionelement.api.IonBinaryLocation
 import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonElementLoader
 import com.amazon.ionelement.api.IonElementLoaderException
+import com.amazon.ionelement.api.IonElementLoaderOptions
 import com.amazon.ionelement.api.IonLocation
-import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.IonTextLocation
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionBlob
@@ -51,7 +52,7 @@ import com.amazon.ionelement.api.toElementType
 import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.api.withMetas
 
-class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLoader {
+class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
     /**
      * Catches an [IonException] occurring in [block] and throws an [IonElementLoaderException] with
@@ -124,7 +125,7 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
             val annotations = ionReader.typeAnnotations!!
 
             val metas = when {
-                includeLocations -> {
+                options.includeLocationMeta -> {
                     val location = ionReader.currentLocation()
                     when {
                         location != null -> metaContainerOf(ION_LOCATION_META_TAG to location)
@@ -178,8 +179,8 @@ class IonElementLoaderImpl(private val includeLocations: Boolean) : IonElementLo
                                     ionSexpOf(loadAllElements(ionReader))
                                 }
                                 IonType.STRUCT -> {
-                                    val fields = mutableListOf<IonStructField>()
-                                    ionReader.forEachValue { fields.add(IonStructFieldImpl(ionReader.fieldName, loadCurrentElement(ionReader))) }
+                                    val fields = mutableListOf<StructField>()
+                                    ionReader.forEachValue { fields.add(StructFieldImpl(ionReader.fieldName, loadCurrentElement(ionReader))) }
                                     ionStructOf(fields)
                                 }
                                 else -> error("Unexpected Ion type for container Ion data type ${ionReader.type}.")

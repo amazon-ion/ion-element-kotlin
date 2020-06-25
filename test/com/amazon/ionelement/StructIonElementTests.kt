@@ -17,9 +17,9 @@ package com.amazon.ionelement
 
 import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.util.loadSingleElement
+import com.amazon.ionelement.api.loadSingleElement
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -83,7 +83,7 @@ class StructIonElementTests {
     }
 
 
-    private fun Iterable<IonStructField>.assertHasField(fieldName: String, value: IonElement) {
+    private fun Iterable<StructField>.assertHasField(fieldName: String, value: IonElement) {
         assertTrue(this.any { it.name == fieldName && it.value == value }, "Must have field '$fieldName'")
     }
 

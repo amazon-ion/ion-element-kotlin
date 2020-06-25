@@ -160,7 +160,7 @@ interface SymbolElement : TextElement {
 
 /** Represents an Ion clob or blob. */
 interface LobElement : IonElement {
-    val bytesValue:  IonByteArray
+    val bytesValue:  ByteArrayView
     override fun copy(annotations: List<String>, metas: MetaContainer): LobElement
 }
 
@@ -269,7 +269,7 @@ interface SexpElement : SeqElement {
 interface StructElement : ContainerElement {
 
     /** This struct's unordered collection of fields. */
-    val fields: Collection<IonStructField>
+    val fields: Collection<StructField>
 
     /**
      * Retrieves the value of the first field found with the specified name.

@@ -17,9 +17,11 @@ package com.amazon.ionelement.demos
 
 import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.AnyElement
+import com.amazon.ionelement.api.IonElementConstraintException
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.IonTextLocation
-import com.amazon.ionelement.api.createIonElementLoader
+import com.amazon.ionelement.api.loadSingleElement
+import com.amazon.ionelement.util.INCLUDE_LOCATION_META
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -29,19 +31,17 @@ import org.junit.jupiter.params.provider.MethodSource
  * Demonstrates throwing of [IonElementException] when an unexpected data type or nulliness is encountered.
  */
 class UnexpectedTypesTest {
-    private val loader = createIonElementLoader(includeLocations = true)
 
     data class TestCase(
         val ionText: String,
         val expectedIonLocation: IonLocation,
         val block: (AnyElement) -> Unit)
 
-
     @ParameterizedTest
     @MethodSource("parametersForIonElectrolyteExceptionTest")
     fun ionElectrolyteExceptionTest(tc: TestCase) {
-        val ionElement = loader.loadSingleElement(tc.ionText)
-        val ex = assertThrows<IonElementException> { tc.block(ionElement) }
+        val ionElement = loadSingleElement(tc.ionText, INCLUDE_LOCATION_META)
+        val ex = assertThrows<IonElementConstraintException> { tc.block(ionElement) }
         assertEquals(tc.expectedIonLocation, ex.location)
     }
 

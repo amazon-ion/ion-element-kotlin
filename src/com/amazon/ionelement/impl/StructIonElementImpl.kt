@@ -19,14 +19,14 @@ import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IonStructField
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.constraintError
 
 internal class StructIonElementImpl(
-    private val allFields: List<IonStructField>,
+    private val allFields: List<StructField>,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ): AnyElementBase(), StructElement {
@@ -35,8 +35,8 @@ internal class StructIonElementImpl(
     override val size = allFields.size
     override val values: Collection<AnyElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
     override val containerValues: Collection<AnyElement> get() = values
-    override val structFields: Collection<IonStructField> get() = fields
-    override val fields: Collection<IonStructField> get() = allFields
+    override val structFields: Collection<StructField> get() = fields
+    override val fields: Collection<StructField> get() = allFields
 
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<AnyElement>> by lazy(LazyThreadSafetyMode.NONE) {
