@@ -36,7 +36,7 @@ import java.math.BigInteger
  * Represents an Ion element whose type is not known at compile-time.
  *
  * [IonElement] is returned by all of the [IonElementLoader] functions and is the data type for children of [ListElement],
- * [SexpElement] and [StructElement]. If the type of an Ion element is known at compile-time, the type may be easily
+ * [SexpElement] and [StructElement]. If the type of an Ion element is not known at compile-time, the type may be easily
  * asserted at runtime and a narrower [IonElement] interface may be obtained instead.
  *
  * Two categories of methods are present on this type:
