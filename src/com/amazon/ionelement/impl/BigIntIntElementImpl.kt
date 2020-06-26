@@ -27,8 +27,8 @@ import java.math.BigInteger
 
 internal class BigIntIntElementImpl(
     override val bigIntegerValue: BigInteger,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ) : AnyElementBase(), IntElement {
 
     override val type: ElementType get() = ElementType.INT

@@ -19,12 +19,11 @@ import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.SexpElement
-import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class SexpElementImpl (
     values: List<AnyElement>,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ):  SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
 

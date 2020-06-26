@@ -24,8 +24,8 @@ import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class ClobElementImpl(
     bytes: ByteArray,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ) : LobElementBase(bytes), ClobElement {
 
     override val clobValue: ByteArrayView get() = bytesValue

@@ -20,20 +20,18 @@ import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.TimestampElement
-import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class TimestampElementImpl(
-    val value: Timestamp,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val timestampValue: Timestamp,
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ): AnyElementBase(), TimestampElement {
-    constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
 
     override val type: ElementType get() = ElementType.TIMESTAMP
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement =
-        TimestampElementImpl(value, annotations, metas)
+        TimestampElementImpl(timestampValue, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(value)
+    override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(timestampValue)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -41,7 +39,7 @@ internal class TimestampElementImpl(
 
         other as TimestampElementImpl
 
-        if (value != other.value) return false
+        if (timestampValue != other.timestampValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -49,7 +47,7 @@ internal class TimestampElementImpl(
     }
 
     override fun hashCode(): Int {
-        var result = value.hashCode()
+        var result = timestampValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result
