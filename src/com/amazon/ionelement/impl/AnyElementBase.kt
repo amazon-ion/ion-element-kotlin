@@ -43,6 +43,7 @@ import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.ByteArrayView
+import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ListElement
@@ -83,7 +84,7 @@ internal abstract class AnyElementBase : AnyElement {
         TEXT_WRITER_BUILDER.build(buf).use { writeTo(it) }
     }.toString()
 
-    override val integerSize: IntegerSize get() = constraintError(this, "integerSize not valid for this Element")
+    override val integerSize: IntElementSize get() = constraintError(this, "integerSize not valid for this Element")
 
     private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType): T? {
         if(this.type == NULL) {

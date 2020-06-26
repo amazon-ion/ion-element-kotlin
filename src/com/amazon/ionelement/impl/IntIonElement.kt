@@ -15,10 +15,10 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
+import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 
@@ -27,8 +27,7 @@ internal class IntIonElement(
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ) : AnyElementBase(), IntElement {
-    // It is also possible to return IntegerSize.INT, but why would we I do not know...
-    override val integerSize: IntegerSize get() = IntegerSize.LONG
+    override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT
 
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =

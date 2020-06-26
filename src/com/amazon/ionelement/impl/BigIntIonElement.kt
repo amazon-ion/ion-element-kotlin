@@ -19,6 +19,7 @@ import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
+import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.constraintError
@@ -32,7 +33,7 @@ internal class BigIntIonElement(
 
     override val type: ElementType get() = ElementType.INT
 
-    override val integerSize: IntegerSize get() = IntegerSize.BIG_INTEGER
+    override val integerSize: IntElementSize get() = IntElementSize.BIG_INTEGER
 
     override val longValue: Long get() {
         if(bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
