@@ -27,7 +27,6 @@ internal class IntIonElement(
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
 ) : AnyElementBase(), IntElement {
-    // It is also possible to return IntegerSize.INT, but why would we I do not know...
     override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT
 
