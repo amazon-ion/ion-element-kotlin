@@ -15,32 +15,45 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ion.Decimal
+import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.DecimalElement
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.IntElement
+import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.constraintError
 import com.amazon.ionelement.api.emptyMetaContainer
+import java.math.BigInteger
 
-internal class DecimalIonElement(
-    override val decimalValue: Decimal,
+internal class BigIntIntElementImpl(
+    override val bigIntegerValue: BigInteger,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : AnyElementBase(), DecimalElement {
-    override val type get() = ElementType.DECIMAL
+) : AnyElementBase(), IntElement {
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement =
-        DecimalIonElement(decimalValue, annotations, metas)
+    override val type: ElementType get() = ElementType.INT
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
+    override val integerSize: IntElementSize get() = IntElementSize.BIG_INTEGER
+
+    override val longValue: Long get() {
+        if(bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
+            constraintError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
+        }
+        return bigIntegerValue.longValueExact()
+    }
+
+    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
+        BigIntIntElementImpl(bigIntegerValue, annotations, metas)
+
+    override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as DecimalIonElement
+        other as BigIntIntElementImpl
 
-        // `==` considers `0d0` and `-0d0` to be equivalent.  `Decimal.equals` does not.
-        if (!Decimal.equals(decimalValue, other.decimalValue)) return false
+        if (bigIntegerValue != other.bigIntegerValue) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -48,10 +61,13 @@ internal class DecimalIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = decimalValue.isNegativeZero.hashCode()
-        result = 31 * result + decimalValue.hashCode()
+        var result = bigIntegerValue.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result
     }
 }
+
+internal val MAX_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MAX_VALUE)
+internal val MIN_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MIN_VALUE)
+

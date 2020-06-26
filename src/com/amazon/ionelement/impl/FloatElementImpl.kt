@@ -15,41 +15,43 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.AnyElement
+import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
+import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.SexpElement
 import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class SexpIonElementArray (
-    values: List<AnyElement>,
+internal class FloatElementImpl(
+    override val doubleValue: Double,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-):  SeqElementBase(values), SexpElement {
-    override val type: ElementType get() = ElementType.SEXP
+) : AnyElementBase(), FloatElement {
+    override val type: ElementType get() = ElementType.FLOAT
 
-    override val sexpValues: List<AnyElement> get() = seqValues
+    override fun copy(annotations: List<String>, metas: MetaContainer): FloatElement =
+        FloatElementImpl(doubleValue, annotations, metas)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
-        SexpIonElementArray(values, annotations, metas)
-
+    override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as SexpIonElementArray
+        other as FloatElementImpl
 
-        if (values != other.values) return false
+        // compareTo() distinguishes between 0.0 and -0.0 while `==` operator does not.
+        if (doubleValue.compareTo(other.doubleValue) != 0) return false
         if (annotations != other.annotations) return false
-        // Note: [metas] intentionally omitted!
+        // Note: metas intentionally omitted!
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = values.hashCode()
+        var result = doubleValue.compareTo(0.0).hashCode() // <-- causes 0e0 to have a different hash code than -0e0
+        result = 31 * result + doubleValue.hashCode()
         result = 31 * result + annotations.hashCode()
-        // Note: [metas] intentionally omitted!
+        // Note: metas intentionally omitted!
         return result
     }
+
 }

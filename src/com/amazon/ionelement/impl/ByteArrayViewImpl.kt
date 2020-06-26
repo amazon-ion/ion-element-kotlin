@@ -2,7 +2,7 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.ByteArrayView
 
-class IonByteArrayImpl(private val bytes: ByteArray) : ByteArrayView {
+class ByteArrayViewImpl(private val bytes: ByteArray) : ByteArrayView {
     override fun size(): Int = bytes.size
 
     override fun get(index: Int): Byte = bytes[index]
@@ -13,7 +13,7 @@ class IonByteArrayImpl(private val bytes: ByteArray) : ByteArrayView {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is IonByteArrayImpl) return false
+        if (other !is ByteArrayViewImpl) return false
 
         if (!bytes.contentEquals(other.bytes)) return false
 

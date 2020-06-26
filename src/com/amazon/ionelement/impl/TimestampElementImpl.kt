@@ -16,30 +16,32 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
+import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.TimestampElement
 import com.amazon.ionelement.api.emptyMetaContainer
 
-internal class FloatIonElement(
-    override val doubleValue: Double,
+internal class TimestampElementImpl(
+    val value: Timestamp,
     override val annotations: List<String> = emptyList(),
     override val metas: MetaContainer = emptyMetaContainer()
-) : AnyElementBase(), FloatElement {
-    override val type: ElementType get() = ElementType.FLOAT
+): AnyElementBase(), TimestampElement {
+    constructor(timestamp: String): this(Timestamp.valueOf(timestamp))
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): FloatElement =
-        FloatIonElement(doubleValue, annotations, metas)
+    override val type: ElementType get() = ElementType.TIMESTAMP
+    override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement =
+        TimestampElementImpl(value, annotations, metas)
 
-    override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
+    override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(value)
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as FloatIonElement
+        other as TimestampElementImpl
 
-        // compareTo() distinguishes between 0.0 and -0.0 while `==` operator does not.
-        if (doubleValue.compareTo(other.doubleValue) != 0) return false
+        if (value != other.value) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 
@@ -47,11 +49,9 @@ internal class FloatIonElement(
     }
 
     override fun hashCode(): Int {
-        var result = doubleValue.compareTo(0.0).hashCode() // <-- causes 0e0 to have a different hash code than -0e0
-        result = 31 * result + doubleValue.hashCode()
+        var result = value.hashCode()
         result = 31 * result + annotations.hashCode()
         // Note: metas intentionally omitted!
         return result
     }
-
 }

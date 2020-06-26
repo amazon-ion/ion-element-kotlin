@@ -19,22 +19,22 @@ package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.Timestamp
-// TODO: Make make implementation names consistent.  https://github.com/amzn/ion-element-kotlin/issues/24
-import com.amazon.ionelement.impl.BigIntIonElement
-import com.amazon.ionelement.impl.BlobIonElement
-import com.amazon.ionelement.impl.BoolIonElement
-import com.amazon.ionelement.impl.ClobIonElement
-import com.amazon.ionelement.impl.DecimalIonElement
-import com.amazon.ionelement.impl.FloatIonElement
-import com.amazon.ionelement.impl.IntIonElement
+
+import com.amazon.ionelement.impl.BigIntIntElementImpl
+import com.amazon.ionelement.impl.BlobElementImpl
+import com.amazon.ionelement.impl.BoolElementImpl
+import com.amazon.ionelement.impl.ClobElementImpl
+import com.amazon.ionelement.impl.DecimalElementImpl
+import com.amazon.ionelement.impl.FloatElementImpl
+import com.amazon.ionelement.impl.LongIntElementImpl
 import com.amazon.ionelement.impl.StructFieldImpl
-import com.amazon.ionelement.impl.ListIonElementBase
-import com.amazon.ionelement.impl.NullIonElement
-import com.amazon.ionelement.impl.SexpIonElementArray
-import com.amazon.ionelement.impl.StringIonElement
-import com.amazon.ionelement.impl.StructIonElementImpl
-import com.amazon.ionelement.impl.SymbolIonElement
-import com.amazon.ionelement.impl.TimestampIonElement
+import com.amazon.ionelement.impl.ListElementImpl
+import com.amazon.ionelement.impl.NullElementImpl
+import com.amazon.ionelement.impl.SexpElementImpl
+import com.amazon.ionelement.impl.StringElementImpl
+import com.amazon.ionelement.impl.StructElementImpl
+import com.amazon.ionelement.impl.SymbolElementImpl
+import com.amazon.ionelement.impl.TimestampElementImpl
 import java.math.BigInteger
 
 // TODO:  add "metas: MetaContainer = emptyMetaContainer()" to all IonElement constructor functions.
@@ -46,38 +46,38 @@ import java.math.BigInteger
 fun ionNull(elementType: ElementType = ElementType.NULL): IonElement = ALL_NULLS.getValue(elementType)
 
 /** Creates a [StringElement] that represents an Ion `symbol`. */
-fun ionString(s: String): StringElement = StringIonElement(s)
+fun ionString(s: String): StringElement = StringElementImpl(s)
 
 /** Creates a [SymbolElement] that represents an Ion `symbol`. */
-fun ionSymbol(s: String): SymbolElement = SymbolIonElement(s)
+fun ionSymbol(s: String): SymbolElement = SymbolElementImpl(s)
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
-fun ionTimestamp(s: String): TimestampElement = TimestampIonElement(Timestamp.valueOf(s))
+fun ionTimestamp(s: String): TimestampElement = TimestampElementImpl(Timestamp.valueOf(s))
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
-fun ionTimestamp(timestamp: Timestamp): TimestampElement = TimestampIonElement(timestamp)
+fun ionTimestamp(timestamp: Timestamp): TimestampElement = TimestampElementImpl(timestamp)
 
 /** Creates an [IntElement] that represents an Ion `int`. */
-fun ionInt(l: Long): IntElement = IntIonElement(l)
+fun ionInt(l: Long): IntElement = LongIntElementImpl(l)
 
 /** Creates an [IntElement] that represents an Ion `BitInteger`. */
-fun ionInt(bigInt: BigInteger): IntElement = BigIntIonElement(bigInt)
+fun ionInt(bigInt: BigInteger): IntElement = BigIntIntElementImpl(bigInt)
 
 /** Creates a [BoolElement] that represents an Ion `bool`. */
-fun ionBool(b: Boolean): BoolElement = BoolIonElement(b)
+fun ionBool(b: Boolean): BoolElement = BoolElementImpl(b)
 
 /** Creates a [FloatElement] that represents an Ion `float`. */
-fun ionFloat(d: Double): FloatElement = FloatIonElement(d)
+fun ionFloat(d: Double): FloatElement = FloatElementImpl(d)
 
 /** Creates a [DecimalElement] that represents an Ion `decimall`. */
-fun ionDecimal(bigDecimal: Decimal): DecimalElement = DecimalIonElement(bigDecimal)
+fun ionDecimal(bigDecimal: Decimal): DecimalElement = DecimalElementImpl(bigDecimal)
 
 /**
  * Creates a [BlobElement] that represents an Ion `blob`.
  *
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
-fun ionBlob(bytes: ByteArray): BlobElement = BlobIonElement(bytes.clone())
+fun ionBlob(bytes: ByteArray): BlobElement = BlobElementImpl(bytes.clone())
 
 /** Returns the empty [BlobElement] singleton. */
 fun emptyBlob(): BlobElement = EMPTY_BLOB
@@ -87,7 +87,7 @@ fun emptyBlob(): BlobElement = EMPTY_BLOB
  *
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
-fun ionClob(bytes: ByteArray): ClobElement = ClobIonElement(bytes.clone())
+fun ionClob(bytes: ByteArray): ClobElement = ClobElementImpl(bytes.clone())
 
 /** Returns the empty [ClobElement] singleton. */
 fun emptyClob(): ClobElement = EMPTY_CLOB
@@ -96,7 +96,7 @@ fun emptyClob(): ClobElement = EMPTY_CLOB
 fun ionListOf(iterable: Iterable<IonElement>): ListElement =
     when {
         iterable.none() -> EMPTY_LIST
-        else -> ListIonElementBase(iterable.map { it.asAnyElement() })
+        else -> ListElementImpl(iterable.map { it.asAnyElement() })
     }
 
 /** Creates a [ListElement] that represents an Ion `list`. */
@@ -110,7 +110,7 @@ fun emptyIonList(): ListElement = EMPTY_LIST
 fun ionSexpOf(iterable: Iterable<IonElement>, metas: MetaContainer = emptyMetaContainer()): SexpElement =
     when {
         iterable.none() -> EMPTY_SEXP
-        else -> SexpIonElementArray(iterable.map { it.asAnyElement() }, metas = metas)
+        else -> SexpElementImpl(iterable.map { it.asAnyElement() }, metas = metas)
     }
 
 /** Creates a [SexpElement] that represents an Ion `sexp`. */
@@ -131,7 +131,7 @@ fun field(key: String, value: IonElement): StructField =
 fun ionStructOf(fields: Iterable<StructField>): StructElement =
     when {
         fields.none() -> EMPTY_STRUCT
-        else -> StructIonElementImpl(fields.toList())
+        else -> StructElementImpl(fields.toList())
     }
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
@@ -143,11 +143,11 @@ fun ionStructOf(vararg fields: Pair<String, IonElement>): StructElement =
     ionStructOf(fields.map { field(it.first, it.second.asAnyElement()) })
 
 // Memoized empty instances of our container types.
-private val EMPTY_LIST = ListIonElementBase(emptyList())
-private val EMPTY_SEXP = SexpIonElementArray(emptyList())
-private val EMPTY_STRUCT = StructIonElementImpl(emptyList())
-private val EMPTY_BLOB = BlobIonElement(ByteArray(0))
-private val EMPTY_CLOB = ClobIonElement(ByteArray(0))
+private val EMPTY_LIST = ListElementImpl(emptyList())
+private val EMPTY_SEXP = SexpElementImpl(emptyList())
+private val EMPTY_STRUCT = StructElementImpl(emptyList())
+private val EMPTY_BLOB = BlobElementImpl(ByteArray(0))
+private val EMPTY_CLOB = ClobElementImpl(ByteArray(0))
 
 // Memoized instances of all of our null values.
-private val ALL_NULLS = ElementType.values().map { it to NullIonElement(it) as IonElement }.toMap()
+private val ALL_NULLS = ElementType.values().map { it to NullElementImpl(it) as IonElement }.toMap()

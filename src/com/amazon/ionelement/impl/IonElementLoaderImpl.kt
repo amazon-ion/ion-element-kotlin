@@ -31,8 +31,8 @@ import com.amazon.ionelement.api.IonElementLoader
 import com.amazon.ionelement.api.IonElementLoaderException
 import com.amazon.ionelement.api.IonElementLoaderOptions
 import com.amazon.ionelement.api.IonLocation
-import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.IonTextLocation
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.emptyMetaContainer
 import com.amazon.ionelement.api.ionBlob
 import com.amazon.ionelement.api.ionBool
