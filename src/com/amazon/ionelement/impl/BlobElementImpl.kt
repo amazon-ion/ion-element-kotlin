@@ -20,12 +20,11 @@ import com.amazon.ionelement.api.BlobElement
 import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class BlobElementImpl(
     bytes: ByteArray,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ) : LobElementBase(bytes), BlobElement {
 
     override val blobValue: ByteArrayView get() = bytesValue

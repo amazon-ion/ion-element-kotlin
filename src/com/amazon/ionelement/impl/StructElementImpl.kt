@@ -27,8 +27,8 @@ import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class StructElementImpl(
     private val allFields: List<StructField>,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ): AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT

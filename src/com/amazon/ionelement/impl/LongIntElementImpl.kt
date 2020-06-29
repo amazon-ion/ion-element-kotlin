@@ -24,8 +24,8 @@ import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class LongIntElementImpl(
     override val longValue: Long,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ) : AnyElementBase(), IntElement {
     override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT

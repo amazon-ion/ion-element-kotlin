@@ -19,12 +19,11 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StringElement
-import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class StringElementImpl(
     value: String,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ): TextElementBase(value), StringElement {
     override val type: ElementType get() = ElementType.STRING
 

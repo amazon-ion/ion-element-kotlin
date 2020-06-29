@@ -23,8 +23,8 @@ import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class SymbolElementImpl(
     value: String,
-    override val annotations: List<String> = emptyList(),
-    override val metas: MetaContainer = emptyMetaContainer()
+    override val annotations: List<String>,
+    override val metas: MetaContainer
 ): TextElementBase(value), SymbolElement {
     override val type: ElementType get() = ElementType.SYMBOL
 
