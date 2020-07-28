@@ -26,7 +26,7 @@ import com.amazon.ion.IonValue
  *
  * New code that doesn't need to integrate with existing uses of the mutable DOM should not use this.
  */
-fun AnyElement.toIonValue(ion: IonSystem): IonValue {
+fun IonElement.toIonValue(ion: IonSystem): IonValue {
     val datagram = ion.newDatagram()
     ion.newWriter(datagram).use { writer ->
         this.writeTo(writer)
