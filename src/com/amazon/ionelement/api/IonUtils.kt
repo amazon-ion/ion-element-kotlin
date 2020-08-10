@@ -46,6 +46,6 @@ fun IonValue.toIonElement(): AnyElement =
 
 /** Throws an [IonElementException], including the [IonLocation] (if available). */
 internal fun constraintError(blame: IonElement, description: String): Nothing {
-    throw IonElementConstraintException(blame, description)
+    throw IonElementConstraintException(blame.asAnyElement(), description)
 }
 

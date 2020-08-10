@@ -37,7 +37,9 @@ class IonElementLoaderException(
  * [blame] is the [IonElement] instance that violates the constraint.
  */
 class IonElementConstraintException(
-    val blame: IonElement,
+    private val elementToBlame: IonElement,
     description: String,
     cause: Throwable? = null
-) : IonElementException(blame.metas.location, description, cause)
+) : IonElementException(elementToBlame.metas.location, description, cause) {
+    val blame get() = elementToBlame.asAnyElement()
+}
