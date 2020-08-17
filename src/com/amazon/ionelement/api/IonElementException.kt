@@ -31,9 +31,15 @@ class IonElementLoaderException(
     cause: Throwable? = null
 ) : IonElementException(location, description, cause)
 
-/** Exception thrown by [IonElement] accessor functions to indicate a type or nullness constraint has been violated. */
+/**
+ * Exception thrown by [IonElement] accessor functions to indicate a type or nullness constraint has been violated.
+ *
+ * [blame] is the [IonElement] instance that violates the constraint.
+ */
 class IonElementConstraintException(
-    location: IonLocation?,
+    private val elementToBlame: IonElement,
     description: String,
     cause: Throwable? = null
-) : IonElementException(location, description, cause)
+) : IonElementException(elementToBlame.metas.location, description, cause) {
+    val blame get() = elementToBlame.asAnyElement()
+}
