@@ -23,7 +23,6 @@ import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.constraintError
-import com.amazon.ionelement.api.emptyMetaContainer
 
 internal class StructElementImpl(
     private val allFields: List<StructField>,
@@ -33,18 +32,38 @@ internal class StructElementImpl(
 
     override val type: ElementType get() = ElementType.STRUCT
     override val size = allFields.size
-    override val values: Collection<AnyElement> by lazy(LazyThreadSafetyMode.NONE) { fields.map { it.value }}
+
+    // Note that we are not using `by lazy` here because it requires 2 additional allocations and
+    // has been demonstrated to significantly increase memory consumption!
+    private var valuesBackingField: Collection<AnyElement>? = null
+    override val values: Collection<AnyElement>
+        get() {
+            if(valuesBackingField == null) {
+                valuesBackingField = fields.map { it.value }
+            }
+            return valuesBackingField!!
+    }
     override val containerValues: Collection<AnyElement> get() = values
-    override val structFields: Collection<StructField> get() = fields
+    override val structFields: Collection<StructField> get() = allFields
     override val fields: Collection<StructField> get() = allFields
 
+
+    // Note that we are not using `by lazy` here because it requires 2 additional allocations and
+    // has been demonstrated to significantly increase memory consumption!
+    private var fieldsByNameBackingField: Map<String, List<AnyElement>>? = null
+
     /** Lazily calculated map of field names and lists of their values. */
-    private val fieldsByName: Map<String, List<AnyElement>> by lazy(LazyThreadSafetyMode.NONE) {
-        fields
-            .groupBy { it.name }
-            .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value } }
-            .toMap()
-    }
+    private val fieldsByName: Map<String, List<AnyElement>>
+        get() {
+            if(fieldsByNameBackingField == null) {
+                fieldsByNameBackingField =
+                    fields
+                        .groupBy { it.name }
+                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value } }
+                        .toMap()
+            }
+            return fieldsByNameBackingField!!
+        }
 
     override fun get(fieldName: String): AnyElement =
         fieldsByName[fieldName]?.firstOrNull() ?: constraintError(this, "Required struct field '$fieldName' missing")
@@ -105,15 +124,19 @@ internal class StructElementImpl(
         return true
     }
 
-    private val cachedHashCode by lazy(LazyThreadSafetyMode.NONE) {
-        // Sorting the hash codes of the individual fields makes their order irrelevant.
-        var result = fields.map { it.hashCode() }.sorted().hashCode()
+    // Note that we are not using `by lazy` here because it requires 2 additional allocations and
+    // has been demonstrated to significantly increase memory consumption!
+    private var cachedHashCode: Int? = null
+    override fun hashCode(): Int {
+        if (this.cachedHashCode == null) {
+            // Sorting the hash codes of the individual fields makes their order irrelevant.
+            var result = fields.map { it.hashCode() }.sorted().hashCode()
 
-        result = 31 * result + annotations.hashCode()
+            result = 31 * result + annotations.hashCode()
 
-        // Metas intentionally not included here.
-        result
+            // Metas intentionally not included here.
+            cachedHashCode = result
+        }
+        return this.cachedHashCode!!
     }
-
-    override fun hashCode(): Int = cachedHashCode
 }
