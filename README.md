@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/amzn/ion-element-kotlin.svg?branch=master)](https://travis-ci.org/amzn/ion-element-kotlin)
+![Build Pipeline](https://github.com/amzn/ion-element-kotlin/workflows/Build%20Pipeline/badge.svg)
 
 # Ion Element
 
