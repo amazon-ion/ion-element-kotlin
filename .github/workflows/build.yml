@@ -23,9 +23,3 @@ jobs:
 
         - name: Build using Gradle
           run: ./gradlew build
-
-            #- name: Upload Coverage report to CodeCov
-            #uses: codecov/codecov-action@v1
-            #with:
-            #token: ${{secrets.CODECOV_TOKEN}}
-            #file: ./coverage.txt
