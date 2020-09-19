@@ -1,0 +1,32 @@
+name: Build Pipeline 
+on: [push, pull_request]
+jobs:
+
+  build:
+    - name: Build
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          java: [8, 9, 10, 11 ]
+
+      - name: Java ${{ matrix.java }} sample
+        steps:
+          - name: Check out code 
+            uses: actions/checkout@v2.0.0
+
+          - name: Check out submodules
+            uses: textbook/git-checkout-submodule-action@2.0.0
+
+          - name: Setup java
+            uses: actions/setup-java@v1
+            with:
+              java-version: ${{ matrix.java }}
+
+          - name: Build using Gradle
+            run: ./gradlew build
+
+          #- name: Upload Coverage report to CodeCov
+          #uses: codecov/codecov-action@v1
+          #with:
+          #token: ${{secrets.CODECOV_TOKEN}}
+          #file: ./coverage.txt
