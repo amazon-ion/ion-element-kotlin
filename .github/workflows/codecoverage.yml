@@ -1,0 +1,29 @@
+name: Code Coverage
+on: [push, pull_request]
+
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2.0.0
+
+      - name: Check out submodules
+        uses: textbook/git-checkout-submodule-action@2.0.0
+
+      - name: Setup java ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: Generate coverage report
+        run: ./gradlew jacocoTestReport
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./build/reports/jacoco/test/jacocoTestReport.xml
