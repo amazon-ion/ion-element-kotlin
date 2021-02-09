@@ -20,7 +20,7 @@ import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
+import java.math.BigInteger
 
 internal class LongIntElementImpl(
     override val longValue: Long,
@@ -29,6 +29,8 @@ internal class LongIntElementImpl(
 ) : AnyElementBase(), IntElement {
     override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT
+
+    override val bigIntegerValue: BigInteger get() = BigInteger.valueOf(longValue)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
         LongIntElementImpl(longValue, annotations, metas)

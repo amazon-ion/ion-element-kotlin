@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import java.math.BigInteger
 
 class AnyElementTests {
     @ParameterizedTest
@@ -57,6 +58,16 @@ class AnyElementTests {
         assertEquals(2, s.count())
         s.single { it.name == "foo" && it.value.longValue == 1L}
         s.single { it.name == "bar" && it.value.longValue == 2L}
+    }
+
+    @Test
+    fun bigIntegerValueFromLongIntElement() {
+        val longValues = listOf(1, 0, -1, Long.MIN_VALUE, Long.MAX_VALUE)
+        longValues.map {
+            val bigInt = loadSingleElement(it.toString())
+            val bigIntValue = bigInt.bigIntegerValue
+            assertEquals(BigInteger.valueOf(it), bigIntValue)
+        }
     }
 
     companion object {
