@@ -13,11 +13,11 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.demos
+package com.amazon.ionelement.demos.kotlin
 
-import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonElementConstraintException
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonLocation
 import com.amazon.ionelement.api.IonTextLocation
 import com.amazon.ionelement.api.loadSingleElement
@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.MethodSource
 /**
  * Demonstrates throwing of [IonElementException] when an unexpected data type or nulliness is encountered.
  */
-class UnexpectedTypesTest {
+class UnexpectedTypesDemo {
 
     data class TestCase(
         val ionText: String,

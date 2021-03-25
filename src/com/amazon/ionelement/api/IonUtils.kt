@@ -19,6 +19,7 @@ package com.amazon.ionelement.api
 import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
 
+internal const val DEPRECATED_MSG = "Will be removed in a future version of IonElement."
 
 
 /**

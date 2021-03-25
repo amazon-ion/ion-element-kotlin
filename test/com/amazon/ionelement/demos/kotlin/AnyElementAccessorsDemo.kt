@@ -13,7 +13,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.demos
+package com.amazon.ionelement.demos.kotlin
 
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.AnyElement
@@ -26,7 +26,7 @@ import com.amazon.ionelement.util.TOP_LEVEL_STRUCTS_ION_TEXT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class IonElementExtractionInKotlinTests {
+class AnyElementAccessorsDemo {
 
     /**
      * Demonstrates data extraction with non-nullable data type accessors.
@@ -51,28 +51,28 @@ class IonElementExtractionInKotlinTests {
                             })
                     }
                 }
-        }.asSequence().toList()
+        }.toList()
 
         assertTestCaseExtraction(stockItems)
     }
-
-    private fun assertTestCaseExtraction(stockItems: List<StockItem>) {
-        val expectedTestCases = listOf(
-            StockItem(
-                "Fantastic Widget", Decimal.valueOf("12.34"), 2,
-                listOf(
-                    Order(123, "WA"),
-                    Order(456, "HI")
-                )),
-            StockItem(
-                "<unknown name>", Decimal.valueOf("23.45"), 20,
-                listOf(
-                    Order(234, "VA"),
-                    Order(567, "MI")
-                )))
-
-
-        assertEquals(expectedTestCases, stockItems)
-    }
 }
 
+
+internal fun assertTestCaseExtraction(stockItems: List<StockItem>) {
+    val expectedTestCases = listOf(
+        StockItem(
+            "Fantastic Widget", Decimal.valueOf("12.34"), 2,
+            listOf(
+                Order(123, "WA"),
+                Order(456, "HI")
+            )),
+        StockItem(
+            "<unknown name>", Decimal.valueOf("23.45"), 20,
+            listOf(
+                Order(234, "VA"),
+                Order(567, "MI")
+            )))
+
+
+    assertEquals(expectedTestCases, stockItems)
+}
