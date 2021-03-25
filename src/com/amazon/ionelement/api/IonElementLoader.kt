@@ -13,6 +13,7 @@
  *  permissions and limitations under the License.
  */
 
+@file:JvmName("ElementLoader")
 package com.amazon.ionelement.api
 
 import com.amazon.ion.IonReader
@@ -88,25 +89,31 @@ data class IonElementLoaderOptions(
 )
 
 /** Creates an [IonElementLoader] implementation with the specified [options]. */
+@JvmOverloads
 fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     IonElementLoaderImpl(options)
 
 /** Provides syntactically lighter way of invoking [IonElementLoader.loadSingleElement]. */
+@JvmOverloads
 fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     createIonElementLoader(options).loadSingleElement(ionText)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadSingleElement]. */
+@JvmOverloads
 fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     createIonElementLoader(options).loadSingleElement(ionReader)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+@JvmOverloads
 fun loadAllElements(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
     createIonElementLoader(options).loadAllElements(ionText)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+@JvmOverloads
 fun loadAllElements(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
     createIonElementLoader(options).loadAllElements(ionReader)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
+@JvmOverloads
 fun loadCurrentElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
     createIonElementLoader(options).loadCurrentElement(ionReader)
