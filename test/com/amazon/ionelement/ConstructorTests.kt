@@ -58,9 +58,9 @@ class ConstructorTests {
             ionStructOf(listOf(field("foo", ionInt(1))), annotations = dummyAnnotations, metas = dummyMetas)
         )
 
-        // These constructors called here are the manually added overload which accepts the element value and the
+        // These constructors called here are the manually added overload which accepts only the element value and the
         // metas collection.  These are intended to make creating an IonElement instance with a specific method
-        // easier when calling from Java.
+        // easier when calling from Java.  For details about these functions see the note at the top of Ion.kt.
         @JvmStatic
         @Suppress("unused")
         fun parametersForMetasOnlyTest() = listOf(
@@ -79,7 +79,8 @@ class ConstructorTests {
             ionListOf(listOf(ionInt(1)), dummyMetas),
             ionStructOf(listOf(field("foo", ionInt(1))), dummyMetas)
             // these overloads intentionally do not not exist since Java does not support vararg parameters in this
-            // position and this need for Kotlin is already served by the functions referenced above.
+            // position and this usage from Kotlin is already served by the functions which specify default values for
+            // the annoations and metas parameters.
             // ionListOf(ionInt(1), dummyMetas),
             // ionSexpOf(listOf(ionInt(1)), dummyMetas),
             // ionStructOf("foo" to ionInt(1), dummyMetas),
@@ -93,6 +94,13 @@ class ConstructorTests {
         assertEquals(1, elem.annotations.size)
         assertTrue(elem.annotations.contains("some_annotation"))
 
+        assertEquals(1, elem.metas.size)
+        assertEquals(1, elem.metas["foo_meta"])
+    }
+
+    @ParameterizedTest
+    @MethodSource("parametersForMetasOnlyTest")
+    fun metasOnlyTest(elem: IonElement) {
         assertEquals(1, elem.metas.size)
         assertEquals(1, elem.metas["foo_meta"])
     }
@@ -135,7 +143,6 @@ class ConstructorTests {
 
     @Test
     fun sexpConstructorsValueTest() {
-        ionSexpOf(ionInt(42))
         assertSeqContents(ionSexpOf(ionInt(12)))
         assertSeqContents(ionSexpOf(listOf(ionInt(12))))
     }

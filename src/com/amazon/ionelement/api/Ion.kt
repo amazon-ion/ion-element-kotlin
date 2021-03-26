@@ -65,7 +65,7 @@ typealias Annotations = List<String>
  fun ionInt(l: Long, annotations: Annotations = emptyList(), metas: MetaContainer = emptyMetaContainer()): IntElement = ...
  ```
 
- synthesizes the following overloads
+ Synthesizes the following overloads:
 
  ```
  // java syntax
@@ -81,7 +81,7 @@ typealias Annotations = List<String>
  IntElement ionInt(Long l, Annotations annotations, MetaContainer metas) { ... }`
  ```
 
- Below, we use a combination of @JvmOverloads and the manually implemented function below to provide.
+ Below, we use a combination of @JvmOverloads and the manually implemented overloads for each Ion data type.
  */
 
 /**
@@ -220,7 +220,7 @@ fun ionInt(
 fun ionInt(
     bigInt: BigInteger,
     metas: MetaContainer
-): IntElement = ionInt(bigInt, metas)
+): IntElement = ionInt(bigInt, emptyList(), metas)
 
 /** Creates a [BoolElement] that represents an Ion `bool`. */
 @JvmOverloads
@@ -274,7 +274,7 @@ fun ionDecimal(
 fun ionDecimal(
     bigDecimal: Decimal,
     metas: MetaContainer
-): DecimalElement = ionDecimal(bigDecimal, metas)
+): DecimalElement = ionDecimal(bigDecimal, emptyList(), metas)
 
 /**
  * Creates a [BlobElement] that represents an Ion `blob`.
@@ -399,7 +399,7 @@ fun ionSexpOf(
 fun ionSexpOf(
     iterable: Iterable<IonElement>,
     metas: MetaContainer
-): SexpElement = ionSexpOf(iterable, metas)
+): SexpElement = ionSexpOf(iterable, emptyList(), metas)
 
 /** Creates a [SexpElement] that represents an Ion `sexp`. */
 @JvmOverloads

@@ -16,11 +16,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 // These static imports greatly reduce the syntactic overhead of the constructor functions.
 
 import static com.amazon.ionelement.api.Ion.emptyIonList;
-import static com.amazon.ionelement.api.Ion.emptyIonStruct;
 import static com.amazon.ionelement.api.Ion.field;
 import static com.amazon.ionelement.api.Ion.ionBlob;
 import static com.amazon.ionelement.api.Ion.ionBool;
@@ -36,16 +36,13 @@ import static com.amazon.ionelement.api.Ion.ionStructOf;
 import static com.amazon.ionelement.api.Ion.ionSymbol;
 import static com.amazon.ionelement.api.Ion.ionTimestamp;
 
-
 /**
- * Demonstrates usage of the element constructor functions.
+ * Demonstrates usage of the element constructor functions and to allows developers of this library to verify that
+ * usage from Java is in fact idiomatic to Java, which is sometimes not otherwise apparent if we're working only in
+ * Kotlin.
  *
- * These methods appear as top-level functions in the {@link com.amazon.ionelement.api} package to Kotlin,
- * but as static members of the {@link com.amazon.ionelement.api.Ion} class to Java.
- *
- * This class serves as documentation to show proper usage of the {@code IonElement} API from Java and to allow
- * developers of this library to verify that usage from Java is in fact idiomatic to Java, which is sometimes not
- * otherwise apparent if we're working only in Kotlin.
+ * The constructor functions are top-level functions in the {@link com.amazon.ionelement.api} package, and appear
+ * as static members of the {@link com.amazon.ionelement.api.Ion} class to Java.
  */
 public class ConstructionDemo extends Assertions {
 
@@ -54,66 +51,6 @@ public class ConstructionDemo extends Assertions {
         AnyElement expectedElem = ElementLoader.loadSingleElement(expectedIonText);
         assertEquals(expectedElem, value);
     }
-
-    @Test
-    void alksjdfr() {
-        IntElement ie = ionInt(42);
-        ionSexpOf(ie);
-    }
-    @Test
-    void scalarElements() {
-        // boolean
-        assertEquiv("true", ionBool(true));
-        assertEquiv("false", ionBool(false));
-
-        // integer
-        assertEquiv("42", ionInt(42L));
-
-        // string
-        assertEquiv("\"make it so\"", ionString("make it so"));
-
-        // symbol
-        assertEquiv("'Aye aye, captain!'", ionSymbol("Aye aye, captain!"));
-
-        // float
-        assertEquiv("314e-2", ionFloat(3.14));
-
-        // decimal (note: this is com.amazon.ion.Decimal)
-        assertEquiv("98.6", ionDecimal(Decimal.valueOf("98.6")));
-
-        // timestamp (note: this is com.amazon.ion.Timestamp)
-        assertEquiv("1969-07-20T", ionTimestamp(Timestamp.valueOf("1969-07-20T")));
-    }
-
-    @Test
-    void listElement() {
-        assertEquiv("[]", emptyIonList());
-
-        assertEquiv("[42]", ionListOf(Arrays.asList(ionInt(42))));
-        assertEquiv("[1, 2, 3]", ionListOf(ionInt(1), ionInt(2), ionInt(3)));
-
-        assertEquiv("foo::[]", ionListOf(Collections.emptyList(), Collections.singletonList("foo")));
-        assertEquiv("foo::[42]", ionListOf(Collections.singletonList(ionInt(42)), Collections.singletonList("foo")));
-
-        assertEquiv("foo::[]", ionListOf(Collections.emptyList(), Collections.singletonList("foo")));
-        assertEquiv("foo::[42]", ionListOf(Collections.singletonList(ionInt(42)), Collections.singletonList("foo")));
-    }
-
-    @Test
-    void annotations() {
-        IntElement elem1 = ionInt(42L, Collections.singletonList("meaning_of_life"));
-        assertEquiv("meaning_of_life::42", elem1);
-
-        // TODO:  create an issue to expose `withAnnotations` and other `with*` functions to Java.
-    }
-
-    @Test
-    void metas() {
-        IntElement elem3 = ionInt(42L, Collections.singletonMap("so long", "thanks for all the fish"));
-
-        assertEquals("thanks for all the fish", elem3.getMetas().get("so long"));
-    }
-
 
     static class TestCase {
         String expectedIonText;
@@ -206,10 +143,69 @@ public class ConstructionDemo extends Assertions {
                                 Arrays.asList(
                                         field("meaning_of_life", ionInt(42)),
                                         field("days_until_im_a_millionaire", ionInt(999999))),
-                                testAnnotations)),
+                                testAnnotations))
+        );
+    }
 
+    /** Tests that the handwritten overloads of all constructor functions work as intended. */
+    @ParameterizedTest
+    @MethodSource("parametersForValuesWithMetasTest")
+    void valuesWithMetasTest(TestCase tc) {
+        assertEquiv(tc.expectedIonText, tc.element);
+        assertEquals(42, tc.element.getMetas().get("foo"));
+    }
 
-                new TestCase("true", ionBool(true))
+    static List<TestCase> parametersForValuesWithMetasTest() {
+        Map<String, Object> testMetas = Collections.singletonMap("foo", 42);
+        return Arrays.asList(
+
+                // null
+                new TestCase("null", ionNull(ElementType.NULL, testMetas)),
+
+                // typed null
+                new TestCase("null.int", ionNull(ElementType.INT, testMetas)),
+
+                // boolean
+                new TestCase("true", ionBool(true, testMetas)),
+
+                // int
+                new TestCase("2", ionInt(2, testMetas)),
+
+                // float
+                new TestCase("314e-2", ionFloat(3.14, testMetas)),
+
+                // decimal
+                new TestCase("1.23", ionDecimal(Decimal.valueOf("1.23"), testMetas)),
+
+                // symbol
+                new TestCase("some_symbol", ionSymbol("some_symbol", testMetas)),
+
+                // string
+                new TestCase("\"some string\"", ionString("some string", testMetas)),
+
+                // blob
+                new TestCase("{{ VG8gaW5maW5pdHkuLi4gYW5kIGJleW9uZCE= }}", ionBlob("To infinity... and beyond!".getBytes(StandardCharsets.UTF_8), testMetas)),
+
+                // clob
+                new TestCase("{{ \"This is a CLOB of text.\" }}", ionClob("This is a CLOB of text.".getBytes(StandardCharsets.UTF_8), testMetas)),
+
+                //
+                // Collection types
+                //
+
+                // list
+                new TestCase("[1, 2]", ionListOf(Arrays.asList(ionInt(1), ionInt(2)), testMetas)),
+
+                // sexp
+                new TestCase("(1 2)", ionSexpOf(Arrays.asList(ionInt(1), ionInt(2)), testMetas)),
+
+                // struct
+                new TestCase("{ meaning_of_life: 42, days_until_im_a_millionaire: 999999 }",
+                        ionStructOf(
+                                Arrays.asList(
+                                        field("meaning_of_life", ionInt(42)),
+                                        field("days_until_im_a_millionaire", ionInt(999999))),
+                                testMetas))
         );
     }
 }
