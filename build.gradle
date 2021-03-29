@@ -65,12 +65,12 @@ dokka {
 
 task sourcesJar(type: Jar) {
     from "src"
-    classifier = "sources"
+    archiveClassifier.set("sources")
 }
 
 task javadocJar(type: Jar) {
     from dokka
-    classifier = "javadoc"
+    archiveClassifier.set("javadoc")
 }
 
 java {
