@@ -39,50 +39,51 @@ import java.math.BigInteger
 typealias Annotations = List<String>
 
 /*
- # Notes
 
- ## vararg and collection constructors
+# Notes
 
- The vararg element collection constructors Kotin API are not fully idiomatic to from Java, because Java requires
- variadic parameters to be the last parameter, but kotlin does not.  When a vararg parameter is defined in Kotlin that
- is not in the last one, it appears to Java to be simply an array.  Unfortunately, `ionListOf`, `ionSexpOf` and
- `ionStructOf` constructors all accept a vararg parameter as the first argument and this cannot change without breaking
- many clients.
+## vararg and collection constructors
 
- This each of these functions has an overload that from Java appears to accept either an IonElement[] or an
- Iterable<IonElement>.
+The vararg element collection constructors Kotlin API are not fully idiomatic from the perspective of Java, because
+Java requires variadic parameters to be the last parameter, but kotlin does not.  When a vararg parameter is defined
+in Kotlin that is not in the last one, it appears to Java to be simply an array.  Unfortunately, `ionListOf`,
+`ionSexpOf` and `ionStructOf` constructors all accept a vararg parameter as the first argument and this cannot change
+without breaking many clients.
 
- ## @JvmOverloads
+This each of these functions has an overload that from Java appears to accept either an IonElement[] or an
+Iterable<IonElement>.
 
- @JvmOverloads is a very useful tool for Java compatibility that synthesizes overloads which specify the
- default values of your parameters when left unspecified by calling code, however, they do not generate
- overloads for all possible combinations of values.
+## @JvmOverloads
 
- For example, the following definition:
+@JvmOverloads is a very useful tool for Java compatibility that synthesizes overloads which specify the default values
+of your parameters when left unspecified by calling code, however, this do not generate overloads for all possible
+combinations of values.
 
- ```
- @JvmOverloads
- fun ionInt(l: Long, annotations: Annotations = emptyList(), metas: MetaContainer = emptyMetaContainer()): IntElement = ...
- ```
+For example, the following definition:
 
- Synthesizes the following overloads:
+```
+@JvmOverloads
+fun ionInt(l: Long, annotations: Annotations = emptyList(), metas: MetaContainer = emptyMetaContainer()): IntElement = ...
+```
 
- ```
- // java syntax
- IntElement ionInt(Long l) { ... }
- IntElement ionInt(Long l, Annotations annotations) { ... }
- IntElement ionInt(Long l, Annotations annotations, MetaContainer metas) { ... }
- ```
+Synthesizes the following overloads:
 
- Missing from this is an overload that accepts only the the `l` and `metas` parameters, which has to be added
- manually:
+```
+// Java syntax
+IntElement ionInt(Long l) { ... }
+IntElement ionInt(Long l, Annotations annotations) { ... }
+IntElement ionInt(Long l, Annotations annotations, MetaContainer metas) { ... }
+```
 
- ```
- IntElement ionInt(Long l, Annotations annotations, MetaContainer metas) { ... }`
- ```
+Missing from this is an overload that accepts only the the `l` and `metas` parameters, which has to be added
+manually:
 
- Below, we use a combination of @JvmOverloads and the manually implemented overloads for each Ion data type.
- */
+```
+IntElement ionInt(Long l, MetaContainer metas) { ... }`
+```
+
+Below, we use a combination of @JvmOverloads and the manually implemented overloads for each Ion data type.
+*/
 
 /**
  * Creates an [IonElement] that represents an Ion `null.null` or a typed `null` with the specified metas

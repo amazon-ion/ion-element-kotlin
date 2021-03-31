@@ -26,7 +26,7 @@ import com.amazon.ionelement.util.TOP_LEVEL_STRUCTS_ION_TEXT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class AnyElementAccessorsDemo {
+class IonElementExtractionInKotlinTests {
 
     /**
      * Demonstrates data extraction with non-nullable data type accessors.
@@ -35,7 +35,7 @@ class AnyElementAccessorsDemo {
     @Test
     fun extractFromStructsDemo() {
         val stockItems = ION.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
-           loadAllElements(reader, INCLUDE_LOCATION_META)
+            loadAllElements(reader, INCLUDE_LOCATION_META)
                 .map { stockItem: AnyElement ->
                     stockItem.asStruct().run {
                         StockItem(
@@ -51,28 +51,27 @@ class AnyElementAccessorsDemo {
                             })
                     }
                 }
-        }.toList()
+        }.asSequence().toList()
 
         assertTestCaseExtraction(stockItems)
     }
-}
+
+    private fun assertTestCaseExtraction(stockItems: List<StockItem>) {
+        val expectedTestCases = listOf(
+            StockItem(
+                "Fantastic Widget", Decimal.valueOf("12.34"), 2,
+                listOf(
+                    Order(123, "WA"),
+                    Order(456, "HI")
+                )),
+            StockItem(
+                "<unknown name>", Decimal.valueOf("23.45"), 20,
+                listOf(
+                    Order(234, "VA"),
+                    Order(567, "MI")
+                )))
 
 
-internal fun assertTestCaseExtraction(stockItems: List<StockItem>) {
-    val expectedTestCases = listOf(
-        StockItem(
-            "Fantastic Widget", Decimal.valueOf("12.34"), 2,
-            listOf(
-                Order(123, "WA"),
-                Order(456, "HI")
-            )),
-        StockItem(
-            "<unknown name>", Decimal.valueOf("23.45"), 20,
-            listOf(
-                Order(234, "VA"),
-                Order(567, "MI")
-            )))
-
-
-    assertEquals(expectedTestCases, stockItems)
+        assertEquals(expectedTestCases, stockItems)
+    }
 }

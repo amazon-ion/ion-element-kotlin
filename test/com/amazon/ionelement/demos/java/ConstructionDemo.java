@@ -5,10 +5,8 @@ import com.amazon.ion.Timestamp;
 import com.amazon.ionelement.api.AnyElement;
 import com.amazon.ionelement.api.ElementLoader;
 import com.amazon.ionelement.api.ElementType;
-import com.amazon.ionelement.api.IntElement;
 import com.amazon.ionelement.api.IonElement;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -18,9 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-// These static imports greatly reduce the syntactic overhead of the constructor functions.
-
-import static com.amazon.ionelement.api.Ion.emptyIonList;
 import static com.amazon.ionelement.api.Ion.field;
 import static com.amazon.ionelement.api.Ion.ionBlob;
 import static com.amazon.ionelement.api.Ion.ionBool;
@@ -36,8 +31,10 @@ import static com.amazon.ionelement.api.Ion.ionStructOf;
 import static com.amazon.ionelement.api.Ion.ionSymbol;
 import static com.amazon.ionelement.api.Ion.ionTimestamp;
 
+// These static imports greatly reduce the syntactic overhead of the constructor functions.
+
 /**
- * Demonstrates usage of the element constructor functions and to allows developers of this library to verify that
+ * Demonstrates usage of the element constructor functions and allows developers of this library to verify that
  * usage from Java is in fact idiomatic to Java, which is sometimes not otherwise apparent if we're working only in
  * Kotlin.
  *
@@ -103,6 +100,10 @@ public class ConstructionDemo extends Assertions {
                 // decimal
                 new TestCase("1.23", ionDecimal(Decimal.valueOf("1.23"))),
                 new TestCase("foo::1.23", ionDecimal(Decimal.valueOf("1.23"), testAnnotations)),
+
+                // timestamp
+                new TestCase("2001-02-03T", ionTimestamp(Timestamp.valueOf("2001-02-03T"))),
+                new TestCase("foo::2001-02-03T", ionTimestamp(Timestamp.valueOf("2001-02-03T"), testAnnotations)),
 
                 // symbol
                 new TestCase("some_symbol", ionSymbol("some_symbol")),
