@@ -1,4 +1,4 @@
-package com.amazon.ionelement.demos
+package com.amazon.ionelement.demos.kotlin
 
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IonElement
@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class Narowing {
+class NarrowingDemo {
     sealed class ValueContainer {
         data class Text(val textValue: String) : ValueContainer()
         data class Integer(val indexValue: Int) : ValueContainer()

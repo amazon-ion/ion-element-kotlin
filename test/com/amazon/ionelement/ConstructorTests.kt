@@ -57,6 +57,35 @@ class ConstructorTests {
             ionStructOf(field("foo", ionInt(1)), annotations = dummyAnnotations, metas = dummyMetas),
             ionStructOf(listOf(field("foo", ionInt(1))), annotations = dummyAnnotations, metas = dummyMetas)
         )
+
+        // These constructors called here are the manually added overload which accepts only the element value and the
+        // metas collection.  These are intended to make creating an IonElement instance with a specific method
+        // easier when calling from Java.  For details about these functions see the note at the top of Ion.kt.
+        @JvmStatic
+        @Suppress("unused")
+        fun parametersForMetasOnlyTest() = listOf(
+            ionNull(ElementType.NULL, dummyMetas),
+            ionBool(true, dummyMetas),
+            ionInt(123L, dummyMetas),
+            ionInt(BigInteger.ONE, dummyMetas),
+            ionTimestamp("2001T", dummyMetas),
+            ionTimestamp(Timestamp.valueOf("2001T"), dummyMetas),
+            ionFloat(1.0, dummyMetas),
+            ionDecimal(Decimal.ZERO, dummyMetas),
+            ionString("foo", dummyMetas),
+            ionSymbol("foo", dummyMetas),
+            ionClob(ByteArray(1), dummyMetas),
+            ionBlob(ByteArray(1), dummyMetas),
+            ionListOf(listOf(ionInt(1)), dummyMetas),
+            ionStructOf(listOf(field("foo", ionInt(1))), dummyMetas)
+            // these overloads intentionally do not not exist since Java does not support vararg parameters in this
+            // position and this usage from Kotlin is already served by the functions which specify default values for
+            // the annoations and metas parameters.
+            // ionListOf(ionInt(1), dummyMetas),
+            // ionSexpOf(listOf(ionInt(1)), dummyMetas),
+            // ionStructOf("foo" to ionInt(1), dummyMetas),
+            // ionStructOf(field("foo", ionInt(1)), dummyMetas),
+        )
     }
 
     @ParameterizedTest
@@ -65,6 +94,13 @@ class ConstructorTests {
         assertEquals(1, elem.annotations.size)
         assertTrue(elem.annotations.contains("some_annotation"))
 
+        assertEquals(1, elem.metas.size)
+        assertEquals(1, elem.metas["foo_meta"])
+    }
+
+    @ParameterizedTest
+    @MethodSource("parametersForMetasOnlyTest")
+    fun metasOnlyTest(elem: IonElement) {
         assertEquals(1, elem.metas.size)
         assertEquals(1, elem.metas["foo_meta"])
     }

@@ -13,7 +13,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.demos
+package com.amazon.ionelement.demos.kotlin
 
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.AnyElement
@@ -35,7 +35,7 @@ class IonElementExtractionInKotlinTests {
     @Test
     fun extractFromStructsDemo() {
         val stockItems = ION.newReader(TOP_LEVEL_STRUCTS_ION_TEXT).use { reader ->
-           loadAllElements(reader, INCLUDE_LOCATION_META)
+            loadAllElements(reader, INCLUDE_LOCATION_META)
                 .map { stockItem: AnyElement ->
                     stockItem.asStruct().run {
                         StockItem(
@@ -75,4 +75,3 @@ class IonElementExtractionInKotlinTests {
         assertEquals(expectedTestCases, stockItems)
     }
 }
-

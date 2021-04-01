@@ -19,8 +19,6 @@ package com.amazon.ionelement.api
 import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
 
-
-
 /**
  * Bridge function that converts from an immutable [AnyElement] to a mutable [IonValue].
  *
@@ -48,4 +46,3 @@ fun IonValue.toIonElement(): AnyElement =
 internal fun constraintError(blame: IonElement, description: String): Nothing {
     throw IonElementConstraintException(blame.asAnyElement(), description)
 }
-
