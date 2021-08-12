@@ -14,8 +14,39 @@ unstable and in alpha status.
 
 ## Example
 
-```Kotlin
+### Constructing Ion Values
 
+`ion-element` provides a function for creating instances of each of the Ion element types.
+
+```kotlin
+import com.amazon.ionelement.api.ionInt
+import com.amazon.ionelement.api.ionListOf
+import com.amazon.ionelement.api.ionString
+import com.amazon.ionelement.api.ionStructOf
+import com.amazon.ionelement.api.ionTimestamp
+
+val greeting = ionString("Hello world!")
+
+val ultimateAnswer = ionInt(42)
+
+val listOfInts = ionListOf((1L..10L).map { ionInt(it) })
+
+val anotherList = ionListOf(
+    greeting,
+    ultimateAnswer,
+    listOfInts,
+    annotations = listOf("yolo", "i_love_ion")
+)
+
+val person = ionStructOf(
+    "firstName" to ionString("Frédéric"),
+    "lastName" to ionString("Chopin"),
+    "birthdate" to ionTimestamp("1810-02-22")
+)
+```
+
+### Loading Ion Data using an IonReader
+```Kotlin
 // Loading Ion Data using an IonReader from Ion-java
 
 val stockItemsIonText = """
@@ -59,19 +90,42 @@ val stockItems = ion.newReader(stockItemsIonText).use { reader ->
 }
 ```
 
-## Building
-
-Pull in the `ion-tests` git submodule:
-
-```
-git submodule update --init
-```
-
-Then run the gradle wrapper:
+## Development
+This repository contains the [ion-tests](https://github.com/amzn/ion-tests) repository as a [git submodule](https://git-scm.com/docs/git-submodule).
+The easiest way to clone the `ion-element-kotlin` repository and initialize its submodule
+is to run the following command:
 
 ```
-./gradlew build
+$ git clone --recursive https://github.com/amzn/ion-element-kotlin.git ion-element-kotlin
 ```
+
+Alternatively, the submodule may be initialized independently of the clone
+by running the following commands:
+
+```
+$ git submodule init
+$ git submodule update
+```
+
+`ion-element-kotlin` may now be built with the following command:
+
+```
+$ ./gradlew build
+```
+
+### Pulling in Upstream Changes
+To pull upstream changes into `ion-element-kotlin`, start with a simple `git pull`.
+This will pull in any changes to `ion-element-kotlin` itself (including any changes
+to its `.gitmodules` file), but not any changes to the submodules.
+To make sure the submodules are up-to-date, use the following
+command:
+
+```
+$ git submodule update --remote
+```
+
+For detailed walkthroughs of git submodule usage, see the
+[Git Tools documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## License
 
