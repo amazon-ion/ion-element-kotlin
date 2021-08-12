@@ -20,14 +20,20 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.constraintError
+import kotlinx.collections.immutable.PersistentCollection
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class StructElementImpl(
-    private val allFields: List<StructField>,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    private val allFields: PersistentList<StructField>,
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ): AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
@@ -35,11 +41,11 @@ internal class StructElementImpl(
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!
-    private var valuesBackingField: Collection<AnyElement>? = null
+    private var valuesBackingField: PersistentCollection<AnyElement>? = null
     override val values: Collection<AnyElement>
         get() {
             if(valuesBackingField == null) {
-                valuesBackingField = fields.map { it.value }
+                valuesBackingField = fields.map { it.value }.toPersistentList()
             }
             return valuesBackingField!!
     }
@@ -50,7 +56,7 @@ internal class StructElementImpl(
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!
-    private var fieldsByNameBackingField: Map<String, List<AnyElement>>? = null
+    private var fieldsByNameBackingField: PersistentMap<String, PersistentList<AnyElement>>? = null
 
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<AnyElement>>
@@ -59,8 +65,8 @@ internal class StructElementImpl(
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
-                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value } }
-                        .toMap()
+                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList() }
+                        .toMap().toPersistentMap()
             }
             return fieldsByNameBackingField!!
         }
@@ -74,7 +80,7 @@ internal class StructElementImpl(
     override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
-        StructElementImpl(allFields, annotations, metas)
+        StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)

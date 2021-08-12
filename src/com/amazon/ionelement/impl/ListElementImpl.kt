@@ -19,18 +19,22 @@ import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class ListElementImpl (
-    values: List<AnyElement>,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    values: PersistentList<AnyElement>,
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ): SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
     override val listValues: List<AnyElement> get() = values
 
     override fun copy(annotations: List<String>, metas: MetaContainer): ListElement =
-        ListElementImpl(values, annotations, metas)
+        ListElementImpl(values, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

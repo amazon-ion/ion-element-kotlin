@@ -20,12 +20,16 @@ import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 import java.math.BigInteger
 
 internal class LongIntElementImpl(
     override val longValue: Long,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ) : AnyElementBase(), IntElement {
     override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT
@@ -33,7 +37,7 @@ internal class LongIntElementImpl(
     override val bigIntegerValue: BigInteger get() = BigInteger.valueOf(longValue)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
-        LongIntElementImpl(longValue, annotations, metas)
+        LongIntElementImpl(longValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
     override fun equals(other: Any?): Boolean {

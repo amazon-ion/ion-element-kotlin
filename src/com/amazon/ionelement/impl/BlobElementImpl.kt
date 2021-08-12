@@ -21,10 +21,15 @@ import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
 
+import com.amazon.ionelement.api.PersistentMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
+
 internal class BlobElementImpl(
     bytes: ByteArray,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ) : LobElementBase(bytes), BlobElement {
 
     override val blobValue: ByteArrayView get() = bytesValue
@@ -32,7 +37,7 @@ internal class BlobElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BlobElement =
-        BlobElementImpl(bytes, annotations, metas)
+        BlobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
 
     override val type: ElementType get() = ElementType.BLOB
 }

@@ -20,17 +20,22 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.DecimalElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class DecimalElementImpl(
     override val decimalValue: Decimal,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ) : AnyElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement =
-        DecimalElementImpl(decimalValue, annotations, metas)
+        DecimalElementImpl(decimalValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
     override fun equals(other: Any?): Boolean {

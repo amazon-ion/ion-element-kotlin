@@ -19,17 +19,21 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.BoolElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class BoolElementImpl(
     override val booleanValue: Boolean,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ): AnyElementBase(), BoolElement {
     override val type: ElementType get() = ElementType.BOOL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement =
-        BoolElementImpl(booleanValue, annotations, metas)
+        BoolElementImpl(booleanValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
     override fun equals(other: Any?): Boolean {

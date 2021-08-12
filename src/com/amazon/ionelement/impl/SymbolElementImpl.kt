@@ -18,20 +18,24 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.emptyMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class SymbolElementImpl(
     value: String,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ): TextElementBase(value), SymbolElement {
     override val type: ElementType get() = ElementType.SYMBOL
 
     override val symbolValue: String get() = textValue
 
     override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElement =
-        SymbolElementImpl(textValue, annotations, metas)
+        SymbolElementImpl(textValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)
     override fun equals(other: Any?): Boolean {

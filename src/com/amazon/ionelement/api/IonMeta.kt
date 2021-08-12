@@ -16,9 +16,13 @@
 @file: JvmName("IonMeta")
 package com.amazon.ionelement.api
 
-typealias MetaContainer = Map<String, Any>
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.toPersistentHashMap
 
-private val EMPTY_METAS = HashMap<String, Any>()
+typealias MetaContainer = Map<String, Any>
+internal typealias PersistentMetaContainer = PersistentMap<String, Any>
+
+internal val EMPTY_METAS = HashMap<String, Any>().toPersistentHashMap()
 
 fun emptyMetaContainer(): MetaContainer = EMPTY_METAS
 
