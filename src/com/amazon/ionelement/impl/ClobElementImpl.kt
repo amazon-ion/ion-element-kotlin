@@ -20,19 +20,24 @@ import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.ClobElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class ClobElementImpl(
     bytes: ByteArray,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ) : LobElementBase(bytes), ClobElement {
 
     override val clobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
     override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement =
-        ClobElementImpl(bytes, annotations, metas)
+        ClobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
 
     override val type: ElementType get() = ElementType.CLOB
 }

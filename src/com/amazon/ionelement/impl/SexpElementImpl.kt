@@ -18,19 +18,23 @@ package com.amazon.ionelement.impl
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.SexpElement
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class SexpElementImpl (
-    values: List<AnyElement>,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    values: PersistentList<AnyElement>,
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ):  SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
 
     override val sexpValues: List<AnyElement> get() = seqValues
 
     override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
-        SexpElementImpl(values, annotations, metas)
+        SexpElementImpl(values, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

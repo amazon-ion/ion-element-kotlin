@@ -19,17 +19,21 @@ import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.TimestampElement
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class TimestampElementImpl(
     override val timestampValue: Timestamp,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ): AnyElementBase(), TimestampElement {
 
     override val type: ElementType get() = ElementType.TIMESTAMP
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement =
-        TimestampElementImpl(timestampValue, annotations, metas)
+        TimestampElementImpl(timestampValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(timestampValue)
 

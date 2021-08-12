@@ -19,17 +19,22 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.MetaContainer
+
+import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.emptyMetaContainer
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class FloatElementImpl(
     override val doubleValue: Double,
-    override val annotations: List<String>,
-    override val metas: MetaContainer
+    override val annotations: PersistentList<String>,
+    override val metas: PersistentMetaContainer
 ) : AnyElementBase(), FloatElement {
     override val type: ElementType get() = ElementType.FLOAT
 
     override fun copy(annotations: List<String>, metas: MetaContainer): FloatElement =
-        FloatElementImpl(doubleValue, annotations, metas)
+        FloatElementImpl(doubleValue, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
     override fun equals(other: Any?): Boolean {
