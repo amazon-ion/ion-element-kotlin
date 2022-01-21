@@ -83,8 +83,8 @@ class StructIonElementTests {
     }
 
 
-    private fun Iterable<StructField>.assertHasField(fieldName: String, value: IonElement) {
-        assertTrue(this.any { it.name == fieldName && it.value == value }, "Must have field '$fieldName'")
+    private fun Iterable<StructField>.assertHasField(expectedName: String, expectedValue: IonElement) {
+        assertTrue(this.any { (name, value) -> name == expectedName && value == expectedValue }, "Must have field '$expectedName'")
     }
 
 }
