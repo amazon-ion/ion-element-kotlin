@@ -21,5 +21,8 @@ package com.amazon.ionelement.api
 interface StructField {
     val name: String
     val value: AnyElement
+
+    operator fun component1(): String
+    operator fun component2(): AnyElement
 }
 
