@@ -16,20 +16,26 @@
 @file:JvmName("IonUtils")
 package com.amazon.ionelement.api
 
-import com.amazon.ion.IonSystem
 import com.amazon.ion.IonValue
+import com.amazon.ion.ValueFactory
 
 /**
- * Bridge function that converts from an immutable [AnyElement] to a mutable [IonValue].
+ * Bridge function that converts from an immutable [IonElement] to a mutable [IonValue].
  *
  * New code that doesn't need to integrate with existing uses of the mutable DOM should not use this.
+ *
+ * @param factory A [ValueFactory] to use to create the new [IonValue] instances.  Note that any
+ * [com.amazon.ion.IonSystem] instance maybe be used here, in addition to other implementations of [ValueFactory].
  */
-fun IonElement.toIonValue(ion: IonSystem): IonValue {
-    val datagram = ion.newDatagram()
-    ion.newWriter(datagram).use { writer ->
+fun IonElement.toIonValue(factory: ValueFactory): IonValue {
+    // We still have to use IonSystem under the covers for this to get an IonWriter that writes to a dummy list.
+    val dummyList = factory.newList()
+    dummyList.system.newWriter(dummyList).use { writer ->
         this.writeTo(writer)
     }
-    return datagram.first()
+    // .removeAt(0) below detaches the `IonValue` that was written above so that it may be added to other
+    // IonContainer instances without needing to be `IonValue.cloned()`'d.
+    return dummyList.removeAt(0)
 }
 
 /**
