@@ -256,10 +256,6 @@ val typedNullElement: AnyElement = loadSingleElement("null.int")
 println(typedNullElement.asIntOrNull())
 ```
 
-The `*Value` functions include a null-check so the application doesn't have to, additionally this takes advantage
-of [Kotlin's null safety](https://kotlinlang.org/docs/null-safety.html), since the values returned from these functions
-are guaranteed to be non-null. For values that *might* legitimately be null,
-
 ## `IonElement` API Guidelines
 
 The following guidelines are applied to the API of this package and are good practices to follow for any API accepting
