@@ -200,7 +200,7 @@ typedNullElement.longValue
 ```
 
 Each of `*Value` properties has a corresponding `*ValueOrNull`, which converts Ion null values to a Kotlin `null`. These
-should be used when the application wishes to allow elements to be non-null.
+should be used when the application wishes to allow elements to be null.
 
 ```Kotlin
 val nullElement: AnyElement = loadSingleElement("null")
@@ -215,7 +215,50 @@ are guaranteed to be non-null. For values that *might* legitimately be null,
 
 ### `AnyElement`'s `as*[OrNull]()` Functions
 
-`ion-element` greatly reduces the need for down-casting, but as shown above it does not does not completely
+Similar to `AnyElement`'s `*Value[OrNull]` properties `AnyElement` also provides a number of `as*[OrNull]()` functions.
+These serve a similar purpose to the former, performing type checking and optionally a null-check, but the latter casts
+the `AnyElement` to a narrowed `IonElement` sub-interface.
+
+Here is an example using `asInt()` and `asString()`
+
+```Kotlin
+val anInteger: AnyElement = loadSingleElement("42")
+
+// Prints 42
+println(anInteger.longValue)
+
+// throws IonElementConstraintException
+anInteger.stringValue
+```
+
+As before, if the `AnyElement` instance contains an Ion null value, an `IonElementConstraintException` is also thrown.
+These should be used when the application wishes to require elements to be non-null.
+
+```Kotlin
+val nullElement: AnyElement = loadSingleElement("null")
+val typedNullElement: AnyElement = loadSingleElement("null.int")
+
+// Both throw IonElementConstraintException
+nullElement.asInt()
+typedNullElement.asInt()
+```
+
+Also as before, each of `as*()` properties has a corresponding `as*OrNull` function, which converts `AnyElement` 
+instance to a narrowed sub-interface of `IonElement` or null.  
+
+```Kotlin
+val nullElement: AnyElement = loadSingleElement("null")
+// prints: null
+println(nullElement.asIntOrNull()) 
+
+val typedNullElement: AnyElement = loadSingleElement("null.int")
+// prints: null
+println(typedNullElement.asIntOrNull())
+```
+
+The `*Value` functions include a null-check so the application doesn't have to, additionally this takes advantage
+of [Kotlin's null safety](https://kotlinlang.org/docs/null-safety.html), since the values returned from these functions
+are guaranteed to be non-null. For values that *might* legitimately be null,
 
 ## `IonElement` API Guidelines
 
@@ -234,7 +277,8 @@ or returning `IonElement` types or its sub-types.
       narrower sub-interface or `AnyElement`.
     - ... more than one type of Ion data should have the narrowest possible return type, for instance:
         - A function that will only ever return s-expressions should have the `SexpElement` return type.
-        - A function that will return lists or s-expressions should have the `ContainerElement` return type.
+        - A function that may return lists or s-expressions should have the `SeqElement` return type.
+        - A function that may return structs, lists or s-expressions should have the `ContainerElement` return type.
 
 ## `IonElement` Constructors
 
@@ -323,9 +367,9 @@ val element: AnyElement = loadSingleElement("{ some_field: 42 }")
 
 #### `loadCurrentElement`
 
-Loads the entire current top-level Ion value from an `IonReader`. Unlike `loadSingleElement`, does not throw an 
-exception if another top-level value remains in the `IonReader`.  Steps in to and out as needed for container values, 
-but does *not* advance the reader to the next top level value. 
+Loads the entire current top-level Ion value from an `IonReader`. Unlike `loadSingleElement`, does not throw an
+exception if another top-level value remains in the `IonReader`. Steps in to and out as needed for container values, but
+does *not* advance the reader to the next top level value.
 
 Signatures:
 
@@ -337,7 +381,7 @@ Example:
 
 ```Kotlin
 IonReaderBuilder.standard().build("1 2").use { reader ->
-    while(reader.next() != null) {
+    while (reader.next() != null) {
         println(loadCurrentElement(reader))
     }
 }
@@ -345,13 +389,16 @@ IonReaderBuilder.standard().build("1 2").use { reader ->
 
 #### `loadAllElements`
 
-This is an alternative to `loadCurrentElement`.  Returns an iterator that reads one top-level value at a time.
+This is an alternative to `loadCurrentElement`. Returns an iterator that reads one top-level value at a time.
 
 Signatures:
 
 ```Kotlin
 fun loadAllElements(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement>
-fun loadAllElements(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement>
+fun loadAllElements(
+    ionReader: IonReader,
+    options: IonElementLoaderOptions = IonElementLoaderOptions()
+): Iterable<AnyElement>
 ```
 
 ```Kotlin
@@ -419,13 +466,13 @@ the application to take care of persisting any metas.
 
 ## Loading Data With Location Metas
 
-In certain contexts, for example, when Ion text is used as the syntax of a DSL (domain specific language) or 
-as a configuration file, it is helpful to know the line & column number of the Ion value within a file so that 
-semantic validation errors may be reported to the end user.  This is accomplished through the use of the previously
-described metas.
+In certain contexts, for example, when Ion text is used as the syntax of a DSL (domain specific language) or as a
+configuration file, it is helpful to know the line & column number of the Ion value within a file so that semantic
+validation errors may be reported to the end user. This is accomplished through the use of the previously described
+metas.
 
 The inclusion of location metas comes at a additional CPU cost which is non-trivial for large files, so by default is
-disabled. It is enabled by passing `IonElementLoaderOptions(includeLocationMeta = true)` along to the corresponding 
+disabled. It is enabled by passing `IonElementLoaderOptions(includeLocationMeta = true)` along to the corresponding
 loader function.
 
 ```Kotlin
@@ -445,7 +492,7 @@ Note that `.location` above is an extension property provided for convenience.
 Finally, this works for both Ion text and Ion binary files, however for binary files, this the meta includes a byte
 offset instead of a line number and character offset.
 
-## Converting between `IonElement` and `IonValue` Instances
+## Converting between `IonElement` and `IonValue`
 
 In order to support better interoperability with existing code that uses `IonValue`, it is easy to convert between
 `IonElement` and `IonValue` instances. The `IonValue.toIonElement()` and `IonElement.toIonValue(ValueFactory)`
@@ -472,15 +519,15 @@ assertEquals(ion.newString(messageString), ionValue2)
 
 ## Future of `IonElement`
 
-Currently, there are two possible areas of future development for `IonElement`. 
+Currently, there are two possible areas of future development for `IonElement`.
 
 - [Path copying](https://en.wikipedia.org/wiki/Persistent_data_structure#Path_copying) can be employed to aid in the
-transformation of nested deeply nested elements.  Today, clients must provide their own solutions for transformation 
-of deeply nested `IonElement` values.  Ideally, this library provides such a facility out of the box. 
-- Lazy loading of `IonElement` values.  An alternative to `ion-java`'s skip-scanning abilities, this would avoid parsing
-the Ion text or binary values *until their values area actually requested*, and would provide all the benefits of 
-skip-scanning, while also providing a rich Ion object model.  By contrast, today `IonElement` (and also`IonValue`)
-eagerly read the entire top-level value and populate an entire deeply nested data structure).   
+  transformation of nested deeply nested elements. Today, clients must provide their own solutions for transformation of
+  deeply nested `IonElement` values. Ideally, this library provides such a facility out of the box.
+- Lazy loading of `IonElement` values. An alternative to `ion-java`'s skip-scanning abilities, this would avoid parsing
+  the Ion text or binary values *until their values area actually requested*, and would provide all the benefits of
+  skip-scanning, while also providing a rich Ion object model. By contrast, today `IonElement` (and also`IonValue`)
+  eagerly read the entire top-level value and populate an entire deeply nested data structure).
 
 ## Development
 
