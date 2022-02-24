@@ -90,17 +90,17 @@ data class IonElementLoaderOptions(
 
 /** Creates an [IonElementLoader] implementation with the specified [options]. */
 @JvmOverloads
-fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()): IonElementLoader =
+fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     IonElementLoaderImpl(options)
 
 /** Provides syntactically lighter way of invoking [IonElementLoader.loadSingleElement]. */
 @JvmOverloads
-fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     createIonElementLoader(options).loadSingleElement(ionText)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadSingleElement]. */
 @JvmOverloads
-fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()) =
     createIonElementLoader(options).loadSingleElement(ionReader)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */

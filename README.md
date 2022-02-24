@@ -411,7 +411,7 @@ same.
 Every instance of `IonElement` contains a `metas: HashSet<String, Any>` that is useful for storing arbitrary metadata
 with each node. This metadata does not affect `IonElement.equals` or `IonElement.hashCode`, and it is currently up to
 the application to take care of persisting any metas.
-[Future work: this library should assist with (de)serializing metas](https://github.com/amzn/ion-element-kotlin/issues/65)
+[Future work: this library should assist with (de)serializing metas](https://github.com/amzn/ion-element-kotlin/issues/20)
 .
 
 - Metas not considered during equivalence and computation of hash codes.
