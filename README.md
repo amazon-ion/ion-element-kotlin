@@ -170,7 +170,7 @@ More details about these functions are included below.
 ## `AnyElement`'s `*Value[OrNull]` Properties
 
 In order to reduce the need to downcast to the appropriate sub-interface of `IonElement`, `AnyElement` provides two
-read-only properties per type of Ion data: `<kotlinType>Value` and `<kotilnType>ValueOrNull`, where `<jvmType>` is the
+read-only properties per type of Ion data: `<kotlinType>Value` and `<kotlinType>ValueOrNull`, where `<jvmType>` is the
 JVM Kotlin equivalent of the corresponding Ion type. Each of these properties will check to if the Ion type is the
 correct for the property called, and if not, will throw `IonElementConstraintException` to indicate that the element is
 of an unexpected type.
