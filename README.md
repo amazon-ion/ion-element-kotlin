@@ -266,7 +266,7 @@ or returning `IonElement` types or its sub-types.
       of `IonElement.asAnyElement()` at the call-site.
     - ... a specific type of Ion data should use the narrowest possible `IonElement` sub-interface, for instance:
         - A function argument requiring an Ion s-expression should be of type `SexpElement`.
-        - A function argument allowing either a list *or* an s-expression should be of type `ContainerElement`, which is
+        - A function argument allowing either a list *or* an s-expression should be of type `SeqElement`, which is
           the narrowest type that can represent either.
 - Any functions that may return...
     - ... any type of Ion data should have the `AnyElement` return type to avoid forcing the caller to down cast to a
@@ -451,14 +451,11 @@ same.
 
 ## Metas
 
-Every instance of `IonElement` contains a `metas: HashSet<String, Any>` that is useful for storing arbitrary metadata
+Every instance of `IonElement` contains a `metas: HashMap<String, Any>` that is useful for storing arbitrary metadata
 with each node. This metadata does not affect `IonElement.equals` or `IonElement.hashCode`, and it is currently up to
 the application to take care of persisting any metas.
 [Future work: this library should assist with (de)serializing metas](https://github.com/amzn/ion-element-kotlin/issues/20)
 .
-
-- Metas not considered during equivalence and computation of hash codes.
-- not currently represented when written out as text or binary Ion.  (Provide link)
 
 ## Loading Data With Location Metas
 
