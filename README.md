@@ -4,7 +4,7 @@
 
 `ion-element` is an immutable in-memory representation of [Amazon Ion](http://amzn.github.io/ion-docs/) which has an API
 that is idiomatic to Kotlin and is also usable from Java. It is meant as an alternative to `IonValue` from
-[Ion-java](https://github.com/amzn/ion-java) but is not a complete implementation of Ion as it relies on `Ion-java`'s
+[ion-java](https://github.com/amzn/ion-java) but is not a complete implementation of Ion as it relies on `ion-java`'s
 `IonReader` and `IonWriter` interfaces for reading and writing Ion data.
 
 ## Status
@@ -199,19 +199,22 @@ nullElement.longValue
 typedNullElement.longValue
 ```
 
-Each of `*Value` properties has a corresponding `*ValueOrNull`, which converts Ion null values to a Kotlin `null`. These
-should be used when the application wishes to allow elements to be null.
+The `*Value` functions include a null-check so the application doesn't have to, additionally this takes advantage
+of [Kotlin's null safety](https://kotlinlang.org/docs/null-safety.html), since the values returned from these functions
+are guaranteed to be non-null. For values that *might* legitimately be null, each of `*Value` properties has a 
+corresponding `*ValueOrNull`, which converts Ion null values to a Kotlin `null`. These should be used when the 
+application wishes to allow elements to be null.
 
 ```Kotlin
 val nullElement: AnyElement = loadSingleElement("null")
 println(nullElement.longValueOrNull)
 val typedNullElement: AnyElement = loadSingleElement("null.int")
 println(typedNullElement.longValueOrNull)
-```
 
-The `*Value` functions include a null-check so the application doesn't have to, additionally this takes advantage
-of [Kotlin's null safety](https://kotlinlang.org/docs/null-safety.html), since the values returned from these functions
-are guaranteed to be non-null. For values that *might* legitimately be null,
+val nullStringElement: AnyElement = loadSingleElement("null.string")
+// throws IonElementConstraintException
+nullStringElement.longValueOrNull
+```
 
 ### `AnyElement`'s `as*[OrNull]()` Functions
 
@@ -420,8 +423,9 @@ val element: AnyElement = loader.loadSingleElement("{ some_field: 42 }")
 
 ### `IonElement.toString()`
 
-Whereas `IonValue.toString()` is not guaranteed to produce valid Ion text, `IonElement.toString()` is. The string
-representation is produced with a standard `IonTextWriter` from `ion-java`.
+The contract of `IonValue.toString()` does not guaranteed that the method will produce valid Ion text (though in practice
+it does produce valid Ion text). The constract of `IonElement.toString()` _does_ guarantee that the function must produce
+value Ion text. The string representation is produced with a standard `IonTextWriter` from `ion-java`.
 
 As a rule of thumb, if performance or space considerations are paramount, this should be avoided. It is generally more
 performant to write an `IonElement` directly to an `IonWriter`, shown below.
@@ -454,8 +458,7 @@ same.
 Every instance of `IonElement` contains a `metas: HashMap<String, Any>` that is useful for storing arbitrary metadata
 with each node. This metadata does not affect `IonElement.equals` or `IonElement.hashCode`, and it is currently up to
 the application to take care of persisting any metas.
-[Future work: this library should assist with (de)serializing metas](https://github.com/amzn/ion-element-kotlin/issues/20)
-.
+[Future work: this library should assist with (de)serializing metas](https://github.com/amzn/ion-element-kotlin/issues/20).
 
 ## Loading Data With Location Metas
 
@@ -464,7 +467,7 @@ configuration file, it is helpful to know the line & column number of the Ion va
 validation errors may be reported to the end user. This is accomplished through the use of the previously described
 metas.
 
-The inclusion of location metas comes at a additional CPU cost which is non-trivial for large files, so by default is
+The inclusion of location metas comes at an additional CPU cost which is non-trivial for large files, so by default is
 disabled. It is enabled by passing `IonElementLoaderOptions(includeLocationMeta = true)` along to the corresponding
 loader function.
 
@@ -518,7 +521,7 @@ Currently, there are two possible areas of future development for `IonElement`.
   transformation of nested deeply nested elements. Today, clients must provide their own solutions for transformation of
   deeply nested `IonElement` values. Ideally, this library provides such a facility out of the box.
 - Lazy loading of `IonElement` values. An alternative to `ion-java`'s skip-scanning abilities, this would avoid parsing
-  the Ion text or binary values *until their values area actually requested*, and would provide all the benefits of
+  the Ion text or binary values *until their values are actually requested*, and would provide all the benefits of
   skip-scanning, while also providing a rich Ion object model. By contrast, today `IonElement` (and also`IonValue`)
   eagerly read the entire top-level value and populate an entire deeply nested data structure).
 
@@ -561,4 +564,3 @@ For detailed walkthroughs of git submodule usage, see the
 ## License
 
 This project is licensed under the Apache-2.0 License.
-
