@@ -79,6 +79,8 @@ internal class StructElementImpl(
 
     override fun getAll(fieldName: String): Iterable<AnyElement> = fieldsByName[fieldName] ?: emptyList()
 
+    override fun containsField(fieldName: String): Boolean = fieldsByName.containsKey(fieldName)
+
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
