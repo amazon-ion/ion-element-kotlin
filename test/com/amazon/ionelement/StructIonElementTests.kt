@@ -21,6 +21,7 @@ import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.loadSingleElement
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -82,6 +83,12 @@ class StructIonElementTests {
             "null is returned when the field is not present.")
     }
 
+    @Test
+    fun containsField() {
+        assertTrue(struct.containsField("a"))
+        assertTrue(struct.containsField("b"))
+        assertFalse(struct.containsField("z"))
+    }
 
     private fun Iterable<StructField>.assertHasField(expectedName: String, expectedValue: IonElement) {
         assertTrue(this.any { (name, value) -> name == expectedName && value == expectedValue }, "Must have field '$expectedName'")

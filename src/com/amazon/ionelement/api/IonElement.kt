@@ -307,5 +307,8 @@ interface StructElement : ContainerElement {
     /** Retrieves all values with a given field name. Returns an empty iterable if the field does not exist. */
     fun getAll(fieldName: String): Iterable<AnyElement>
 
+    /** Returns true if this StructElement has at least one field with the given field name. */
+    fun containsField(fieldName: String): Boolean
+
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
 }
