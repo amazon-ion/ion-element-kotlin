@@ -126,8 +126,8 @@ Kotlin native value. As shown below, `AnyElement.as*[OrNull]()` functions perfor
 the event of a type mismatch, and down-cast to the narrowed `IonElement` sub-interface.  `AnyElement.*Value[OrNull]`
 properties are similar but return JVM native values directly.
 
-The `IonElement.asAnyElement()` interface exists to convert to `AnyElement`. Although in `IonElement` implementations
-this is implemented as a simple downcast (i.e. `this as AnyElement`), implementations of `IonElement` are free to
+The `IonElement.asAnyElement()` interface exists to convert to `AnyElement`. Although the implementations
+of `IonElement` included in `ion-element-kotlin` implement this as a simple downcast (i.e. `this as AnyElement`), other implementations of `IonElement` are free to
 implement this however they see fit.
 
 An example using these functions is shown below:
@@ -171,7 +171,7 @@ More details about these functions are included below.
 
 In order to reduce the need to downcast to the appropriate sub-interface of `IonElement`, `AnyElement` provides two
 read-only properties per type of Ion data: `<kotlinType>Value` and `<kotlinType>ValueOrNull`, where `<jvmType>` is the
-JVM Kotlin equivalent of the corresponding Ion type. Each of these properties will check to if the Ion type is the
+JVM Kotlin equivalent of the corresponding Ion type. Each of these properties will check whether the Ion type is
 correct for the property called, and if not, will throw `IonElementConstraintException` to indicate that the element is
 of an unexpected type.
 
@@ -423,8 +423,8 @@ val element: AnyElement = loader.loadSingleElement("{ some_field: 42 }")
 
 ### `IonElement.toString()`
 
-The contract of `IonValue.toString()` does not guaranteed that the method will produce valid Ion text (though in practice
-it does produce valid Ion text). The constract of `IonElement.toString()` _does_ guarantee that the function must produce
+The contract of `IonValue.toString()` does not guarantee that the method will produce valid Ion text (though in practice
+it does produce valid Ion text). The contract of `IonElement.toString()` _does_ guarantee that the function must produce
 value Ion text. The string representation is produced with a standard `IonTextWriter` from `ion-java`.
 
 As a rule of thumb, if performance or space considerations are paramount, this should be avoided. It is generally more
@@ -485,7 +485,7 @@ assertEquals(IonTextLocation(2, 3), structElem["some_field"].metas.location)
 
 Note that `.location` above is an extension property provided for convenience.
 
-Finally, this works for both Ion text and Ion binary files, however for binary files, this the meta includes a byte
+Finally, this works for both Ion text and Ion binary files, however for binary files, the meta includes a byte
 offset instead of a line number and character offset.
 
 ## Converting between `IonElement` and `IonValue`
