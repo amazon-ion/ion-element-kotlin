@@ -15,11 +15,8 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.SexpElement
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -33,8 +30,15 @@ internal class SexpElementImpl (
 
     override val sexpValues: List<AnyElement> get() = seqValues
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): SexpElementImpl =
         SexpElementImpl(values, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): SexpElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): SexpElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): SexpElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): SexpElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): SexpElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): SexpElementImpl = _withoutMetas()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

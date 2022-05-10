@@ -16,12 +16,9 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.BlobElement
-import com.amazon.ionelement.api.ByteArrayView
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
-
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
+
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -36,8 +33,15 @@ internal class BlobElementImpl(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): BlobElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): BlobElementImpl =
         BlobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): BlobElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): BlobElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): BlobElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): BlobElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): BlobElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): BlobElementImpl = _withoutMetas()
 
     override val type: ElementType get() = ElementType.BLOB
 }

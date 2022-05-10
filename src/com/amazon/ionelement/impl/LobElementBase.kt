@@ -17,12 +17,21 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.LobElement
+import com.amazon.ionelement.api.MetaContainer
 
 internal abstract class LobElementBase(
     protected val bytes: ByteArray
 ): AnyElementBase(), LobElement {
 
     override val bytesValue: ByteArrayView = ByteArrayViewImpl(bytes)
+
+    abstract override fun copy(annotations: List<String>, metas: MetaContainer): LobElementBase
+    abstract override fun withAnnotations(vararg additionalAnnotations: String): LobElementBase
+    abstract override fun withAnnotations(additionalAnnotations: Iterable<String>): LobElementBase
+    abstract override fun withoutAnnotations(): LobElementBase
+    abstract override fun withMetas(additionalMetas: MetaContainer): LobElementBase
+    abstract override fun withMeta(key: String, value: Any): LobElementBase
+    abstract override fun withoutMetas(): LobElementBase
 
     override fun equals(other: Any?): Boolean {
         return when {

@@ -17,13 +17,9 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.IntElementSize
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.constraintError
-import com.amazon.ionelement.api.emptyMetaContainer
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -46,8 +42,15 @@ internal class BigIntIntElementImpl(
         return bigIntegerValue.longValueExact()
     }
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): BigIntIntElementImpl =
         BigIntIntElementImpl(bigIntegerValue, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): BigIntIntElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): BigIntIntElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): BigIntIntElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): BigIntIntElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): BigIntIntElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): BigIntIntElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)
 

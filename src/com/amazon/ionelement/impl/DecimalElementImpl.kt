@@ -17,12 +17,9 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.DecimalElement
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
-
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
+
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -34,8 +31,15 @@ internal class DecimalElementImpl(
 ) : AnyElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElementImpl =
         DecimalElementImpl(decimalValue, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): DecimalElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): DecimalElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): DecimalElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): DecimalElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): DecimalElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): DecimalElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
     override fun equals(other: Any?): Boolean {

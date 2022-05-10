@@ -16,11 +16,8 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -35,6 +32,13 @@ internal class NullElementImpl(
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
         NullElementImpl(type, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): AnyElement = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): AnyElement = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): AnyElement = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): AnyElement = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): AnyElement = _withMeta(key, value)
+    override fun withoutMetas(): AnyElement = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeNull(type.toIonType())
 

@@ -25,7 +25,6 @@ import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.api.toIonElement
 import com.amazon.ionelement.api.toIonValue
-import com.amazon.ionelement.api.withAnnotations
 import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.INCLUDE_LOCATION_META
 import com.amazon.ionelement.util.IonElementLoaderTestCase
