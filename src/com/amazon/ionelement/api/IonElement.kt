@@ -95,6 +95,12 @@ interface IonElement {
     /** Converts the current element to Ion text. */
     override fun toString(): String
 
+    /*
+     * The following `with*` mutators are repeated on every sub-interface because any approach using generics that is
+     * ergonomic for Java code results in conflicting function declarations for classes that both extend AnyElementBase
+     * and implement a type-specific sub-interface of IonElement.
+     */
+
     /** Returns a shallow copy of the current node with the specified additional annotations. */
     fun withAnnotations(vararg additionalAnnotations: String): IonElement
 
