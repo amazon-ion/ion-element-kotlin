@@ -15,19 +15,19 @@
 
 package com.amazon.ionelement.api
 
-val ION_LOCATION_META_TAG = "\$ion_location"
+internal const val ION_LOCATION_META_TAG: String = "\$ion_location"
 
-sealed class IonLocation
+public sealed class IonLocation
 
-data class IonTextLocation(val line: Long, val charOffset: Long) : IonLocation() {
+public data class IonTextLocation(val line: Long, val charOffset: Long) : IonLocation() {
     override fun toString(): String = "$line:$charOffset"
 }
 
-data class IonBinaryLocation(val byteOffset: Long): IonLocation() {
+public data class IonBinaryLocation(val byteOffset: Long): IonLocation() {
     override fun toString(): String = byteOffset.toString()
 }
 
-fun locationToString(loc: IonLocation?) = loc?.toString() ?: "<unknown location>"
+public fun locationToString(loc: IonLocation?): String = loc?.toString() ?: "<unknown location>"
 
-val MetaContainer.location: IonLocation?
+public val MetaContainer.location: IonLocation?
     get() = this[ION_LOCATION_META_TAG] as? IonLocation

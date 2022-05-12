@@ -43,6 +43,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
+kotlin {
+    explicitApi = 'strict'
+}
+
 dependencies {
     api 'com.amazon.ion:ion-java:[1.4.0,)'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'

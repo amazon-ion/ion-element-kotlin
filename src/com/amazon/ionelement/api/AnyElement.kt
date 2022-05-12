@@ -147,210 +147,210 @@ import java.math.BigInteger
  *
  * @see [IonElement]
  */
-interface AnyElement : IonElement {
+public interface AnyElement : IonElement {
 
     /** See [AnyElement]. */
-    fun asBoolean(): BoolElement
+    public fun asBoolean(): BoolElement
 
     /** See [AnyElement]. */
-    fun asBooleanOrNull(): BoolElement?
+    public fun asBooleanOrNull(): BoolElement?
 
     /** See [AnyElement]. */
-    fun asInt(): IntElement
+    public fun asInt(): IntElement
 
     /** See [AnyElement]. */
-    fun asIntOrNull(): IntElement?
+    public fun asIntOrNull(): IntElement?
 
     /** See [AnyElement]. */
-    fun asDecimal(): DecimalElement
+    public fun asDecimal(): DecimalElement
 
     /** See [AnyElement]. */
-    fun asDecimalOrNull(): DecimalElement?
+    public fun asDecimalOrNull(): DecimalElement?
 
     /** See [AnyElement]. */
-    fun asFloat(): FloatElement
+    public fun asFloat(): FloatElement
 
     /** See [AnyElement]. */
-    fun asFloatOrNull(): FloatElement?
+    public fun asFloatOrNull(): FloatElement?
 
     /** See [AnyElement]. */
-    fun asText(): TextElement
+    public fun asText(): TextElement
 
     /** See [AnyElement]. */
-    fun asTextOrNull(): TextElement?
+    public fun asTextOrNull(): TextElement?
 
     /** See [AnyElement]. */
-    fun asString(): StringElement
+    public fun asString(): StringElement
 
     /** See [AnyElement]. */
-    fun asStringOrNull(): StringElement?
+    public fun asStringOrNull(): StringElement?
 
     /** See [AnyElement]. */
-    fun asSymbol(): SymbolElement
+    public fun asSymbol(): SymbolElement
 
     /** See [AnyElement]. */
-    fun asSymbolOrNull(): SymbolElement?
+    public fun asSymbolOrNull(): SymbolElement?
 
     /** See [AnyElement]. */
-    fun asTimestamp(): TimestampElement
+    public fun asTimestamp(): TimestampElement
 
     /** See [AnyElement]. */
-    fun asTimestampOrNull(): TimestampElement?
+    public fun asTimestampOrNull(): TimestampElement?
 
     /** See [AnyElement]. */
-    fun asLob(): LobElement
+    public fun asLob(): LobElement
 
     /** See [AnyElement]. */
-    fun asLobOrNull(): LobElement?
+    public fun asLobOrNull(): LobElement?
 
     /** See [AnyElement]. */
-    fun asBlob(): BlobElement
+    public fun asBlob(): BlobElement
 
     /** See [AnyElement]. */
-    fun asBlobOrNull(): BlobElement?
+    public fun asBlobOrNull(): BlobElement?
 
     /** See [AnyElement]. */
-    fun asClob(): ClobElement
+    public fun asClob(): ClobElement
 
     /** See [AnyElement]. */
-    fun asClobOrNull(): ClobElement?
+    public fun asClobOrNull(): ClobElement?
 
     /** See [AnyElement]. */
-    fun asContainer(): ContainerElement
+    public fun asContainer(): ContainerElement
 
     /** See [AnyElement]. */
-    fun asContainerOrNull(): ContainerElement?
+    public fun asContainerOrNull(): ContainerElement?
 
     /** See [AnyElement]. */
-    fun asSeq(): SeqElement
+    public fun asSeq(): SeqElement
 
     /** See [AnyElement]. */
-    fun asSeqOrNull(): SeqElement?
+    public fun asSeqOrNull(): SeqElement?
 
     /** See [AnyElement]. */
-    fun asList(): ListElement
+    public fun asList(): ListElement
 
     /** See [AnyElement]. */
-    fun asListOrNull(): ListElement?
+    public fun asListOrNull(): ListElement?
 
     /** See [AnyElement]. */
-    fun asSexp(): SexpElement
+    public fun asSexp(): SexpElement
 
     /** See [AnyElement]. */
-    fun asSexpOrNull(): SexpElement?
+    public fun asSexpOrNull(): SexpElement?
 
     /** See [AnyElement]. */
-    fun asStruct(): StructElement
+    public fun asStruct(): StructElement
 
     /** See [AnyElement]. */
-    fun asStructOrNull(): StructElement?
+    public fun asStructOrNull(): StructElement?
 
     /**
      * If this is an Ion integer, returns its [IntElementSize] otherwise, throws [IonElementConstraintException].
      */
-    val integerSize: IntElementSize
+    public val integerSize: IntElementSize
 
     /** See [AnyElement]. */
-    val booleanValue: Boolean
+    public val booleanValue: Boolean
 
     /** See [AnyElement]. */
-    val booleanValueOrNull: Boolean?
+    public val booleanValueOrNull: Boolean?
 
     /** See [AnyElement]. */
-    val longValue: Long
+    public val longValue: Long
 
     /** See [AnyElement]. */
-    val longValueOrNull: Long?
+    public val longValueOrNull: Long?
 
     /** See [AnyElement]. */
-    val bigIntegerValue: BigInteger
+    public val bigIntegerValue: BigInteger
 
     /** See [AnyElement]. */
-    val bigIntegerValueOrNull: BigInteger?
+    public val bigIntegerValueOrNull: BigInteger?
 
     /** See [AnyElement]. */
-    val textValue: String
+    public val textValue: String
 
     /** See [AnyElement]. */
-    val textValueOrNull: String?
+    public val textValueOrNull: String?
 
     /** See [AnyElement]. */
-    val stringValue: String
+    public val stringValue: String
 
     /** See [AnyElement]. */
-    val stringValueOrNull: String?
+    public val stringValueOrNull: String?
 
     /** See [AnyElement]. */
-    val symbolValue: String
+    public val symbolValue: String
 
     /** See [AnyElement]. */
-    val symbolValueOrNull: String?
+    public val symbolValueOrNull: String?
 
     /** See [AnyElement]. */
-    val decimalValue: Decimal
+    public val decimalValue: Decimal
 
     /** See [AnyElement]. */
-    val decimalValueOrNull: Decimal?
+    public val decimalValueOrNull: Decimal?
 
     /** See [AnyElement]. */
-    val doubleValue: Double
+    public val doubleValue: Double
 
     /** See [AnyElement]. */
-    val doubleValueOrNull: Double?
+    public val doubleValueOrNull: Double?
 
     /** See [AnyElement]. */
-    val timestampValue: Timestamp
+    public val timestampValue: Timestamp
 
     /** See [AnyElement]. */
-    val timestampValueOrNull: Timestamp?
+    public val timestampValueOrNull: Timestamp?
 
     /** See [AnyElement]. */
-    val bytesValue: ByteArrayView
+    public val bytesValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val bytesValueOrNull: ByteArrayView?
+    public val bytesValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
-    val blobValue: ByteArrayView
+    public val blobValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val blobValueOrNull: ByteArrayView?
+    public val blobValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
-    val clobValue: ByteArrayView
+    public val clobValue: ByteArrayView
 
     /** See [AnyElement]. */
-    val clobValueOrNull: ByteArrayView?
+    public val clobValueOrNull: ByteArrayView?
 
     /** See [AnyElement]. */
-    val containerValues: Collection<AnyElement>
+    public val containerValues: Collection<AnyElement>
 
     /** See [AnyElement]. */
-    val containerValuesOrNull: Collection<AnyElement>?
+    public val containerValuesOrNull: Collection<AnyElement>?
 
     /** See [AnyElement]. */
-    val seqValues: List<AnyElement>
+    public val seqValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val seqValuesOrNull: List<AnyElement>?
+    public val seqValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val listValues: List<AnyElement>
+    public val listValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val listValuesOrNull: List<AnyElement>?
+    public val listValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val sexpValues: List<AnyElement>
+    public val sexpValues: List<AnyElement>
 
     /** See [AnyElement]. */
-    val sexpValuesOrNull: List<AnyElement>?
+    public val sexpValuesOrNull: List<AnyElement>?
 
     /** See [AnyElement]. */
-    val structFields: Collection<StructField>
+    public val structFields: Collection<StructField>
 
     /** See [AnyElement]. */
-    val structFieldsOrNull: Collection<StructField>?
+    public val structFieldsOrNull: Collection<StructField>?
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement
     override fun withAnnotations(vararg additionalAnnotations: String): AnyElement

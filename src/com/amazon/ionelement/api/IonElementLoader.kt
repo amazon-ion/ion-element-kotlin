@@ -26,13 +26,13 @@ import com.amazon.ionelement.impl.IonElementLoaderImpl
  * current [IonLocation] if one is available.  Note that depending on the state of the [IonReader], a location
  * may not be available.
  */
-interface IonElementLoader {
+public interface IonElementLoader {
     /**
      * Reads a single element from the specified Ion text data.
      *
      * Throws an [IonElementLoaderException] if there are multiple top level elements.
      */
-    fun loadSingleElement(ionText: String): AnyElement
+    public fun loadSingleElement(ionText: String): AnyElement
 
     /**
      * Reads the next element from the specified [IonReader].
@@ -42,7 +42,7 @@ interface IonElementLoader {
      * If there are additional elements to be read after reading the next element,
      * throws an [IonElementLoaderException].
      */
-    fun loadSingleElement(ionReader: IonReader): AnyElement
+    public fun loadSingleElement(ionReader: IonReader): AnyElement
 
     /**
      * Reads all elements remaining to be read from the [IonReader].
@@ -52,7 +52,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [IonElementLoaderException].
      */
-    fun loadAllElements(ionReader: IonReader): Iterable<AnyElement>
+    public fun loadAllElements(ionReader: IonReader): Iterable<AnyElement>
 
     /**
      * Reads all of the elements in the specified Ion text data.
@@ -60,7 +60,7 @@ interface IonElementLoader {
      * Avoid this function when reading large amounts of Ion because a large amount of memory will be consumed.
      * Instead, prefer [processAll] or [loadCurrentElement].
      */
-    fun loadAllElements(ionText: String): Iterable<AnyElement>
+    public fun loadAllElements(ionText: String): Iterable<AnyElement>
 
     /**
      * Reads the current element from the specified [IonReader].  Does not close the [IonReader].
@@ -70,7 +70,7 @@ interface IonElementLoader {
      * This method can be utilized to fetch and process the elements one by one and can help avoid high memory
      * consumption when processing large amounts of Ion data.
      */
-    fun loadCurrentElement(ionReader: IonReader): AnyElement
+    public fun loadCurrentElement(ionReader: IonReader): AnyElement
 }
 
 /**
@@ -79,7 +79,7 @@ interface IonElementLoader {
  * While there is only one property here currently, new properties may be added to this class without breaking
  * source compatibility with prior versions of this library.
  */
-data class IonElementLoaderOptions(
+public data class IonElementLoaderOptions(
     /**
      * Set to true to cause `IonLocation` to be stored in the [IonElement.metas] collection of all elements loaded.
      *
@@ -90,30 +90,30 @@ data class IonElementLoaderOptions(
 
 /** Creates an [IonElementLoader] implementation with the specified [options]. */
 @JvmOverloads
-fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()): IonElementLoader =
+public fun createIonElementLoader(options: IonElementLoaderOptions = IonElementLoaderOptions()): IonElementLoader =
     IonElementLoaderImpl(options)
 
 /** Provides syntactically lighter way of invoking [IonElementLoader.loadSingleElement]. */
 @JvmOverloads
-fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+public fun loadSingleElement(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
     createIonElementLoader(options).loadSingleElement(ionText)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadSingleElement]. */
 @JvmOverloads
-fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+public fun loadSingleElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
     createIonElementLoader(options).loadSingleElement(ionReader)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
 @JvmOverloads
-fun loadAllElements(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
+public fun loadAllElements(ionText: String, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
     createIonElementLoader(options).loadAllElements(ionText)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
 @JvmOverloads
-fun loadAllElements(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
+public fun loadAllElements(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): Iterable<AnyElement> =
     createIonElementLoader(options).loadAllElements(ionReader)
 
 /** Provides syntactically lighter method of invoking [IonElementLoader.loadAllElements]. */
 @JvmOverloads
-fun loadCurrentElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
+public fun loadCurrentElement(ionReader: IonReader, options: IonElementLoaderOptions = IonElementLoaderOptions()): AnyElement =
     createIonElementLoader(options).loadCurrentElement(ionReader)

@@ -65,14 +65,14 @@ internal inline fun <reified T: IonElement> T._withoutMetas(): T =
  *
  * If the first element is not a symbol or this container has no elements, throws [IonElementException],
  */
-val SeqElement.tag get() = this.head.symbolValue
+public val SeqElement.tag: String get() = this.head.symbolValue
 
 /**
  * Returns the first element of this container.
  *
  * If this container has no elements, throws [IonElementException].
  */
-val SeqElement.head: AnyElement
+public val SeqElement.head: AnyElement
     get() =
         when (this.size) {
             0 -> constraintError(this, "Cannot get head of empty container")
@@ -84,15 +84,15 @@ val SeqElement.head: AnyElement
  *
  * If this container has no elements, throws [IonElementException].
  */
-val SeqElement.tail: List<AnyElement> get()  =
+public val SeqElement.tail: List<AnyElement> get()  =
     when (this.size) {
         0 -> constraintError(this, "Cannot get tail of empty container")
         else -> this.values.subList(1, this.size)
     }
 
 /** Returns the first element. */
-val List<AnyElement>.head get() =
-    this.first()
+public val List<AnyElement>.head: AnyElement
+    get() = this.first()
 
 /** Returns a copy of the list with the first element removed. */
-val List<AnyElement>.tail get() = this.subList(1, this.size)
+public val List<AnyElement>.tail: List<AnyElement> get() = this.subList(1, this.size)

@@ -18,11 +18,11 @@ package com.amazon.ionelement.api
 /**
  * A field within an Ion struct.
  */
-interface StructField {
-    val name: String
-    val value: AnyElement
+public interface StructField {
+    public val name: String
+    public val value: AnyElement
 
-    operator fun component1(): String
-    operator fun component2(): AnyElement
+    public operator fun component1(): String
+    public operator fun component2(): AnyElement
 }
 

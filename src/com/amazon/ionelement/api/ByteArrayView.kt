@@ -16,10 +16,10 @@
 package com.amazon.ionelement.api
 
 /** An immutable wrapper over a [byte[]]. */
-interface ByteArrayView : Iterable<Byte> {
-    fun size(): Int
-    operator fun get(index: Int): Byte
+public interface ByteArrayView : Iterable<Byte> {
+    public fun size(): Int
+    public operator fun get(index: Int): Byte
 
-    fun copyOfBytes(): ByteArray
+    public fun copyOfBytes(): ByteArray
 }
 
