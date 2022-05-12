@@ -35,13 +35,13 @@ import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.loadSingleElement
 import com.amazon.ionelement.impl.ByteArrayViewImpl
+import java.math.BigInteger
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import java.math.BigInteger
 
 class AnyElementTests {
     @ParameterizedTest
@@ -56,8 +56,8 @@ class AnyElementTests {
         /** Test what we were unable to in [assertAccessors] */
         val s = loadSingleElement("{ foo: 1, bar: 2 }").structFields
         assertEquals(2, s.count())
-        s.single { it.name == "foo" && it.value.longValue == 1L}
-        s.single { it.name == "bar" && it.value.longValue == 2L}
+        s.single { it.name == "foo" && it.value.longValue == 1L }
+        s.single { it.name == "bar" && it.value.longValue == 2L }
     }
 
     @Test
@@ -107,7 +107,8 @@ class AnyElementTests {
             TestCase("[1]", LIST, listOf(ionInt(1))),
             TestCase("(2)", SEXP, listOf(ionInt(2))),
             // Note, this test case only checks `.containerValues`
-            TestCase("{ foo: 42 }", STRUCT, listOf(ionInt(42))))
+            TestCase("{ foo: 42 }", STRUCT, listOf(ionInt(42)))
+        )
 
         private fun assertElementProperties(element: AnyElement, elementType: ElementType, expectedValue: Any?) {
             assertEquals(elementType, element.type)
@@ -372,7 +373,7 @@ class AnyElementTests {
          */
         private fun assertThrowsForWrongAccessorTypes(element: AnyElement) {
             with(element) {
-                if(type == NULL) {
+                if (type == NULL) {
                     // No checks needed in this case because:
                     // - Non-null accessors will throw for due to the value being unexpectedly null. (checked in [assertAccessors]).
                     // - *OrNull accessors never throw in this case.
@@ -493,6 +494,5 @@ class AnyElementTests {
                 }
             }
         }
-
     }
 }

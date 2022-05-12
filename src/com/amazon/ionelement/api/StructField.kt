@@ -25,4 +25,3 @@ public interface StructField {
     public operator fun component1(): String
     public operator fun component2(): AnyElement
 }
-

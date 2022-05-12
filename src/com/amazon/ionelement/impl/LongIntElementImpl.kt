@@ -18,10 +18,10 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
+import java.math.BigInteger
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
-import java.math.BigInteger
 
 internal class LongIntElementImpl(
     override val longValue: Long,
@@ -64,4 +64,3 @@ internal class LongIntElementImpl(
         return result
     }
 }
-

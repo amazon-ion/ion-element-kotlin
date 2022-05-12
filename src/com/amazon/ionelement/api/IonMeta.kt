@@ -30,7 +30,6 @@ public inline fun <reified T> MetaContainer.metaOrNull(key: String): T? = this[k
 public inline fun <reified T> MetaContainer.meta(key: String): T =
     metaOrNull(key) ?: error("Meta with key '$key' and type ${T::class.java} not found in MetaContainer")
 
-
 public fun metaContainerOf(kvps: List<Pair<String, Any>>): MetaContainer =
     metaContainerOf(*kvps.toTypedArray())
 
@@ -53,4 +52,3 @@ public operator fun MetaContainer.plus(other: MetaContainer): MetaContainer =
  */
 public operator fun MetaContainer.plus(other: Iterable<Pair<String, Any>>): MetaContainer =
     HashMap<String, Any>(this.toList().union(other).toMap())
-

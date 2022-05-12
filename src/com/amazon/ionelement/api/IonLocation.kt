@@ -23,7 +23,7 @@ public data class IonTextLocation(val line: Long, val charOffset: Long) : IonLoc
     override fun toString(): String = "$line:$charOffset"
 }
 
-public data class IonBinaryLocation(val byteOffset: Long): IonLocation() {
+public data class IonBinaryLocation(val byteOffset: Long) : IonLocation() {
     override fun toString(): String = byteOffset.toString()
 }
 

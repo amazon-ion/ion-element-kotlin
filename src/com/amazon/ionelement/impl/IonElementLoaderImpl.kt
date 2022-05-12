@@ -35,11 +35,12 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
     private inline fun <T> handleReaderException(ionReader: IonReader, crossinline block: () -> T): T {
         try {
             return block()
-        } catch(e: IonException) {
+        } catch (e: IonException) {
             throw IonElementException(
                 location = ionReader.currentLocation(),
                 description = "IonException occurred, likely due to malformed Ion data (see cause)",
-                cause = e)
+                cause = e
+            )
         }
     }
 
@@ -181,7 +182,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
  * Calls [IonReader.next] and invokes [block] until all values at the current level in the [IonReader]
  * have been exhausted.
  * */
-private fun <T> IonReader.forEachValue(block: () -> T): Unit {
+private fun <T> IonReader.forEachValue(block: () -> T) {
     while (this.next() != null) {
         block()
     }

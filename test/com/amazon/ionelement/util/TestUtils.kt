@@ -17,7 +17,6 @@
 package com.amazon.ionelement.util
 import com.amazon.ion.IonValue
 import com.amazon.ion.system.IonSystemBuilder
-
 import com.amazon.ionelement.api.IonElementLoaderOptions
 
 @JvmField

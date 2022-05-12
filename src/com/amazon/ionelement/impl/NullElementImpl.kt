@@ -26,7 +26,7 @@ internal class NullElementImpl(
     override val type: ElementType = ElementType.NULL,
     override val annotations: PersistentList<String>,
     override val metas: PersistentMetaContainer
-): AnyElementBase() {
+) : AnyElementBase() {
 
     override val isNull: Boolean get() = true
 

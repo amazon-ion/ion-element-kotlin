@@ -15,10 +15,10 @@
 
 package com.amazon.ionelement.util
 
+import java.util.stream.Stream
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
-import java.util.stream.Stream
 
 /**
  * Reduces some of the boilerplate associated with the style of parameterized testing frequently
@@ -38,6 +38,4 @@ abstract class ArgumentsProviderBase : ArgumentsProvider {
     override fun provideArguments(extensionContext: ExtensionContext): Stream<out Arguments>? {
         return getParameters().map { Arguments.of(it) }.stream()
     }
-
 }
-

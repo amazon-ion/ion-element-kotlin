@@ -42,7 +42,7 @@ public enum class ElementType(
     BOOL(false, false, false, false),
     INT(false, false, false, false),
     FLOAT(false, false, false, false),
-    DECIMAL(false, false, false,false),
+    DECIMAL(false, false, false, false),
     TIMESTAMP(false, false, false, false),
 
     // String-valued types
@@ -60,7 +60,7 @@ public enum class ElementType(
     STRUCT(false, true, false, false);
 
     /** Converts this [ElementType] to [IonType]. */
-    public fun toIonType(): IonType = when(this) {
+    public fun toIonType(): IonType = when (this) {
         NULL -> IonType.NULL
         BOOL -> IonType.BOOL
         INT -> IonType.INT
@@ -83,7 +83,7 @@ public enum class ElementType(
  * @throws [IllegalStateException] if the receiver is [IonType.DATAGRAM] because [AnyElement] has no notion of
  * datagrams.
  */
-public fun IonType.toElementType(): ElementType = when(this) {
+public fun IonType.toElementType(): ElementType = when (this) {
     IonType.NULL -> ElementType.NULL
     IonType.BOOL -> ElementType.BOOL
     IonType.INT -> ElementType.INT

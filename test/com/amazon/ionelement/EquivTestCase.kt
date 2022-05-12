@@ -15,8 +15,8 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.AnyElement
+import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionStructOf
 import org.junit.jupiter.api.Assertions
@@ -51,7 +51,8 @@ data class EquivTestCase(val left: String, val right: String, val isEquiv: Boole
         checkEquivalence(
             isEquiv,
             leftElementWithAnnotation,
-            rightElementWithAnnotation)
+            rightElementWithAnnotation
+        )
 
         // Adding an annotation to only one side will force them to be not equivalent
         checkEquivalence(false, leftElement.withAnnotations("some_annotation"), rightElement)

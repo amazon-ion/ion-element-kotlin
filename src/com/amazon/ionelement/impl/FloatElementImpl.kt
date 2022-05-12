@@ -18,7 +18,6 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -62,5 +61,4 @@ internal class FloatElementImpl(
         // Note: metas intentionally omitted!
         return result
     }
-
 }

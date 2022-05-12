@@ -20,7 +20,7 @@ import com.amazon.ionelement.api.TextElement
 
 internal abstract class TextElementBase(
     override val textValue: String
-): AnyElementBase(), TextElement {
+) : AnyElementBase(), TextElement {
 
     abstract override fun copy(annotations: List<String>, metas: MetaContainer): TextElementBase
     abstract override fun withAnnotations(vararg additionalAnnotations: String): TextElementBase
@@ -30,4 +30,3 @@ internal abstract class TextElementBase(
     abstract override fun withMeta(key: String, value: Any): TextElementBase
     abstract override fun withoutMetas(): TextElementBase
 }
-

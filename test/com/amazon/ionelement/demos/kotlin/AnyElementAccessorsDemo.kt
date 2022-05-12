@@ -26,7 +26,7 @@ import com.amazon.ionelement.util.TOP_LEVEL_STRUCTS_ION_TEXT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class IonElementExtractionInKotlinTests {
+class AnyElementAccessorsDemo {
 
     /**
      * Demonstrates data extraction with non-nullable data type accessors.
@@ -46,9 +46,11 @@ class IonElementExtractionInKotlinTests {
                                 order.asStruct().run {
                                     Order(
                                         get("customerId").longValue,
-                                        get("state").textValue)
+                                        get("state").textValue
+                                    )
                                 }
-                            })
+                            }
+                        )
                     }
                 }
         }.asSequence().toList()
@@ -63,14 +65,16 @@ class IonElementExtractionInKotlinTests {
                 listOf(
                     Order(123, "WA"),
                     Order(456, "HI")
-                )),
+                )
+            ),
             StockItem(
                 "<unknown name>", Decimal.valueOf("23.45"), 20,
                 listOf(
                     Order(234, "VA"),
                     Order(567, "MI")
-                )))
-
+                )
+            )
+        )
 
         assertEquals(expectedTestCases, stockItems)
     }

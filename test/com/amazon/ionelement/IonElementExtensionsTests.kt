@@ -3,19 +3,16 @@ package com.amazon.ionelement
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.util.ArgumentsProviderBase
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ArgumentsProvider
-import org.junit.jupiter.params.provider.ArgumentsSource
-import org.junit.jupiter.params.provider.MethodSource
-import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ArgumentsSource
 
-class IonElementExtensionsTests: ArgumentsProviderBase() {
+class IonElementExtensionsTests : ArgumentsProviderBase() {
 
     override fun getParameters(): List<IonElement> = listOf(
         ionInt(1),

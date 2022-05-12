@@ -21,7 +21,7 @@ import com.amazon.ionelement.api.MetaContainer
 
 internal abstract class LobElementBase(
     protected val bytes: ByteArray
-): AnyElementBase(), LobElement {
+) : AnyElementBase(), LobElement {
 
     override val bytesValue: ByteArrayView = ByteArrayViewImpl(bytes)
 
@@ -52,6 +52,4 @@ internal abstract class LobElementBase(
         // Metas are intentionally omitted here.
         return result
     }
-
 }
-

@@ -16,13 +16,13 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.Decimal
-import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import com.amazon.ion.system.IonTextWriterBuilder
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.BlobElement
 import com.amazon.ionelement.api.BoolElement
+import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.ClobElement
 import com.amazon.ionelement.api.ContainerElement
 import com.amazon.ionelement.api.DecimalElement
@@ -42,16 +42,15 @@ import com.amazon.ionelement.api.ElementType.SYMBOL
 import com.amazon.ionelement.api.ElementType.TIMESTAMP
 import com.amazon.ionelement.api.FloatElement
 import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.ByteArrayView
 import com.amazon.ionelement.api.IntElementSize
 import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ListElement
 import com.amazon.ionelement.api.LobElement
 import com.amazon.ionelement.api.SeqElement
 import com.amazon.ionelement.api.SexpElement
 import com.amazon.ionelement.api.StringElement
 import com.amazon.ionelement.api.StructElement
+import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.SymbolElement
 import com.amazon.ionelement.api.TextElement
 import com.amazon.ionelement.api.TimestampElement
@@ -74,7 +73,7 @@ internal abstract class AnyElementBase : AnyElement {
     protected abstract fun writeContentTo(writer: IonWriter)
 
     override fun writeTo(writer: IonWriter) {
-        if(this.annotations.any()) {
+        if (this.annotations.any()) {
             writer.setTypeAnnotations(*this.annotations.toTypedArray())
         }
         this.writeContentTo(writer)
@@ -86,12 +85,12 @@ internal abstract class AnyElementBase : AnyElement {
 
     override val integerSize: IntElementSize get() = constraintError(this, "integerSize not valid for this Element")
 
-    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType): T? {
-        if(this.type == NULL) {
+    private inline fun <reified T : IonElement> requireTypeAndCastOrNull(allowedType: ElementType): T? {
+        if (this.type == NULL) {
             return null
         }
 
-        if(this.type != allowedType)
+        if (this.type != allowedType)
             errIfNotTyped(allowedType)
 
         return when {
@@ -105,20 +104,20 @@ internal abstract class AnyElementBase : AnyElement {
         constraintError(this, "Expected an element of type $allowedType but found an element of type ${this.type}")
     }
 
-    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType): Nothing  {
+    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType): Nothing {
         constraintError(this, "Expected an element of type $allowedType or $allowedType2 but found an element of type ${this.type}")
     }
 
-    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): Nothing  {
+    private fun errIfNotTyped(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): Nothing {
         constraintError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
     }
 
-    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType): T? {
-        if(this.type == NULL) {
+    private inline fun <reified T : IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType): T? {
+        if (this.type == NULL) {
             return null
         }
 
-        if(this.type != allowedType && this.type != allowedType2)
+        if (this.type != allowedType && this.type != allowedType2)
             errIfNotTyped(allowedType, allowedType2)
 
         return when {
@@ -128,12 +127,12 @@ internal abstract class AnyElementBase : AnyElement {
         }
     }
 
-    private inline fun <reified T: IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T? {
-        if(this.type == NULL) {
+    private inline fun <reified T : IonElement> requireTypeAndCastOrNull(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T? {
+        if (this.type == NULL) {
             return null
         }
 
-        if(this.type != allowedType && this.type != allowedType2 && this.type != allowedType3)
+        if (this.type != allowedType && this.type != allowedType2 && this.type != allowedType3)
             constraintError(this, "Expected an element of type $allowedType, $allowedType2 or $allowedType3 but found an element of type ${this.type}")
 
         return when {
@@ -143,17 +142,17 @@ internal abstract class AnyElementBase : AnyElement {
         }
     }
 
-    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType): T {
+    private inline fun <reified T : IonElement> requireTypeAndCast(allowedType: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType) ?: constraintError(this, "Required non-null value of type $allowedType but found a $this")
         return this as T
     }
 
-    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType): T {
+    private inline fun <reified T : IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType, allowedType2) ?: constraintError(this, "Required non-null value of type $allowedType or $allowedType2 but found a $this")
         return this as T
     }
 
-    private inline fun <reified T: IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T {
+    private inline fun <reified T : IonElement> requireTypeAndCast(allowedType: ElementType, allowedType2: ElementType, allowedType3: ElementType): T {
         requireTypeAndCastOrNull<T>(allowedType, allowedType2, allowedType3) ?: constraintError(this, "Required non-null value of type $allowedType, $allowedType2 or $allowedType3 but found a $this")
         return this as T
     }
@@ -175,7 +174,7 @@ internal abstract class AnyElementBase : AnyElement {
     final override fun asSymbolOrNull(): SymbolElement? = requireTypeAndCastOrNull(SYMBOL)
     final override fun asTimestamp(): TimestampElement = requireTypeAndCast(TIMESTAMP)
     final override fun asTimestampOrNull(): TimestampElement? = requireTypeAndCastOrNull(TIMESTAMP)
-    final override fun asLob(): LobElement  = requireTypeAndCast(BLOB, CLOB)
+    final override fun asLob(): LobElement = requireTypeAndCast(BLOB, CLOB)
     final override fun asLobOrNull(): LobElement? = requireTypeAndCastOrNull(BLOB, CLOB)
     final override fun asBlob(): BlobElement = requireTypeAndCast(BLOB)
     final override fun asBlobOrNull(): BlobElement? = requireTypeAndCastOrNull(BLOB)
@@ -214,7 +213,7 @@ internal abstract class AnyElementBase : AnyElement {
 
     // Default implementations that perform the type check and wrap the corresponding non-nullable version.
     final override val booleanValueOrNull: Boolean? get() = requireTypeAndCastOrNull<BoolElement>(BOOL)?.booleanValue
-    final override val longValueOrNull: Long? get() =  requireTypeAndCastOrNull<IntElement>(INT)?.longValue
+    final override val longValueOrNull: Long? get() = requireTypeAndCastOrNull<IntElement>(INT)?.longValue
     final override val bigIntegerValueOrNull: BigInteger? get() = requireTypeAndCastOrNull<IntElement>(INT)?.bigIntegerValue
     final override val textValueOrNull: String? get() = requireTypeAndCastOrNull<TextElement>(STRING, SYMBOL)?.textValue
     final override val stringValueOrNull: String? get() = requireTypeAndCastOrNull<StringElement>(STRING)?.textValue
@@ -231,4 +230,3 @@ internal abstract class AnyElementBase : AnyElement {
     final override val sexpValuesOrNull: List<AnyElement>? get() = requireTypeAndCastOrNull<SexpElement>(SEXP)?.values
     final override val structFieldsOrNull: Collection<StructField>? get() = requireTypeAndCastOrNull<StructElement>(STRUCT)?.fields
 }
-

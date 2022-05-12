@@ -22,10 +22,6 @@ import com.amazon.ion.system.IonTextWriterBuilder
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.loadAllElements
 import com.amazon.ionelement.util.INCLUDE_LOCATION_META
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -35,6 +31,10 @@ import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.function.BiPredicate
 import java.util.stream.Stream
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 
 val TESTS_ROOT_DIR = "./ion-tests/iontestdata"
 val GOOD_DIR: Path = Paths.get(TESTS_ROOT_DIR, "good")
@@ -73,12 +73,11 @@ class ComplianceTests {
         private fun findTestFiles(rootDir: Path): Stream<Path> {
             val searchPredicate = BiPredicate<Path, BasicFileAttributes> { path, _ ->
                 val pathStr = path.toString()
-                (pathStr.endsWith(".ion") || pathStr.endsWith(".10n"))
-                && !SKIP_LIST.contains(pathStr)
+                (pathStr.endsWith(".ion") || pathStr.endsWith(".10n")) &&
+                    !SKIP_LIST.contains(pathStr)
             }
             return Files.find(rootDir, 100, searchPredicate)
         }
-
     }
 
     @ParameterizedTest
@@ -111,7 +110,7 @@ class ComplianceTests {
 
         // Every top level value is a list or s-exp value containing values that should be equivalent
         topLevelValues.forEach { equivalenceGroup ->
-            if(equivalenceGroup.annotations.contains("embedded_documents")) {
+            if (equivalenceGroup.annotations.contains("embedded_documents")) {
                 val documents = equivalenceGroup.asSeqOrNull()?.values?.map {
                     loadAllElements(it.stringValue, INCLUDE_LOCATION_META).toList()
                 } ?: error("Unexpected null encountered")
@@ -147,7 +146,7 @@ class ComplianceTests {
 
         immutableIonValues.forEachIndexed { i, iIndex ->
             immutableIonValues.forEachIndexed { n, nIndex ->
-                if(iIndex != nIndex) {
+                if (iIndex != nIndex) {
                     assertNotEquals(i, n, "$i and $n must *not* be equivalent")
                 }
             }
@@ -189,6 +188,4 @@ class ComplianceTests {
                 String(stream.toByteArray())
             }
         }
-
-
 }

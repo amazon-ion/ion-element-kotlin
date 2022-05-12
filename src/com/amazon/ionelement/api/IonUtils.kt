@@ -44,7 +44,7 @@ public fun IonElement.toIonValue(factory: ValueFactory): IonValue {
  * New code that does not need to integrate with uses of the mutable DOM should not use this.
  */
 public fun IonValue.toIonElement(): AnyElement =
-    this.system.newReader(this).use { reader->
+    this.system.newReader(this).use { reader ->
         createIonElementLoader().loadSingleElement(reader)
     }
 

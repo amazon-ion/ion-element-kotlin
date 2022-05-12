@@ -22,4 +22,3 @@ public interface ByteArrayView : Iterable<Byte> {
 
     public fun copyOfBytes(): ByteArray
 }
-

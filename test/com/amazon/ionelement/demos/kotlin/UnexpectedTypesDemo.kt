@@ -35,7 +35,8 @@ class UnexpectedTypesDemo {
     data class TestCase(
         val ionText: String,
         val expectedIonLocation: IonLocation,
-        val block: (AnyElement) -> Unit)
+        val block: (AnyElement) -> Unit
+    )
 
     @ParameterizedTest
     @MethodSource("parametersForIonElectrolyteExceptionTest")
@@ -60,5 +61,4 @@ class UnexpectedTypesDemo {
             }
         )
     }
-
 }

@@ -21,12 +21,12 @@ import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.api.metaContainerOf
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 
 class ConstructorTests {
 
@@ -49,7 +49,7 @@ class ConstructorTests {
             ionSymbol("foo", dummyAnnotations, dummyMetas),
             ionClob(ByteArray(1), dummyAnnotations, dummyMetas),
             ionBlob(ByteArray(1), dummyAnnotations, dummyMetas),
-            ionListOf(ionInt(1), annotations =  dummyAnnotations, metas = dummyMetas),
+            ionListOf(ionInt(1), annotations = dummyAnnotations, metas = dummyMetas),
             ionListOf(listOf(ionInt(1)), dummyAnnotations, dummyMetas),
             ionSexpOf(ionInt(1), annotations = dummyAnnotations, metas = dummyMetas),
             ionSexpOf(listOf(ionInt(1)), dummyAnnotations, dummyMetas),
@@ -104,7 +104,7 @@ class ConstructorTests {
         assertEquals(1, elem.metas.size)
         assertEquals(1, elem.metas["foo_meta"])
     }
-    
+
     @Test
     fun scalarConstructorsValueTest() {
         assertTrue(ionNull(ElementType.NULL).isNull)
@@ -163,5 +163,4 @@ class ConstructorTests {
         assertEquals(1, struct.size)
         assertEquals(12L, struct["foo"].longValue)
     }
-
 }

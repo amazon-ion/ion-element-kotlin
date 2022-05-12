@@ -6,10 +6,10 @@ import com.amazon.ionelement.api.StringElement
 import com.amazon.ionelement.api.TextElement
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.ionString
-import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import org.junit.jupiter.api.Test
 
 class NarrowingDemo {
     sealed class ValueContainer {
@@ -32,7 +32,7 @@ class NarrowingDemo {
     }
 
     class Env(val elem: IonElement)
-    private inline fun <reified T: IonElement> List<Env>.extractNarrowValue() =
+    private inline fun <reified T : IonElement> List<Env>.extractNarrowValue() =
         first().let { it.elem as T }
 
     @Test

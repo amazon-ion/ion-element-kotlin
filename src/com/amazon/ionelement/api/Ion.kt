@@ -13,7 +13,6 @@
  *  permissions and limitations under the License.
  */
 
-
 @file: JvmName("Ion")
 package com.amazon.ionelement.api
 
@@ -34,9 +33,8 @@ import com.amazon.ionelement.impl.StructElementImpl
 import com.amazon.ionelement.impl.StructFieldImpl
 import com.amazon.ionelement.impl.SymbolElementImpl
 import com.amazon.ionelement.impl.TimestampElementImpl
-import kotlinx.collections.immutable.PersistentList
 import java.math.BigInteger
-
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
@@ -117,7 +115,6 @@ public fun ionNull(
     elementType: ElementType = ElementType.NULL,
     metas: MetaContainer
 ): IonElement = ionNull(elementType, emptyList(), metas)
-
 
 /** Creates a [StringElement] that represents an Ion `symbol`. */
 @JvmOverloads

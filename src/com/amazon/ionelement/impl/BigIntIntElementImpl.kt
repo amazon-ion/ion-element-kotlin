@@ -15,15 +15,14 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ion.IntegerSize
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.constraintError
+import java.math.BigInteger
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
-import java.math.BigInteger
 
 internal class BigIntIntElementImpl(
     override val bigIntegerValue: BigInteger,
@@ -36,7 +35,7 @@ internal class BigIntIntElementImpl(
     override val integerSize: IntElementSize get() = IntElementSize.BIG_INTEGER
 
     override val longValue: Long get() {
-        if(bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
+        if (bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
             constraintError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
         }
         return bigIntegerValue.longValueExact()
@@ -77,4 +76,3 @@ internal class BigIntIntElementImpl(
 
 internal val MAX_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MAX_VALUE)
 internal val MIN_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MIN_VALUE)
-

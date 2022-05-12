@@ -15,18 +15,9 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.createIonElementLoader
-import com.amazon.ionelement.api.ionBool
-import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.api.ionListOf
-import com.amazon.ionelement.api.ionString
-import com.amazon.ionelement.api.ionStructOf
-import com.amazon.ionelement.api.ionTimestamp
-import com.amazon.ionelement.api.loadSingleElement
-import com.amazon.ionelement.api.toIonElement
-import com.amazon.ionelement.api.toIonValue
-import com.amazon.ionelement.util.ION
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.util.INCLUDE_LOCATION_META
+import com.amazon.ionelement.util.ION
 import com.amazon.ionelement.util.IonElementLoaderTestCase
 import com.amazon.ionelement.util.convertToString
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -81,7 +72,9 @@ class IonElementLoaderTests {
                 ionStructOf(
                     "foo" to ionInt(1),
                     "bar" to ionInt(2),
-                    "bat" to ionInt(3))))
+                    "bat" to ionInt(3)
+                )
+            )
+        )
     }
 }
-

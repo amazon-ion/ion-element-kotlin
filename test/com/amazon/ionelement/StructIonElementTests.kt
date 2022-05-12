@@ -15,8 +15,8 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.IonElement
+import com.amazon.ionelement.api.IonElementException
 import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.loadSingleElement
@@ -56,31 +56,43 @@ class StructIonElementTests {
 
     @Test
     fun get() {
-        assertEquals(ionInt(1), struct["a"],
-            "value is returned when field is present")
+        assertEquals(
+            ionInt(1), struct["a"],
+            "value is returned when field is present"
+        )
 
         val b1 = struct["b"]
-        assertTrue(listOf(ionInt(2), ionInt(3)).any { it == b1 },
-            "any value of the b field is returned (duplicate field name)")
+        assertTrue(
+            listOf(ionInt(2), ionInt(3)).any { it == b1 },
+            "any value of the b field is returned (duplicate field name)"
+        )
 
         val ex = assertThrows<IonElementException>("exception is thrown when field is not present") {
             struct["z"]
         }
-        assertTrue(ex.message!!.contains("'z'"),
-            "Exception message must contain the missing field")
+        assertTrue(
+            ex.message!!.contains("'z'"),
+            "Exception message must contain the missing field"
+        )
     }
 
     @Test
     fun getOptional() {
-        assertEquals(ionInt(1), struct.getOptional("a"),
-            "value is returned when field is present")
+        assertEquals(
+            ionInt(1), struct.getOptional("a"),
+            "value is returned when field is present"
+        )
 
         val b2 = struct.getOptional("b")
-        assertTrue(listOf(ionInt(1), ionInt(2)).any { it == b2 },
-            "any value of the b field is returned (duplicate field name)")
+        assertTrue(
+            listOf(ionInt(1), ionInt(2)).any { it == b2 },
+            "any value of the b field is returned (duplicate field name)"
+        )
 
-        assertNull(struct.getOptional("z"),
-            "null is returned when the field is not present.")
+        assertNull(
+            struct.getOptional("z"),
+            "null is returned when the field is not present."
+        )
     }
 
     @Test
@@ -93,5 +105,4 @@ class StructIonElementTests {
     private fun Iterable<StructField>.assertHasField(expectedName: String, expectedValue: IonElement) {
         assertTrue(this.any { (name, value) -> name == expectedName && value == expectedValue }, "Must have field '$expectedName'")
     }
-
 }

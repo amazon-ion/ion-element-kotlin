@@ -153,7 +153,6 @@ public interface TimestampElement : IonElement {
     override fun withoutMetas(): TimestampElement
 }
 
-
 /** Indicates the size of the integer element. */
 public enum class IntElementSize {
     /** For integer values representable by a [Long]. */
@@ -266,7 +265,7 @@ public interface SymbolElement : TextElement {
 
 /** Represents an Ion clob or blob. */
 public interface LobElement : IonElement {
-    public val bytesValue:  ByteArrayView
+    public val bytesValue: ByteArrayView
     override fun copy(annotations: List<String>, metas: MetaContainer): LobElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): LobElement
@@ -437,7 +436,6 @@ public interface StructElement : ContainerElement {
 
     /** The same as [get] but returns a null reference if the field does not exist.  */
     public fun getOptional(fieldName: String): AnyElement?
-
 
     /** Retrieves all values with a given field name. Returns an empty iterable if the field does not exist. */
     public fun getAll(fieldName: String): Iterable<AnyElement>
