@@ -23,34 +23,7 @@ import com.amazon.ion.OffsetSpan
 import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.ION_LOCATION_META_TAG
-import com.amazon.ionelement.api.IonBinaryLocation
-import com.amazon.ionelement.api.IonElementException
-import com.amazon.ionelement.api.IonElementLoader
-import com.amazon.ionelement.api.IonElementLoaderException
-import com.amazon.ionelement.api.IonElementLoaderOptions
-import com.amazon.ionelement.api.IonLocation
-import com.amazon.ionelement.api.IonTextLocation
-import com.amazon.ionelement.api.StructField
-import com.amazon.ionelement.api.emptyMetaContainer
-import com.amazon.ionelement.api.ionBlob
-import com.amazon.ionelement.api.ionBool
-import com.amazon.ionelement.api.ionClob
-import com.amazon.ionelement.api.ionDecimal
-import com.amazon.ionelement.api.ionFloat
-import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.api.ionListOf
-import com.amazon.ionelement.api.ionNull
-import com.amazon.ionelement.api.ionSexpOf
-import com.amazon.ionelement.api.ionString
-import com.amazon.ionelement.api.ionStructOf
-import com.amazon.ionelement.api.ionSymbol
-import com.amazon.ionelement.api.ionTimestamp
-import com.amazon.ionelement.api.metaContainerOf
-import com.amazon.ionelement.api.toElementType
-import com.amazon.ionelement.api.withAnnotations
-import com.amazon.ionelement.api.withMetas
+import com.amazon.ionelement.api.*
 
 class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
@@ -193,10 +166,10 @@ class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonEl
             }.asAnyElement()
 
             if (annotations.any()) {
-                element = element.withAnnotations(*annotations)
+                element = element._withAnnotations(*annotations)
             }
             if (metas.any()) {
-                element = element.withMetas(metas)
+                element = element._withMetas(metas)
             }
 
             element

@@ -17,12 +17,8 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.StructElement
-import com.amazon.ionelement.api.StructField
 import com.amazon.ionelement.api.constraintError
 import kotlinx.collections.immutable.PersistentCollection
 import kotlinx.collections.immutable.PersistentList
@@ -81,8 +77,15 @@ internal class StructElementImpl(
 
     override fun containsField(fieldName: String): Boolean = fieldsByName.containsKey(fieldName)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): StructElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): StructElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): StructElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): StructElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): StructElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)

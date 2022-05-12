@@ -16,13 +16,9 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ByteArrayView
-import com.amazon.ionelement.api.ClobElement
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
-
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.emptyMetaContainer
+
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -36,8 +32,15 @@ internal class ClobElementImpl(
     override val clobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
-    override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): ClobElementImpl =
         ClobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): ClobElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): ClobElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): ClobElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): ClobElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): ClobElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): ClobElementImpl = _withoutMetas()
 
     override val type: ElementType get() = ElementType.CLOB
 }

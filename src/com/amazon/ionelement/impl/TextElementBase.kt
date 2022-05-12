@@ -15,7 +15,19 @@
 
 package com.amazon.ionelement.impl
 
+import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.TextElement
+
 internal abstract class TextElementBase(
     override val textValue: String
-): AnyElementBase()
+): AnyElementBase(), TextElement {
+
+    abstract override fun copy(annotations: List<String>, metas: MetaContainer): TextElementBase
+    abstract override fun withAnnotations(vararg additionalAnnotations: String): TextElementBase
+    abstract override fun withAnnotations(additionalAnnotations: Iterable<String>): TextElementBase
+    abstract override fun withoutAnnotations(): TextElementBase
+    abstract override fun withMetas(additionalMetas: MetaContainer): TextElementBase
+    abstract override fun withMeta(key: String, value: Any): TextElementBase
+    abstract override fun withoutMetas(): TextElementBase
+}
 

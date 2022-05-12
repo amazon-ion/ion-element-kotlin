@@ -16,10 +16,8 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
-import com.amazon.ionelement.api.StringElement
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -33,8 +31,15 @@ internal class StringElementImpl(
 
     override val stringValue: String get() = textValue
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): StringElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): StringElementImpl =
         StringElementImpl(textValue, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): StringElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): StringElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): StringElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): StringElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): StringElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): StringElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeString(textValue)
     override fun equals(other: Any?): Boolean {

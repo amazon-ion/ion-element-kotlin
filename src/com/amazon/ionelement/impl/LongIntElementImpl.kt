@@ -16,10 +16,7 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.ElementType
-import com.amazon.ionelement.api.IntElement
-import com.amazon.ionelement.api.IntElementSize
-import com.amazon.ionelement.api.MetaContainer
+import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -36,8 +33,15 @@ internal class LongIntElementImpl(
 
     override val bigIntegerValue: BigInteger get() = BigInteger.valueOf(longValue)
 
-    override fun copy(annotations: List<String>, metas: MetaContainer): IntElement =
+    override fun copy(annotations: List<String>, metas: MetaContainer): LongIntElementImpl =
         LongIntElementImpl(longValue, annotations.toPersistentList(), metas.toPersistentMap())
+
+    override fun withAnnotations(vararg additionalAnnotations: String): LongIntElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): LongIntElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withoutAnnotations(): LongIntElementImpl = _withoutAnnotations()
+    override fun withMetas(additionalMetas: MetaContainer): LongIntElementImpl = _withMetas(additionalMetas)
+    override fun withMeta(key: String, value: Any): LongIntElementImpl = _withMeta(key, value)
+    override fun withoutMetas(): LongIntElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
     override fun equals(other: Any?): Boolean {

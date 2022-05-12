@@ -19,8 +19,6 @@ import com.amazon.ionelement.api.IonElement
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.createIonElementLoader
 import com.amazon.ionelement.api.ionStructOf
-import com.amazon.ionelement.api.withAnnotations
-import com.amazon.ionelement.api.withMeta
 import org.junit.jupiter.api.Assertions
 
 data class EquivTestCase(val left: String, val right: String, val isEquiv: Boolean) {

@@ -352,4 +352,11 @@ interface AnyElement : IonElement {
     /** See [AnyElement]. */
     val structFieldsOrNull: Collection<StructField>?
 
+    override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement
+    override fun withAnnotations(vararg additionalAnnotations: String): AnyElement
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): AnyElement
+    override fun withoutAnnotations(): AnyElement
+    override fun withMetas(additionalMetas: MetaContainer): AnyElement
+    override fun withMeta(key: String, value: Any): AnyElement
+    override fun withoutMetas(): AnyElement
 }

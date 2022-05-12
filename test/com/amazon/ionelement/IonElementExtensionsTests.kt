@@ -1,53 +1,70 @@
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.head
-import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.api.loadSingleElement
-import com.amazon.ionelement.api.metaContainerOf
-import com.amazon.ionelement.api.tail
-import com.amazon.ionelement.api.withAnnotations
-import com.amazon.ionelement.api.withMeta
-import com.amazon.ionelement.api.withMetas
-import com.amazon.ionelement.api.withoutAnnotations
-import com.amazon.ionelement.api.withoutMetas
+import com.amazon.ion.Decimal
+import com.amazon.ionelement.api.*
+import com.amazon.ionelement.util.ArgumentsProviderBase
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ArgumentsProvider
+import org.junit.jupiter.params.provider.ArgumentsSource
+import org.junit.jupiter.params.provider.MethodSource
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
-class IonElementExtensionsTests {
+class IonElementExtensionsTests: ArgumentsProviderBase() {
 
-    @Test
-    fun withAnnotationsVariadic() {
-        val oneAnno = ionInt(1).withAnnotations("foo")
+    override fun getParameters(): List<IonElement> = listOf(
+        ionInt(1),
+        ionInt(BigInteger("${Long.MAX_VALUE}000")),
+        ionFloat(1.0),
+        ionDecimal(Decimal.valueOf("1.0")),
+        ionString("hello"),
+        ionSymbol("world"),
+        ionBool(true),
+        ionNull(ElementType.BOOL),
+        ionTimestamp("2022-01-01"),
+        emptyIonList(),
+        emptyIonSexp(),
+        emptyIonStruct(),
+        emptyClob(),
+        emptyBlob()
+    )
+
+    @ParameterizedTest
+    @ArgumentsSource(IonElementExtensionsTests::class)
+    fun withAnnotationsVariadic(element: IonElement) {
+        val oneAnno = element.withAnnotations("foo")
         assertSame(oneAnno, oneAnno.withAnnotations())
         assertEquals(1, oneAnno.annotations.size)
         assertTrue(oneAnno.annotations.contains("foo"))
 
-        val twoAnno1 = ionInt(1).withAnnotations("foo", "bar")
+        val twoAnno1 = element.withAnnotations("foo", "bar")
         assertSame(twoAnno1, twoAnno1.withAnnotations())
         assertEquals(2, twoAnno1.annotations.size)
         assertTrue(twoAnno1.annotations.contains("foo"))
         assertTrue(twoAnno1.annotations.contains("bar"))
 
-        val twoAnno2 = ionInt(1).withAnnotations("foo").withAnnotations("bar")
+        val twoAnno2 = element.withAnnotations("foo").withAnnotations("bar")
         assertSame(twoAnno2, twoAnno2.withAnnotations())
         assertEquals(2, twoAnno2.annotations.size)
         assertTrue(twoAnno2.annotations.contains("foo"))
         assertTrue(twoAnno2.annotations.contains("bar"))
     }
 
-    @Test
-    fun withAnnotationsList() {
-        val twoAnno1 = ionInt(1).withAnnotations(listOf("foo", "bar"))
+    @ParameterizedTest
+    @ArgumentsSource(IonElementExtensionsTests::class)
+    fun withAnnotationsList(element: IonElement) {
+        val twoAnno1 = element.withAnnotations(listOf("foo", "bar"))
         assertSame(twoAnno1, twoAnno1.withAnnotations())
         assertEquals(2, twoAnno1.annotations.size)
         assertTrue(twoAnno1.annotations.contains("foo"))
         assertTrue(twoAnno1.annotations.contains("bar"))
 
-        val twoAnno2 = ionInt(1).withAnnotations(listOf("foo")).withAnnotations(listOf("bar"))
+        val twoAnno2 = element.withAnnotations(listOf("foo")).withAnnotations(listOf("bar"))
         assertSame(twoAnno2, twoAnno2.withAnnotations())
         assertEquals(2, twoAnno2.annotations.size)
         assertTrue(twoAnno2.annotations.contains("foo"))
@@ -57,9 +74,10 @@ class IonElementExtensionsTests {
         assertEquals(0, noAnnos.annotations.size)
     }
 
-    @Test
-    fun withoutAnnotations() {
-        val hasAnnos = loadSingleElement("foo::bar::1").withMeta("foo", 42).asInt()
+    @ParameterizedTest
+    @ArgumentsSource(IonElementExtensionsTests::class)
+    fun withoutAnnotations(element: IonElement) {
+        val hasAnnos = element.withAnnotations("foo", "bar").withMeta("foo", 42)
         assertEquals(2, hasAnnos.annotations.size)
 
         val noAnnos = hasAnnos.withoutAnnotations()
@@ -69,17 +87,18 @@ class IonElementExtensionsTests {
         assertEquals(42, noAnnos.metas["foo"])
     }
 
-    @Test
-    fun metas() {
-        val oneMeta = ionInt(1).withMeta("foo", 42)
+    @ParameterizedTest
+    @ArgumentsSource(IonElementExtensionsTests::class)
+    fun metas(element: IonElement) {
+        val oneMeta = element.withMeta("foo", 42)
         assertEquals(1, oneMeta.metas.size)
         assertEquals(42, oneMeta.metas["foo"])
 
-        val twoMeta1 = ionInt(1).withMeta("foo", 42).withMeta("bar", 43)
+        val twoMeta1 = element.withMeta("foo", 42).withMeta("bar", 43)
         assertEquals(42, twoMeta1.metas["foo"])
         assertEquals(43, twoMeta1.metas["bar"])
 
-        val twoMeta2 = ionInt(1).withMetas(metaContainerOf("foo" to 52, "bar" to 53))
+        val twoMeta2 = element.withMetas(metaContainerOf("foo" to 52, "bar" to 53))
         assertEquals(52, twoMeta2.metas["foo"])
         assertEquals(53, twoMeta2.metas["bar"])
 
@@ -97,9 +116,10 @@ class IonElementExtensionsTests {
         assertEquals(0, noMetas.annotations.size)
     }
 
-    @Test
-    fun withoutMetas() {
-        val hasMetas = loadSingleElement("foo::1").withMeta("foo", 42)
+    @ParameterizedTest
+    @ArgumentsSource(IonElementExtensionsTests::class)
+    fun withoutMetas(element: IonElement) {
+        val hasMetas = element.withAnnotations("foo").withMeta("foo", 42)
         assertEquals(1, hasMetas.annotations.size)
         assertTrue(hasMetas.annotations.contains("foo"))
 
