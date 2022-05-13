@@ -40,7 +40,7 @@ import java.math.BigInteger
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
-typealias Annotations = List<String>
+internal typealias Annotations = List<String>
 
 /*
 
@@ -67,7 +67,7 @@ For example, the following definition:
 
 ```
 @JvmOverloads
-fun ionInt(l: Long, annotations: Annotations = emptyList(), metas: MetaContainer = emptyMetaContainer()): IntElement = ...
+public fun ionInt(l: Long, annotations: Annotations = emptyList(), metas: MetaContainer = emptyMetaContainer()): IntElement = ...
 ```
 
 Synthesizes the following overloads:
@@ -93,7 +93,7 @@ Below, we use a combination of @JvmOverloads and the manually implemented overlo
  * Creates an [IonElement] that represents an Ion `null.null` or a typed `null` with the specified metas
  * and annotations. */
 @JvmOverloads
-fun ionNull(
+public fun ionNull(
     elementType: ElementType = ElementType.NULL,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -113,7 +113,7 @@ fun ionNull(
 /**
  * Creates an [IonElement] that represents an Ion `null.null` or a typed `null` with the specified metas
  * and annotations. */
-fun ionNull(
+public fun ionNull(
     elementType: ElementType = ElementType.NULL,
     metas: MetaContainer
 ): IonElement = ionNull(elementType, emptyList(), metas)
@@ -121,7 +121,7 @@ fun ionNull(
 
 /** Creates a [StringElement] that represents an Ion `symbol`. */
 @JvmOverloads
-fun ionString(
+public fun ionString(
     s: String,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -131,14 +131,14 @@ fun ionString(
     metas = metas.toPersistentMap()
 )
 /** Creates a [StringElement] that represents an Ion `symbol`. */
-fun ionString(
+public fun ionString(
     s: String,
     metas: MetaContainer
 ): StringElement = ionString(s, emptyList(), metas)
 
 /** Creates a [SymbolElement] that represents an Ion `symbol`. */
 @JvmOverloads
-fun ionSymbol(
+public fun ionSymbol(
     s: String,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -149,14 +149,14 @@ fun ionSymbol(
 )
 
 /** Creates a [SymbolElement] that represents an Ion `symbol`. */
-fun ionSymbol(
+public fun ionSymbol(
     s: String,
     metas: MetaContainer
 ): SymbolElement = ionSymbol(s, emptyList(), metas)
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
 @JvmOverloads
-fun ionTimestamp(
+public fun ionTimestamp(
     s: String,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -167,14 +167,14 @@ fun ionTimestamp(
 )
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
-fun ionTimestamp(
+public fun ionTimestamp(
     s: String,
     metas: MetaContainer
 ): TimestampElement = ionTimestamp(s, emptyList(), metas)
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
 @JvmOverloads
-fun ionTimestamp(
+public fun ionTimestamp(
     timestamp: Timestamp,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -185,14 +185,14 @@ fun ionTimestamp(
 )
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
-fun ionTimestamp(
+public fun ionTimestamp(
     timestamp: Timestamp,
     metas: MetaContainer
 ): TimestampElement = ionTimestamp(timestamp, emptyList(), metas)
 
 /** Creates an [IntElement] that represents an Ion `int`. */
 @JvmOverloads
-fun ionInt(
+public fun ionInt(
     l: Long,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -204,14 +204,14 @@ fun ionInt(
     )
 
 /** Creates an [IntElement] that represents an Ion `int`. */
-fun ionInt(
+public fun ionInt(
     l: Long,
     metas: MetaContainer
 ): IntElement = ionInt(l, emptyList(), metas)
 
 /** Creates an [IntElement] that represents an Ion `BitInteger`. */
 @JvmOverloads
-fun ionInt(
+public fun ionInt(
     bigInt: BigInteger,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -222,14 +222,14 @@ fun ionInt(
 )
 
 /** Creates an [IntElement] that represents an Ion `BitInteger`. */
-fun ionInt(
+public fun ionInt(
     bigInt: BigInteger,
     metas: MetaContainer
 ): IntElement = ionInt(bigInt, emptyList(), metas)
 
 /** Creates a [BoolElement] that represents an Ion `bool`. */
 @JvmOverloads
-fun ionBool(
+public fun ionBool(
     b: Boolean,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -240,14 +240,14 @@ fun ionBool(
 )
 
 /** Creates a [BoolElement] that represents an Ion `bool`. */
-fun ionBool(
+public fun ionBool(
     b: Boolean,
     metas: MetaContainer
 ): BoolElement = ionBool(b, emptyList(), metas)
 
 /** Creates a [FloatElement] that represents an Ion `float`. */
 @JvmOverloads
-fun ionFloat(
+public fun ionFloat(
     d: Double,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -258,14 +258,14 @@ fun ionFloat(
 )
 
 /** Creates a [FloatElement] that represents an Ion `float`. */
-fun ionFloat(
+public fun ionFloat(
     d: Double,
     metas: MetaContainer
 ): FloatElement = ionFloat(d, emptyList(), metas)
 
 /** Creates a [DecimalElement] that represents an Ion `decimall`. */
 @JvmOverloads
-fun ionDecimal(
+public fun ionDecimal(
     bigDecimal: Decimal,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -276,7 +276,7 @@ fun ionDecimal(
 )
 
 /** Creates a [DecimalElement] that represents an Ion `decimall`. */
-fun ionDecimal(
+public fun ionDecimal(
     bigDecimal: Decimal,
     metas: MetaContainer
 ): DecimalElement = ionDecimal(bigDecimal, emptyList(), metas)
@@ -287,7 +287,7 @@ fun ionDecimal(
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
 @JvmOverloads
-fun ionBlob(
+public fun ionBlob(
     bytes: ByteArray,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -302,13 +302,13 @@ fun ionBlob(
  *
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
-fun ionBlob(
+public fun ionBlob(
     bytes: ByteArray,
     metas: MetaContainer
 ): BlobElement = ionBlob(bytes, emptyList(), metas)
 
 /** Returns the empty [BlobElement] singleton. */
-fun emptyBlob(): BlobElement = EMPTY_BLOB
+public fun emptyBlob(): BlobElement = EMPTY_BLOB
 
 /**
  * Creates a [ClobElement] that represents an Ion `clob`.
@@ -316,7 +316,7 @@ fun emptyBlob(): BlobElement = EMPTY_BLOB
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
 @JvmOverloads
-fun ionClob(
+public fun ionClob(
     bytes: ByteArray,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -330,17 +330,17 @@ fun ionClob(
  *
  * Note that the [ByteArray] is cloned so immutability can be enforced.
  */
-fun ionClob(
+public fun ionClob(
     bytes: ByteArray,
     metas: MetaContainer = emptyMetaContainer()
 ): ClobElement = ionClob(bytes, emptyList(), metas)
 
 /** Returns the empty [ClobElement] singleton. */
-fun emptyClob(): ClobElement = EMPTY_CLOB
+public fun emptyClob(): ClobElement = EMPTY_CLOB
 
 /** Creates a [ListElement] that represents an Ion `list`. */
 @JvmOverloads
-fun ionListOf(
+public fun ionListOf(
     iterable: Iterable<IonElement>,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -352,7 +352,7 @@ fun ionListOf(
     )
 
 /** Creates a [ListElement] that represents an Ion `list`. */
-fun ionListOf(
+public fun ionListOf(
     iterable: Iterable<IonElement>,
     metas: MetaContainer
 ): ListElement = ionListOf(iterable, emptyList(), metas)
@@ -363,7 +363,7 @@ fun ionListOf(
  * If calling from Java, please use one of the overloads which accepts the child elements in an instance of
  * `Iterable<IonElement>`.
  */
-fun ionListOf(
+public fun ionListOf(
     vararg elements: IonElement,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -375,7 +375,7 @@ fun ionListOf(
     )
 
 /** Creates a [ListElement] that represents an Ion `list`. */
-fun ionListOf(
+public fun ionListOf(
     vararg elements: IonElement
 ): ListElement =
     ionListOf(
@@ -385,11 +385,11 @@ fun ionListOf(
     )
 
 /** Returns a [ListElement] representing an empty Ion `list`. */
-fun emptyIonList(): ListElement = EMPTY_LIST
+public fun emptyIonList(): ListElement = EMPTY_LIST
 
 /** Creates an [SexpElement] that represents an Ion `sexp`. */
 @JvmOverloads
-fun ionSexpOf(
+public fun ionSexpOf(
     iterable: Iterable<IonElement>,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -401,14 +401,14 @@ fun ionSexpOf(
     )
 
 /** Creates an [SexpElement] that represents an Ion `sexp`. */
-fun ionSexpOf(
+public fun ionSexpOf(
     iterable: Iterable<IonElement>,
     metas: MetaContainer
 ): SexpElement = ionSexpOf(iterable, emptyList(), metas)
 
 /** Creates a [SexpElement] that represents an Ion `sexp`. */
 @JvmOverloads
-fun ionSexpOf(
+public fun ionSexpOf(
     vararg elements: IonElement,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -420,18 +420,18 @@ fun ionSexpOf(
     )
 
 /** Returns a [SexpElement] representing an empty Ion `sexp`. */
-fun emptyIonSexp(): SexpElement = EMPTY_SEXP
+public fun emptyIonSexp(): SexpElement = EMPTY_SEXP
 
 /** Returns a [StructElement] representing an empty Ion `struct`. */
-fun emptyIonStruct(): StructElement = EMPTY_STRUCT
+public fun emptyIonStruct(): StructElement = EMPTY_STRUCT
 
 /** Creates a [StructField] . */
-fun field(key: String, value: IonElement): StructField =
+public fun field(key: String, value: IonElement): StructField =
     StructFieldImpl(name = key, value = value.asAnyElement())
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
 @JvmOverloads
-fun ionStructOf(
+public fun ionStructOf(
     fields: Iterable<StructField>,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -443,14 +443,14 @@ fun ionStructOf(
     )
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
-fun ionStructOf(
+public fun ionStructOf(
     fields: Iterable<StructField>,
     metas: MetaContainer
 ): StructElement = ionStructOf(fields, emptyList(), metas)
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
 @JvmOverloads
-fun ionStructOf(
+public fun ionStructOf(
     vararg fields: StructField,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()
@@ -463,7 +463,7 @@ fun ionStructOf(
 
 /** Creates an [AnyElement] that represents an Ion `struct` with the specified fields. */
 @JvmOverloads
-fun ionStructOf(
+public fun ionStructOf(
     vararg fields: Pair<String, IonElement>,
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer()

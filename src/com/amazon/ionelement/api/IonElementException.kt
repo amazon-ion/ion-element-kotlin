@@ -18,14 +18,14 @@ package com.amazon.ionelement.api
 /**
  * Base exception which includes the [location] in the message if it was included at construction time.
  */
-open class IonElementException(
-    val location: IonLocation?,
-    val description: String,
+public open class IonElementException internal constructor(
+    public val location: IonLocation?,
+    public val description: String,
     cause: Throwable? = null
 ) : Error(locationToString(location) + ": $description", cause)
 
 /** Exception thrown by [IonElementLoader]. */
-class IonElementLoaderException(
+public class IonElementLoaderException internal constructor(
     location: IonLocation?,
     description: String,
     cause: Throwable? = null
@@ -36,10 +36,10 @@ class IonElementLoaderException(
  *
  * [blame] is the [IonElement] instance that violates the constraint.
  */
-class IonElementConstraintException(
+public class IonElementConstraintException internal constructor(
     private val elementToBlame: IonElement,
     description: String,
     cause: Throwable? = null
 ) : IonElementException(elementToBlame.metas.location, description, cause) {
-    val blame get() = elementToBlame.asAnyElement()
+    public val blame: AnyElement get() = elementToBlame.asAnyElement()
 }

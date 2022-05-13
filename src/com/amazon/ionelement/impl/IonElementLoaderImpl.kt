@@ -25,7 +25,7 @@ import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.*
 
-class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
+internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
     /**
      * Catches an [IonException] occurring in [block] and throws an [IonElementLoaderException] with

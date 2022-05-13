@@ -16,26 +16,26 @@ import com.amazon.ionelement.api.ElementType.SYMBOL
  * has no notion of datagrams.  It also exposes [isText], [isContainer] and [isLob] as properties instead of as static
  * functions.
  */
-enum class ElementType(
+public enum class ElementType(
     /** True if the current [ElementType] is [STRING] or [SYMBOL]. */
-    val isText: Boolean,
+    public val isText: Boolean,
 
     /**
      * True if the current [ElementType] is [LIST] or [SEXP] or [STRUCT].
      *
      * Ordering of the child elements cannot be guaranteed for [STRUCT] elements.
      */
-    val isContainer: Boolean,
+    public val isContainer: Boolean,
 
     /**
      * True if the current [ElementType] is [LIST] or [SEXP].
      *
      * Ordering of the child elements is guaranteed.
      */
-    val isSeq: Boolean,
+    public val isSeq: Boolean,
 
     /** True if the current [ElementType] is [CLOB] or [BLOB]. */
-    val isLob: Boolean
+    public val isLob: Boolean
 ) {
     // Other scalar types
     NULL(false, false, false, false),
@@ -60,7 +60,7 @@ enum class ElementType(
     STRUCT(false, true, false, false);
 
     /** Converts this [ElementType] to [IonType]. */
-    fun toIonType() = when(this) {
+    public fun toIonType(): IonType = when(this) {
         NULL -> IonType.NULL
         BOOL -> IonType.BOOL
         INT -> IonType.INT
@@ -83,7 +83,7 @@ enum class ElementType(
  * @throws [IllegalStateException] if the receiver is [IonType.DATAGRAM] because [AnyElement] has no notion of
  * datagrams.
  */
-fun IonType.toElementType() = when(this) {
+public fun IonType.toElementType(): ElementType = when(this) {
     IonType.NULL -> ElementType.NULL
     IonType.BOOL -> ElementType.BOOL
     IonType.INT -> ElementType.INT

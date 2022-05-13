@@ -27,7 +27,7 @@ import com.amazon.ion.ValueFactory
  * @param factory A [ValueFactory] to use to create the new [IonValue] instances.  Note that any
  * [com.amazon.ion.IonSystem] instance maybe be used here, in addition to other implementations of [ValueFactory].
  */
-fun IonElement.toIonValue(factory: ValueFactory): IonValue {
+public fun IonElement.toIonValue(factory: ValueFactory): IonValue {
     // We still have to use IonSystem under the covers for this to get an IonWriter that writes to a dummy list.
     val dummyList = factory.newList()
     dummyList.system.newWriter(dummyList).use { writer ->
@@ -43,7 +43,7 @@ fun IonElement.toIonValue(factory: ValueFactory): IonValue {
  *
  * New code that does not need to integrate with uses of the mutable DOM should not use this.
  */
-fun IonValue.toIonElement(): AnyElement =
+public fun IonValue.toIonElement(): AnyElement =
     this.system.newReader(this).use { reader->
         createIonElementLoader().loadSingleElement(reader)
     }

@@ -63,7 +63,7 @@ import java.math.BigInteger
  *
  * When in doubt, prefer use of [Object.equals] and [Object.hashCode] on the [IonElement] instance.
  */
-interface IonElement {
+public interface IonElement {
 
     /**
      * All [IonElement] implementations must convertible to [AnyElement].
@@ -72,25 +72,25 @@ interface IonElement {
      * expensive than a cast.  The purpose of this interface function is to be very clear about the requirement
      * that all implementations of [IonElement] are convertible to [AnyElement].
      */
-    fun asAnyElement(): AnyElement
+    public fun asAnyElement(): AnyElement
 
     /** The Ion data type of the current node.  */
-    val type: ElementType
+    public val type: ElementType
 
     /** This [IonElement]'s metadata. */
-    val metas: MetaContainer
+    public val metas: MetaContainer
 
     /** This element's Ion type annotations. */
-    val annotations: List<String>
+    public val annotations: List<String>
 
     /** Returns true if the current value is `null.null` or any typed null. */
-    val isNull: Boolean
+    public val isNull: Boolean
 
     /** Returns a shallow copy of the current node, replacing the annotations and metas with those specified. */
-    fun copy(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): IonElement
+    public fun copy(annotations: List<String> = this.annotations, metas: MetaContainer = this.metas): IonElement
 
     /** Writes the current Ion element to the specified [IonWriter]. */
-    fun writeTo(writer: IonWriter)
+    public fun writeTo(writer: IonWriter)
 
     /** Converts the current element to Ion text. */
     override fun toString(): String
@@ -102,19 +102,19 @@ interface IonElement {
      */
 
     /** Returns a shallow copy of the current node with the specified additional annotations. */
-    fun withAnnotations(vararg additionalAnnotations: String): IonElement
+    public fun withAnnotations(vararg additionalAnnotations: String): IonElement
 
     /** Returns a shallow copy of the current node with the specified additional annotations. */
-    fun withAnnotations(additionalAnnotations: Iterable<String>): IonElement
+    public fun withAnnotations(additionalAnnotations: Iterable<String>): IonElement
 
     /** Returns a shallow copy of the current node with all annotations removed. */
-    fun withoutAnnotations(): IonElement
+    public fun withoutAnnotations(): IonElement
 
     /**
      * Returns a shallow copy of the current node with the specified additional metadata, overwriting any metas
      * that already exist with the same keys.
      */
-    fun withMetas(additionalMetas: MetaContainer): IonElement
+    public fun withMetas(additionalMetas: MetaContainer): IonElement
 
     /**
      * Returns a shallow copy of the current node with the specified additional meta, overwriting any meta
@@ -122,15 +122,15 @@ interface IonElement {
      *
      * When adding multiple metas, consider [withMetas] instead.
      */
-    fun withMeta(key: String, value: Any): IonElement
+    public fun withMeta(key: String, value: Any): IonElement
 
     /** Returns a shallow copy of the current node without any metadata. */
-    fun withoutMetas(): IonElement
+    public fun withoutMetas(): IonElement
 }
 
 /** Represents a Ion bool. */
-interface BoolElement : IonElement {
-    val booleanValue: Boolean
+public interface BoolElement : IonElement {
+    public val booleanValue: Boolean
     override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement
     override fun withAnnotations(vararg additionalAnnotations: String): BoolElement
     override fun withAnnotations(additionalAnnotations: Iterable<String>): BoolElement
@@ -141,8 +141,8 @@ interface BoolElement : IonElement {
 }
 
 /** Represents a Ion timestamp. */
-interface TimestampElement : IonElement {
-    val timestampValue: Timestamp
+public interface TimestampElement : IonElement {
+    public val timestampValue: Timestamp
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): TimestampElement
@@ -155,7 +155,7 @@ interface TimestampElement : IonElement {
 
 
 /** Indicates the size of the integer element. */
-enum class IntElementSize {
+public enum class IntElementSize {
     /** For integer values representable by a [Long]. */
     LONG,
     /** For values larger than [Long.MAX_VALUE] or smaller than [Long.MIN_VALUE]. */
@@ -163,22 +163,22 @@ enum class IntElementSize {
 }
 
 /** Represents a Ion int. */
-interface IntElement : IonElement {
+public interface IntElement : IonElement {
 
     /** The size of this [IntElement]. */
-    val integerSize: IntElementSize
+    public val integerSize: IntElementSize
 
     /**
      * Use this property to access the integer value of this [IntElement] when its value fits in a [Long].
      *
      * @throws IonElementConstraintException if [integerSize] is [IntElementSize.BIG_INTEGER].
      */
-    val longValue: Long
+    public val longValue: Long
 
     /**
      * This property may be used to access the integer value of this [IntElement] if its value does not fit in a [Long].
      */
-    val bigIntegerValue: BigInteger
+    public val bigIntegerValue: BigInteger
     override fun copy(annotations: List<String>, metas: MetaContainer): IntElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): IntElement
@@ -190,8 +190,8 @@ interface IntElement : IonElement {
 }
 
 /** Represents a Ion decimal. */
-interface DecimalElement : IonElement {
-    val decimalValue: Decimal
+public interface DecimalElement : IonElement {
+    public val decimalValue: Decimal
     override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): DecimalElement
@@ -205,8 +205,8 @@ interface DecimalElement : IonElement {
 /**
  * Represents a Ion float.
  */
-interface FloatElement : IonElement {
-    val doubleValue: Double
+public interface FloatElement : IonElement {
+    public val doubleValue: Double
     override fun copy(annotations: List<String>, metas: MetaContainer): FloatElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): FloatElement
@@ -218,8 +218,8 @@ interface FloatElement : IonElement {
 }
 
 /** Represents an Ion string or symbol. */
-interface TextElement : IonElement {
-    val textValue: String
+public interface TextElement : IonElement {
+    public val textValue: String
     override fun copy(annotations: List<String>, metas: MetaContainer): TextElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): TextElement
@@ -236,7 +236,7 @@ interface TextElement : IonElement {
  * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
  * working with elements that must be Ion strings.
  */
-interface StringElement : TextElement {
+public interface StringElement : TextElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): StringElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): StringElement
@@ -253,7 +253,7 @@ interface StringElement : TextElement {
  * Includes no additional functionality over [TextElement], but serves to provide additional type safety when
  * working with elements that must be Ion symbols.
  */
-interface SymbolElement : TextElement {
+public interface SymbolElement : TextElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): SymbolElement
@@ -265,8 +265,8 @@ interface SymbolElement : TextElement {
 }
 
 /** Represents an Ion clob or blob. */
-interface LobElement : IonElement {
-    val bytesValue:  ByteArrayView
+public interface LobElement : IonElement {
+    public val bytesValue:  ByteArrayView
     override fun copy(annotations: List<String>, metas: MetaContainer): LobElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): LobElement
@@ -283,7 +283,7 @@ interface LobElement : IonElement {
  * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
  * working with elements that must be Ion blobs.
  */
-interface BlobElement : LobElement {
+public interface BlobElement : LobElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): BlobElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): BlobElement
@@ -300,7 +300,7 @@ interface BlobElement : LobElement {
  * Includes no additional functionality over [LobElement], but serves to provide additional type safety when
  * working with elements that must be Ion clobs.
  */
-interface ClobElement : LobElement {
+public interface ClobElement : LobElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): ClobElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): ClobElement
@@ -323,11 +323,11 @@ interface ClobElement : LobElement {
  *
  * @see [IonElement]
  */
-interface ContainerElement : IonElement {
+public interface ContainerElement : IonElement {
     /** The number of values in this container. */
-    val size: Int
+    public val size: Int
 
-    val values: Collection<AnyElement>
+    public val values: Collection<AnyElement>
 
     override fun copy(annotations: List<String>, metas: MetaContainer): ContainerElement
 
@@ -351,7 +351,7 @@ interface ContainerElement : IonElement {
  *
  * @see [IonElement]
  */
-interface SeqElement : ContainerElement {
+public interface SeqElement : ContainerElement {
     /** Narrows the return type of [ContainerElement.values] to [List<AnyElement>]. */
     override val values: List<AnyElement>
 
@@ -376,7 +376,7 @@ interface SeqElement : ContainerElement {
  *
  * @see [IonElement]
  */
-interface ListElement : SeqElement {
+public interface ListElement : SeqElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): ListElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): ListElement
@@ -399,7 +399,7 @@ interface ListElement : SeqElement {
  *
  * @see [IonElement]
  */
-interface SexpElement : SeqElement {
+public interface SexpElement : SeqElement {
     override fun copy(annotations: List<String>, metas: MetaContainer): SexpElement
 
     override fun withAnnotations(vararg additionalAnnotations: String): SexpElement
@@ -421,10 +421,10 @@ interface SexpElement : SeqElement {
  *
  * @see [IonElement]
  */
-interface StructElement : ContainerElement {
+public interface StructElement : ContainerElement {
 
     /** This struct's unordered collection of fields. */
-    val fields: Collection<StructField>
+    public val fields: Collection<StructField>
 
     /**
      * Retrieves the value of the first field found with the specified name.
@@ -433,17 +433,17 @@ interface StructElement : ContainerElement {
      *
      * @throws IonElementException If there are no fields with the specified [fieldName].
      */
-    operator fun get(fieldName: String): AnyElement
+    public operator fun get(fieldName: String): AnyElement
 
     /** The same as [get] but returns a null reference if the field does not exist.  */
-    fun getOptional(fieldName: String): AnyElement?
+    public fun getOptional(fieldName: String): AnyElement?
 
 
     /** Retrieves all values with a given field name. Returns an empty iterable if the field does not exist. */
-    fun getAll(fieldName: String): Iterable<AnyElement>
+    public fun getAll(fieldName: String): Iterable<AnyElement>
 
     /** Returns true if this StructElement has at least one field with the given field name. */
-    fun containsField(fieldName: String): Boolean
+    public fun containsField(fieldName: String): Boolean
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
     override fun withAnnotations(vararg additionalAnnotations: String): StructElement

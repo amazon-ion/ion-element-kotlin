@@ -19,22 +19,22 @@ package com.amazon.ionelement.api
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentHashMap
 
-typealias MetaContainer = Map<String, Any>
+public typealias MetaContainer = Map<String, Any>
 internal typealias PersistentMetaContainer = PersistentMap<String, Any>
 
 internal val EMPTY_METAS = HashMap<String, Any>().toPersistentHashMap()
 
-fun emptyMetaContainer(): MetaContainer = EMPTY_METAS
+public fun emptyMetaContainer(): MetaContainer = EMPTY_METAS
 
-inline fun <reified T> MetaContainer.metaOrNull(key: String): T? = this[key] as T
-inline fun <reified T> MetaContainer.meta(key: String): T =
+public inline fun <reified T> MetaContainer.metaOrNull(key: String): T? = this[key] as T
+public inline fun <reified T> MetaContainer.meta(key: String): T =
     metaOrNull(key) ?: error("Meta with key '$key' and type ${T::class.java} not found in MetaContainer")
 
 
-fun metaContainerOf(kvps: List<Pair<String, Any>>) =
+public fun metaContainerOf(kvps: List<Pair<String, Any>>): MetaContainer =
     metaContainerOf(*kvps.toTypedArray())
 
-fun metaContainerOf(vararg kvps: Pair<String, Any>) =
+public fun metaContainerOf(vararg kvps: Pair<String, Any>): MetaContainer =
     when {
         kvps.none() -> EMPTY_METAS
         else -> HashMap(mapOf(*kvps))
@@ -44,13 +44,13 @@ fun metaContainerOf(vararg kvps: Pair<String, Any>) =
  * Merges two meta containers.  Any keys present in the receiver will be replaced by any keys in with the same
  * name in [other].
  */
-operator fun MetaContainer.plus(other: MetaContainer): MetaContainer =
+public operator fun MetaContainer.plus(other: MetaContainer): MetaContainer =
     HashMap<String, Any>(this.toList().union(other.toList()).toMap())
 
 /**
  * Merges two meta containers.  Any keys present in the receiver will be replaced by any keys in with the same
  * name in [other].
  */
-operator fun MetaContainer.plus(other: Iterable<Pair<String, Any>>): MetaContainer =
+public operator fun MetaContainer.plus(other: Iterable<Pair<String, Any>>): MetaContainer =
     HashMap<String, Any>(this.toList().union(other).toMap())
 

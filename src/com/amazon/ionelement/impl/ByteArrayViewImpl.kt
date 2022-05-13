@@ -2,7 +2,7 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.ByteArrayView
 
-class ByteArrayViewImpl(private val bytes: ByteArray) : ByteArrayView {
+internal class ByteArrayViewImpl(private val bytes: ByteArray) : ByteArrayView {
     override fun size(): Int = bytes.size
 
     override fun get(index: Int): Byte = bytes[index]
