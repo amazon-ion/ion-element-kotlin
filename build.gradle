@@ -22,6 +22,7 @@ plugins {
     id 'signing'
     id 'org.jetbrains.dokka' version '0.9.18'
     id 'jacoco'
+    id 'org.jetbrains.kotlinx.binary-compatibility-validator' version '0.9.0'
 }
 
 group = "com.amazon.ion"
