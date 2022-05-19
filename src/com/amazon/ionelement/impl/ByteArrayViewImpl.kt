@@ -23,5 +23,4 @@ internal class ByteArrayViewImpl(private val bytes: ByteArray) : ByteArrayView {
     override fun hashCode(): Int {
         return bytes.contentHashCode()
     }
-
 }

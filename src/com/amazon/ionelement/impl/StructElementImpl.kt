@@ -30,7 +30,7 @@ internal class StructElementImpl(
     private val allFields: PersistentList<StructField>,
     override val annotations: PersistentList<String>,
     override val metas: PersistentMetaContainer
-): AnyElementBase(), StructElement {
+) : AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
     override val size = allFields.size
@@ -40,15 +40,14 @@ internal class StructElementImpl(
     private var valuesBackingField: PersistentCollection<AnyElement>? = null
     override val values: Collection<AnyElement>
         get() {
-            if(valuesBackingField == null) {
+            if (valuesBackingField == null) {
                 valuesBackingField = fields.map { it.value }.toPersistentList()
             }
             return valuesBackingField!!
-    }
+        }
     override val containerValues: Collection<AnyElement> get() = values
     override val structFields: Collection<StructField> get() = allFields
     override val fields: Collection<StructField> get() = allFields
-
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!
@@ -57,7 +56,7 @@ internal class StructElementImpl(
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<AnyElement>>
         get() {
-            if(fieldsByNameBackingField == null) {
+            if (fieldsByNameBackingField == null) {
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
@@ -106,7 +105,7 @@ internal class StructElementImpl(
         if (this.fieldsByName.size != other.fieldsByName.size) return false
 
         // If we make it this far we can compare the list of field names in both
-        if(this.fieldsByName.keys != other.fieldsByName.keys) return false
+        if (this.fieldsByName.keys != other.fieldsByName.keys) return false
 
         // If we make it this far then we have to take the expensive approach of comparing the individual values in
         // [this] and [other].
@@ -120,12 +119,12 @@ internal class StructElementImpl(
 
             // [otherGroup] should never be null due to the `if` statement above.
             val otherGroup = other.fieldsByName[thisFieldGroup.key]
-                             ?: error("unexpectedly missing other field named '${thisFieldGroup.key}'")
+                ?: error("unexpectedly missing other field named '${thisFieldGroup.key}'")
 
             val otherSubGroup: Map<AnyElement, Int> = otherGroup.groupingBy { it }.eachCount()
 
             // Simple equality should work from here
-            if(thisSubGroup != otherSubGroup) {
+            if (thisSubGroup != otherSubGroup) {
                 return false
             }
         }

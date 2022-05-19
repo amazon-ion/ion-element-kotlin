@@ -15,6 +15,9 @@
 
 package com.amazon.ionelement
 
+import com.amazon.ion.Decimal
+import com.amazon.ion.Timestamp
+import com.amazon.ionelement.api.ElementType
 import com.amazon.ionelement.api.emptyBlob
 import com.amazon.ionelement.api.emptyClob
 import com.amazon.ionelement.api.emptyIonList
@@ -31,14 +34,10 @@ import com.amazon.ionelement.api.ionTimestamp
 import com.amazon.ionelement.util.ArgumentsProviderBase
 import com.amazon.ionelement.util.randomIonElement
 import com.amazon.ionelement.util.randomSeed
-import com.amazon.ion.Decimal
-import com.amazon.ion.Timestamp
-import com.amazon.ionelement.api.ElementType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
-
 
 private val ALL_NULLS = ElementType.values().map { ionNull(it) }
 
@@ -61,7 +60,6 @@ private fun List<EquivTestCase>.includeAnnotations(): List<EquivTestCase> {
 
     return this + sameAnnotationBothSides + differentAnnotationEachSide + annotationAddedOnlyToOneSide
 }
-
 
 /**
  * The goal of this test class is to validate the result of `equals` and `hashCode` for all implementations
@@ -117,7 +115,8 @@ class EquivalenceTests {
                     EquivTestCase(
                         left = nullValue.toString(),
                         right = nonNullValue.toString(),
-                        isEquiv = false)
+                        isEquiv = false
+                    )
                 }
             }.flatten()
             .includeAnnotations()
@@ -135,7 +134,8 @@ class EquivalenceTests {
                     EquivTestCase(
                         left = left.toString(),
                         right = right.toString(),
-                        isEquiv = left.type == right.type)
+                        isEquiv = left.type == right.type
+                    )
                 }
             }.flatten()
             .includeAnnotations()
@@ -149,16 +149,19 @@ class EquivalenceTests {
             EquivTestCase(
                 "true",
                 "true",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "false",
                 "false",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "true",
                 "false",
-                isEquiv = false)
-            ).includeAnnotations()
+                isEquiv = false
+            )
+        ).includeAnnotations()
     }
     @ParameterizedTest
     @ArgumentsSource(IntEquivalenceTestsArgumentsProvider::class)
@@ -168,11 +171,13 @@ class EquivalenceTests {
             EquivTestCase(
                 "0",
                 "0",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "1",
                 "2",
-                isEquiv = false)
+                isEquiv = false
+            )
         ).includeAnnotations()
     }
 
@@ -185,44 +190,54 @@ class EquivalenceTests {
             EquivTestCase(
                 "0.12e4",
                 "0.12e4",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "0.12e4",
                 "0.23e4",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "0e0",
                 "0e0",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "0e0",
                 "-0e0",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "nan",
                 "nan",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "+inf",
                 "+inf",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "-inf",
                 "-inf",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "nan",
                 "+inf",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "nan",
                 "-inf",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "+inf",
                 "-inf",
-                isEquiv = false)
-            ).includeAnnotations()
+                isEquiv = false
+            )
+        ).includeAnnotations()
     }
 
     @ParameterizedTest
@@ -233,24 +248,29 @@ class EquivalenceTests {
             EquivTestCase(
                 "0.0",
                 "0.0",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "1.0",
                 "1.0",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "0.0",
                 "-0.0",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "1.0",
                 "1.00",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "0.0",
                 "0.00",
-                isEquiv = false)
-            ).includeAnnotations()
+                isEquiv = false
+            )
+        ).includeAnnotations()
     }
 
     @ParameterizedTest
@@ -261,12 +281,14 @@ class EquivalenceTests {
             EquivTestCase(
                 "\"some string\"",
                 "\"some string\"",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "\"some string\"",
                 "\"another string\"",
-                isEquiv = false)
-            ).includeAnnotations()
+                isEquiv = false
+            )
+        ).includeAnnotations()
     }
 
     @ParameterizedTest
@@ -277,11 +299,13 @@ class EquivalenceTests {
             EquivTestCase(
                 "'some symbol'",
                 "'some symbol'",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "'some symbol'",
                 "'another symbol'",
-                isEquiv = false)
+                isEquiv = false
+            )
         ).includeAnnotations()
     }
 
@@ -293,19 +317,23 @@ class EquivalenceTests {
             EquivTestCase(
                 "{{}}",
                 "{{}}",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{{}}",
                 "{{ VG8gaW5maW5pdHkuLi4gYW5kIGJleW9uZCE= }}",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{{ VG8gaW5maW5pdHkuLi4gYW5kIGJleW9uZCE= }}",
                 "{{ VG8gaW5maW5pdHkuLi4gYW5kIGJleW9uZCE= }}",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{{ VG8gaW5maW5pdHkuLi4gYW5kIGJleW9uZCE= }}",
                 "{{ TWFrZSBpdCBzbyE= }}",
-                isEquiv = false)
+                isEquiv = false
+            )
         ).includeAnnotations()
     }
 
@@ -316,20 +344,24 @@ class EquivalenceTests {
         override fun getParameters(): List<Any> = listOf(
             EquivTestCase(
                 "{{ \"\" }}",
-                "{{ \"\" }}" ,
-                isEquiv = true),
+                "{{ \"\" }}",
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{{ \"\" }}",
-                "{{ \"A non-empty CLOB.\" }}" ,
-                isEquiv = false),
+                "{{ \"A non-empty CLOB.\" }}",
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{{ \"This is a CLOB of text.\" }}",
-                "{{ \"This is a CLOB of text.\" }}" ,
-                isEquiv = true),
+                "{{ \"This is a CLOB of text.\" }}",
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{{ \"This is a CLOB of text.\" }}",
-                "{{ \"This is a another CLOB of text.\" }}" ,
-                isEquiv = false)
+                "{{ \"This is a another CLOB of text.\" }}",
+                isEquiv = false
+            )
         ).includeAnnotations()
     }
 
@@ -342,37 +374,45 @@ class EquivalenceTests {
             EquivTestCase(
                 "2001T",
                 "2001T",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "2001T",
                 "3001T",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "2001T",
                 "2001-01T",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "2001-01T",
                 "2001-01T",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "2001-01T",
                 "2001-02T",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "2001-01-01T23:59:59Z",
                 "2001-01-01T23:59:59Z",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "2001-01-01T23:59:58Z",
                 "2001-01-01T23:59:59Z",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 // These values do represent the same instant in time but they are not equivalent since
                 // the offset is specified differently.
                 "2001-01-01T10:00:00-08:00",
                 "2001-01-01T18:00:00Z",
-                isEquiv = false)
+                isEquiv = false
+            )
         ).includeAnnotations()
     }
 
@@ -384,47 +424,58 @@ class EquivalenceTests {
             EquivTestCase(
                 "{}",
                 "{}",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1 }",
                 "{ a: 1 }",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1 }",
                 "{ a: 2 }",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{ a: 1, a: 1 }",
                 "{ a: 1, a: 1 }",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1 }",
                 "{ a: 1, a: 1 }",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{ a: 1, a: 1 }",
                 "{ a: 1, a: 2 }",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{ a: 1, a: 1 }",
                 "{ a: 2, a: 1 }",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "{ a: 1, a: 2 }",
                 "{ a: 1, a: 2 }",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1, a: 2 }",
                 "{ a: 2, a: 1 }",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1, b: 2 }",
                 "{ b: 2, a: 1 }",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "{ a: 1, b: 2, b: 3 }",
                 "{ b: 3, b: 2, a: 1 }",
-                isEquiv = true)
+                isEquiv = true
+            )
         ).includeAnnotations()
     }
 
@@ -436,31 +487,38 @@ class EquivalenceTests {
             EquivTestCase(
                 "[]",
                 "[]",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "[1]",
                 "[1,1]",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "[1]",
                 "[2]",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "[1]",
                 "[1]",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "[1,1]",
                 "[1,1]",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "[1,2]",
                 "[2,1]",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "[(1)]",
                 "[(1)]",
-                isEquiv = true)
+                isEquiv = true
+            )
         ).includeAnnotations()
     }
 
@@ -472,33 +530,38 @@ class EquivalenceTests {
             EquivTestCase(
                 "()",
                 "()",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "(1)",
                 "(1 1)",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "(1)",
                 "(2)",
-                isEquiv = false),
+                isEquiv = false
+            ),
             EquivTestCase(
                 "(1)",
                 "(1)",
-                isEquiv = true),
+                isEquiv = true
+            ),
             EquivTestCase(
                 "(1 1)",
-                "(1 1)" ,
-                isEquiv = true),
+                "(1 1)",
+                isEquiv = true
+            ),
             EquivTestCase(
                 "(1 2)",
-                "(2 1)" ,
-                isEquiv = false),
+                "(2 1)",
+                isEquiv = false
+            ),
             EquivTestCase(
                 "([1])",
-                "([1])" ,
-                isEquiv = true)
+                "([1])",
+                isEquiv = true
+            )
         ).includeAnnotations()
     }
-
 }
-

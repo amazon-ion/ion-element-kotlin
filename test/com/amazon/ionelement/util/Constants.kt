@@ -18,7 +18,6 @@ package com.amazon.ionelement.util
 
 import com.amazon.ion.Decimal
 
-
 @JvmField
 val TOP_LEVEL_STRUCTS_ION_TEXT = """
 stock_item::{
@@ -42,4 +41,3 @@ stock_item::{ // stock item has no name
 
 data class StockItem(val name: String, val price: Decimal, val countInStock: Long, val orders: List<Order>)
 data class Order(val customerId: Long, val state: String)
-

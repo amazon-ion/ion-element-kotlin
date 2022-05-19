@@ -21,11 +21,11 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
-internal class SexpElementImpl (
+internal class SexpElementImpl(
     values: PersistentList<AnyElement>,
     override val annotations: PersistentList<String>,
     override val metas: PersistentMetaContainer
-):  SeqElementBase(values), SexpElement {
+) : SeqElementBase(values), SexpElement {
     override val type: ElementType get() = ElementType.SEXP
 
     override val sexpValues: List<AnyElement> get() = seqValues

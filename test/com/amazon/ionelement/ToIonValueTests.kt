@@ -3,8 +3,8 @@ package com.amazon.ionelement
 import com.amazon.ion.system.IonSystemBuilder
 import com.amazon.ionelement.api.toIonElement
 import com.amazon.ionelement.api.toIonValue
-import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import org.junit.jupiter.api.Test
 
 class ToIonValueTests {
 
@@ -19,6 +19,6 @@ class ToIonValueTests {
         val element = ionValue.toIonElement()
         val ionList = ion.newList(element.toIonValue(ion))
 
-        assertEquals(ion.singleValue("[1]"), ionList);
+        assertEquals(ion.singleValue("[1]"), ionList)
     }
 }

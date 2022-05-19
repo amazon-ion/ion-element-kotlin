@@ -531,22 +531,44 @@ This repository contains the [ion-tests](https://github.com/amzn/ion-tests) repo
 a [git submodule](https://git-scm.com/docs/git-submodule). The easiest way to clone the `ion-element-kotlin` repository
 and initialize its submodule is to run the following command:
 
-```
-$ git clone --recursive https://github.com/amzn/ion-element-kotlin.git ion-element-kotlin
+```shell
+git clone --recursive https://github.com/amzn/ion-element-kotlin.git ion-element-kotlin
 ```
 
 Alternatively, the submodule may be initialized independently of the clone by running the following commands:
 
-```
-$ git submodule init
-$ git submodule update
+```shell
+git submodule init
+git submodule update
 ```
 
 `ion-element-kotlin` may now be built with the following command:
 
+```shell
+./gradlew build
 ```
-$ ./gradlew build
+
+### Code Style Check
+
+This project uses [ktlint](https://github.com/pinterest/ktlint) to enforce the official Kotlin code conventions.
+To automatically correct (most) style violations, run:
+```shell
+./gradlew ktlintFormat
 ```
+
+### Binary Compatibility Check
+
+This project uses [Kotlin/binary-compatibility-validator](https://github.com/Kotlin/binary-compatibility-validator) to 
+prevent accidental changes to the binary API of the library. The `apiCheck` task will be run as part of the Gradle 
+`check` task, and it will fail if the current build differs in any way from the API that is persisted in `api/IonElement.api`.
+If you are intentionally changing the API, update the persisted API definition by running:
+```shell
+./gradlew apiDump && git add api
+```
+
+When preparing a release, you can use the diff of `api/IonElement.api` to help determine whether a release should be a 
+new major, minor, or patch version. If the file has no changes, it _may_ be a patch release. If the file has only 
+additive changes, it _may_ be a minor version. Any other changes indicate that a new major version is required.
 
 ### Pulling in Upstream Changes
 
@@ -554,8 +576,8 @@ To pull upstream changes into `ion-element-kotlin`, start with a simple `git pul
 to `ion-element-kotlin` itself (including any changes to its `.gitmodules` file), but not any changes to the submodules.
 To make sure the submodules are up-to-date, use the following command:
 
-```
-$ git submodule update --remote
+```shell
+git submodule update --remote
 ```
 
 For detailed walkthroughs of git submodule usage, see the

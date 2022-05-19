@@ -1,0 +1,531 @@
+public abstract interface class com/amazon/ionelement/api/AnyElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun asBlob ()Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun asBlobOrNull ()Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun asBoolean ()Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun asBooleanOrNull ()Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun asClob ()Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun asClobOrNull ()Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun asContainer ()Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun asContainerOrNull ()Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun asDecimal ()Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun asDecimalOrNull ()Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun asFloat ()Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun asFloatOrNull ()Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun asInt ()Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun asIntOrNull ()Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun asList ()Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun asListOrNull ()Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun asLob ()Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun asLobOrNull ()Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun asSeq ()Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun asSeqOrNull ()Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun asSexp ()Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun asSexpOrNull ()Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun asString ()Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun asStringOrNull ()Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun asStruct ()Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun asStructOrNull ()Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun asSymbol ()Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun asSymbolOrNull ()Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun asText ()Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun asTextOrNull ()Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun asTimestamp ()Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun asTimestampOrNull ()Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun getBigIntegerValue ()Ljava/math/BigInteger;
+	public abstract fun getBigIntegerValueOrNull ()Ljava/math/BigInteger;
+	public abstract fun getBlobValue ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getBlobValueOrNull ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getBooleanValue ()Z
+	public abstract fun getBooleanValueOrNull ()Ljava/lang/Boolean;
+	public abstract fun getBytesValue ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getBytesValueOrNull ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getClobValue ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getClobValueOrNull ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun getContainerValues ()Ljava/util/Collection;
+	public abstract fun getContainerValuesOrNull ()Ljava/util/Collection;
+	public abstract fun getDecimalValue ()Lcom/amazon/ion/Decimal;
+	public abstract fun getDecimalValueOrNull ()Lcom/amazon/ion/Decimal;
+	public abstract fun getDoubleValue ()D
+	public abstract fun getDoubleValueOrNull ()Ljava/lang/Double;
+	public abstract fun getIntegerSize ()Lcom/amazon/ionelement/api/IntElementSize;
+	public abstract fun getListValues ()Ljava/util/List;
+	public abstract fun getListValuesOrNull ()Ljava/util/List;
+	public abstract fun getLongValue ()J
+	public abstract fun getLongValueOrNull ()Ljava/lang/Long;
+	public abstract fun getSeqValues ()Ljava/util/List;
+	public abstract fun getSeqValuesOrNull ()Ljava/util/List;
+	public abstract fun getSexpValues ()Ljava/util/List;
+	public abstract fun getSexpValuesOrNull ()Ljava/util/List;
+	public abstract fun getStringValue ()Ljava/lang/String;
+	public abstract fun getStringValueOrNull ()Ljava/lang/String;
+	public abstract fun getStructFields ()Ljava/util/Collection;
+	public abstract fun getStructFieldsOrNull ()Ljava/util/Collection;
+	public abstract fun getSymbolValue ()Ljava/lang/String;
+	public abstract fun getSymbolValueOrNull ()Ljava/lang/String;
+	public abstract fun getTextValue ()Ljava/lang/String;
+	public abstract fun getTextValueOrNull ()Ljava/lang/String;
+	public abstract fun getTimestampValue ()Lcom/amazon/ion/Timestamp;
+	public abstract fun getTimestampValueOrNull ()Lcom/amazon/ion/Timestamp;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/BlobElement : com/amazon/ionelement/api/LobElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/BlobElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/BlobElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/BoolElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun getBooleanValue ()Z
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/BoolElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/BoolElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/ByteArrayView : java/lang/Iterable, kotlin/jvm/internal/markers/KMappedMarker {
+	public abstract fun copyOfBytes ()[B
+	public abstract fun get (I)B
+	public abstract fun size ()I
+}
+
+public abstract interface class com/amazon/ionelement/api/ClobElement : com/amazon/ionelement/api/LobElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/ClobElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/ClobElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/ContainerElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun getSize ()I
+	public abstract fun getValues ()Ljava/util/Collection;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/ContainerElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/ContainerElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/DecimalElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun getDecimalValue ()Lcom/amazon/ion/Decimal;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/DecimalElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/DecimalElement;
+}
+
+public final class com/amazon/ionelement/api/ElementLoader {
+	public static final fun createIonElementLoader ()Lcom/amazon/ionelement/api/IonElementLoader;
+	public static final fun createIonElementLoader (Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Lcom/amazon/ionelement/api/IonElementLoader;
+	public static synthetic fun createIonElementLoader$default (Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElementLoader;
+	public static final fun loadAllElements (Lcom/amazon/ion/IonReader;)Ljava/lang/Iterable;
+	public static final fun loadAllElements (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Ljava/lang/Iterable;
+	public static final fun loadAllElements (Ljava/lang/String;)Ljava/lang/Iterable;
+	public static final fun loadAllElements (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Ljava/lang/Iterable;
+	public static synthetic fun loadAllElements$default (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Ljava/lang/Iterable;
+	public static synthetic fun loadAllElements$default (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Ljava/lang/Iterable;
+	public static final fun loadCurrentElement (Lcom/amazon/ion/IonReader;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun loadCurrentElement (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Lcom/amazon/ionelement/api/AnyElement;
+	public static synthetic fun loadCurrentElement$default (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun loadSingleElement (Lcom/amazon/ion/IonReader;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun loadSingleElement (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun loadSingleElement (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun loadSingleElement (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElementLoaderOptions;)Lcom/amazon/ionelement/api/AnyElement;
+	public static synthetic fun loadSingleElement$default (Lcom/amazon/ion/IonReader;Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Lcom/amazon/ionelement/api/AnyElement;
+	public static synthetic fun loadSingleElement$default (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElementLoaderOptions;ILjava/lang/Object;)Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public final class com/amazon/ionelement/api/ElementType : java/lang/Enum {
+	public static final field BLOB Lcom/amazon/ionelement/api/ElementType;
+	public static final field BOOL Lcom/amazon/ionelement/api/ElementType;
+	public static final field CLOB Lcom/amazon/ionelement/api/ElementType;
+	public static final field DECIMAL Lcom/amazon/ionelement/api/ElementType;
+	public static final field FLOAT Lcom/amazon/ionelement/api/ElementType;
+	public static final field INT Lcom/amazon/ionelement/api/ElementType;
+	public static final field LIST Lcom/amazon/ionelement/api/ElementType;
+	public static final field NULL Lcom/amazon/ionelement/api/ElementType;
+	public static final field SEXP Lcom/amazon/ionelement/api/ElementType;
+	public static final field STRING Lcom/amazon/ionelement/api/ElementType;
+	public static final field STRUCT Lcom/amazon/ionelement/api/ElementType;
+	public static final field SYMBOL Lcom/amazon/ionelement/api/ElementType;
+	public static final field TIMESTAMP Lcom/amazon/ionelement/api/ElementType;
+	public final fun isContainer ()Z
+	public final fun isLob ()Z
+	public final fun isSeq ()Z
+	public final fun isText ()Z
+	public final fun toIonType ()Lcom/amazon/ion/IonType;
+	public static fun valueOf (Ljava/lang/String;)Lcom/amazon/ionelement/api/ElementType;
+	public static fun values ()[Lcom/amazon/ionelement/api/ElementType;
+}
+
+public final class com/amazon/ionelement/api/ElementTypeKt {
+	public static final fun toElementType (Lcom/amazon/ion/IonType;)Lcom/amazon/ionelement/api/ElementType;
+}
+
+public abstract interface class com/amazon/ionelement/api/FloatElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun getDoubleValue ()D
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/FloatElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/FloatElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/IntElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun getBigIntegerValue ()Ljava/math/BigInteger;
+	public abstract fun getIntegerSize ()Lcom/amazon/ionelement/api/IntElementSize;
+	public abstract fun getLongValue ()J
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/IntElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/IntElement;
+}
+
+public final class com/amazon/ionelement/api/IntElementSize : java/lang/Enum {
+	public static final field BIG_INTEGER Lcom/amazon/ionelement/api/IntElementSize;
+	public static final field LONG Lcom/amazon/ionelement/api/IntElementSize;
+	public static fun valueOf (Ljava/lang/String;)Lcom/amazon/ionelement/api/IntElementSize;
+	public static fun values ()[Lcom/amazon/ionelement/api/IntElementSize;
+}
+
+public final class com/amazon/ionelement/api/Ion {
+	public static final fun emptyBlob ()Lcom/amazon/ionelement/api/BlobElement;
+	public static final fun emptyClob ()Lcom/amazon/ionelement/api/ClobElement;
+	public static final fun emptyIonList ()Lcom/amazon/ionelement/api/ListElement;
+	public static final fun emptyIonSexp ()Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun emptyIonStruct ()Lcom/amazon/ionelement/api/StructElement;
+	public static final fun field (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/StructField;
+	public static final fun ionBlob ([B)Lcom/amazon/ionelement/api/BlobElement;
+	public static final fun ionBlob ([BLjava/util/List;)Lcom/amazon/ionelement/api/BlobElement;
+	public static final fun ionBlob ([BLjava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/BlobElement;
+	public static final fun ionBlob ([BLjava/util/Map;)Lcom/amazon/ionelement/api/BlobElement;
+	public static synthetic fun ionBlob$default ([BLjava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/BlobElement;
+	public static final fun ionBool (Z)Lcom/amazon/ionelement/api/BoolElement;
+	public static final fun ionBool (ZLjava/util/List;)Lcom/amazon/ionelement/api/BoolElement;
+	public static final fun ionBool (ZLjava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/BoolElement;
+	public static final fun ionBool (ZLjava/util/Map;)Lcom/amazon/ionelement/api/BoolElement;
+	public static synthetic fun ionBool$default (ZLjava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/BoolElement;
+	public static final fun ionClob ([B)Lcom/amazon/ionelement/api/ClobElement;
+	public static final fun ionClob ([BLjava/util/List;)Lcom/amazon/ionelement/api/ClobElement;
+	public static final fun ionClob ([BLjava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ClobElement;
+	public static final fun ionClob ([BLjava/util/Map;)Lcom/amazon/ionelement/api/ClobElement;
+	public static synthetic fun ionClob$default ([BLjava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/ClobElement;
+	public static synthetic fun ionClob$default ([BLjava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/ClobElement;
+	public static final fun ionDecimal (Lcom/amazon/ion/Decimal;)Lcom/amazon/ionelement/api/DecimalElement;
+	public static final fun ionDecimal (Lcom/amazon/ion/Decimal;Ljava/util/List;)Lcom/amazon/ionelement/api/DecimalElement;
+	public static final fun ionDecimal (Lcom/amazon/ion/Decimal;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/DecimalElement;
+	public static final fun ionDecimal (Lcom/amazon/ion/Decimal;Ljava/util/Map;)Lcom/amazon/ionelement/api/DecimalElement;
+	public static synthetic fun ionDecimal$default (Lcom/amazon/ion/Decimal;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/DecimalElement;
+	public static final fun ionFloat (D)Lcom/amazon/ionelement/api/FloatElement;
+	public static final fun ionFloat (DLjava/util/List;)Lcom/amazon/ionelement/api/FloatElement;
+	public static final fun ionFloat (DLjava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
+	public static final fun ionFloat (DLjava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
+	public static synthetic fun ionFloat$default (DLjava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/FloatElement;
+	public static final fun ionInt (J)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (JLjava/util/List;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (JLjava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (JLjava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (Ljava/math/BigInteger;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (Ljava/math/BigInteger;Ljava/util/List;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (Ljava/math/BigInteger;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionInt (Ljava/math/BigInteger;Ljava/util/Map;)Lcom/amazon/ionelement/api/IntElement;
+	public static synthetic fun ionInt$default (JLjava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IntElement;
+	public static synthetic fun ionInt$default (Ljava/math/BigInteger;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IntElement;
+	public static final fun ionListOf (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionListOf (Ljava/lang/Iterable;Ljava/util/List;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionListOf (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionListOf (Ljava/lang/Iterable;Ljava/util/Map;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionListOf ([Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionListOf ([Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ListElement;
+	public static synthetic fun ionListOf$default (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/ListElement;
+	public static synthetic fun ionListOf$default ([Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/ListElement;
+	public static final fun ionNull ()Lcom/amazon/ionelement/api/IonElement;
+	public static final fun ionNull (Lcom/amazon/ionelement/api/ElementType;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun ionNull (Lcom/amazon/ionelement/api/ElementType;Ljava/util/List;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun ionNull (Lcom/amazon/ionelement/api/ElementType;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun ionNull (Lcom/amazon/ionelement/api/ElementType;Ljava/util/Map;)Lcom/amazon/ionelement/api/IonElement;
+	public static synthetic fun ionNull$default (Lcom/amazon/ionelement/api/ElementType;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElement;
+	public static synthetic fun ionNull$default (Lcom/amazon/ionelement/api/ElementType;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun ionSexpOf (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf (Ljava/lang/Iterable;Ljava/util/List;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf (Ljava/lang/Iterable;Ljava/util/Map;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf ([Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf ([Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionSexpOf ([Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SexpElement;
+	public static synthetic fun ionSexpOf$default (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/SexpElement;
+	public static synthetic fun ionSexpOf$default ([Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/SexpElement;
+	public static final fun ionString (Ljava/lang/String;)Lcom/amazon/ionelement/api/StringElement;
+	public static final fun ionString (Ljava/lang/String;Ljava/util/List;)Lcom/amazon/ionelement/api/StringElement;
+	public static final fun ionString (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StringElement;
+	public static final fun ionString (Ljava/lang/String;Ljava/util/Map;)Lcom/amazon/ionelement/api/StringElement;
+	public static synthetic fun ionString$default (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StringElement;
+	public static final fun ionStructOf (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lkotlin/Pair;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lkotlin/Pair;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf ([Lkotlin/Pair;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun ionStructOf$default (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun ionStructOf$default ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun ionStructOf$default ([Lkotlin/Pair;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionSymbol (Ljava/lang/String;)Lcom/amazon/ionelement/api/SymbolElement;
+	public static final fun ionSymbol (Ljava/lang/String;Ljava/util/List;)Lcom/amazon/ionelement/api/SymbolElement;
+	public static final fun ionSymbol (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SymbolElement;
+	public static final fun ionSymbol (Ljava/lang/String;Ljava/util/Map;)Lcom/amazon/ionelement/api/SymbolElement;
+	public static synthetic fun ionSymbol$default (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/SymbolElement;
+	public static final fun ionTimestamp (Lcom/amazon/ion/Timestamp;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Lcom/amazon/ion/Timestamp;Ljava/util/List;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Lcom/amazon/ion/Timestamp;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Lcom/amazon/ion/Timestamp;Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Ljava/lang/String;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Ljava/lang/String;Ljava/util/List;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static final fun ionTimestamp (Ljava/lang/String;Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static synthetic fun ionTimestamp$default (Lcom/amazon/ion/Timestamp;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/TimestampElement;
+	public static synthetic fun ionTimestamp$default (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/TimestampElement;
+}
+
+public final class com/amazon/ionelement/api/IonBinaryLocation : com/amazon/ionelement/api/IonLocation {
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lcom/amazon/ionelement/api/IonBinaryLocation;
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/IonBinaryLocation;JILjava/lang/Object;)Lcom/amazon/ionelement/api/IonBinaryLocation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getByteOffset ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/amazon/ionelement/api/IonElement {
+	public abstract fun asAnyElement ()Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun getAnnotations ()Ljava/util/List;
+	public abstract fun getMetas ()Ljava/util/Map;
+	public abstract fun getType ()Lcom/amazon/ionelement/api/ElementType;
+	public abstract fun isNull ()Z
+	public abstract fun toString ()Ljava/lang/String;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun writeTo (Lcom/amazon/ion/IonWriter;)V
+}
+
+public final class com/amazon/ionelement/api/IonElement$DefaultImpls {
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/IonElement;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElement;
+}
+
+public final class com/amazon/ionelement/api/IonElementConstraintException : com/amazon/ionelement/api/IonElementException {
+	public final fun getBlame ()Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public class com/amazon/ionelement/api/IonElementException : java/lang/Error {
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getLocation ()Lcom/amazon/ionelement/api/IonLocation;
+}
+
+public final class com/amazon/ionelement/api/IonElementExtensionsKt {
+	public static final fun getHead (Lcom/amazon/ionelement/api/SeqElement;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun getHead (Ljava/util/List;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun getTag (Lcom/amazon/ionelement/api/SeqElement;)Ljava/lang/String;
+	public static final fun getTail (Lcom/amazon/ionelement/api/SeqElement;)Ljava/util/List;
+	public static final fun getTail (Ljava/util/List;)Ljava/util/List;
+}
+
+public abstract interface class com/amazon/ionelement/api/IonElementLoader {
+	public abstract fun loadAllElements (Lcom/amazon/ion/IonReader;)Ljava/lang/Iterable;
+	public abstract fun loadAllElements (Ljava/lang/String;)Ljava/lang/Iterable;
+	public abstract fun loadCurrentElement (Lcom/amazon/ion/IonReader;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun loadSingleElement (Lcom/amazon/ion/IonReader;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun loadSingleElement (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public final class com/amazon/ionelement/api/IonElementLoaderException : com/amazon/ionelement/api/IonElementException {
+}
+
+public final class com/amazon/ionelement/api/IonElementLoaderOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/IonElementLoaderOptions;ZILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIncludeLocationMeta ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/amazon/ionelement/api/IonLocation {
+}
+
+public final class com/amazon/ionelement/api/IonLocationKt {
+	public static final fun getLocation (Ljava/util/Map;)Lcom/amazon/ionelement/api/IonLocation;
+	public static final fun locationToString (Lcom/amazon/ionelement/api/IonLocation;)Ljava/lang/String;
+}
+
+public final class com/amazon/ionelement/api/IonMeta {
+	public static final fun emptyMetaContainer ()Ljava/util/Map;
+	public static final fun metaContainerOf (Ljava/util/List;)Ljava/util/Map;
+	public static final fun metaContainerOf ([Lkotlin/Pair;)Ljava/util/Map;
+	public static final fun plus (Ljava/util/Map;Ljava/lang/Iterable;)Ljava/util/Map;
+	public static final fun plus (Ljava/util/Map;Ljava/util/Map;)Ljava/util/Map;
+}
+
+public final class com/amazon/ionelement/api/IonTextLocation : com/amazon/ionelement/api/IonLocation {
+	public fun <init> (JJ)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun copy (JJ)Lcom/amazon/ionelement/api/IonTextLocation;
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/IonTextLocation;JJILjava/lang/Object;)Lcom/amazon/ionelement/api/IonTextLocation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCharOffset ()J
+	public final fun getLine ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/amazon/ionelement/api/IonUtils {
+	public static final fun toIonElement (Lcom/amazon/ion/IonValue;)Lcom/amazon/ionelement/api/AnyElement;
+	public static final fun toIonValue (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ion/ValueFactory;)Lcom/amazon/ion/IonValue;
+}
+
+public abstract interface class com/amazon/ionelement/api/ListElement : com/amazon/ionelement/api/SeqElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/ListElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/ListElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/LobElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun getBytesValue ()Lcom/amazon/ionelement/api/ByteArrayView;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/LobElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/LobElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/SeqElement : com/amazon/ionelement/api/ContainerElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun getValues ()Ljava/util/List;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/SeqElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/SexpElement : com/amazon/ionelement/api/SeqElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/SexpElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/SexpElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/StringElement : com/amazon/ionelement/api/TextElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/StringElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/StringElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/StructElement : com/amazon/ionelement/api/ContainerElement {
+	public abstract fun containsField (Ljava/lang/String;)Z
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun get (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun getAll (Ljava/lang/String;)Ljava/lang/Iterable;
+	public abstract fun getFields ()Ljava/util/Collection;
+	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/StructElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/StructField {
+	public abstract fun component1 ()Ljava/lang/String;
+	public abstract fun component2 ()Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getValue ()Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/SymbolElement : com/amazon/ionelement/api/TextElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/SymbolElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/SymbolElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/TextElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun getTextValue ()Ljava/lang/String;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/TextElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/TextElement;
+}
+
+public abstract interface class com/amazon/ionelement/api/TimestampElement : com/amazon/ionelement/api/IonElement {
+	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun getTimestampValue ()Lcom/amazon/ion/Timestamp;
+	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/TimestampElement;
+	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/TimestampElement;
+}
+

@@ -26,7 +26,7 @@ internal class BoolElementImpl(
     override val booleanValue: Boolean,
     override val annotations: PersistentList<String>,
     override val metas: PersistentMetaContainer
-): AnyElementBase(), BoolElement {
+) : AnyElementBase(), BoolElement {
     override val type: ElementType get() = ElementType.BOOL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BoolElementImpl =
@@ -38,7 +38,7 @@ internal class BoolElementImpl(
     override fun withMetas(additionalMetas: MetaContainer): BoolElementImpl = _withMetas(additionalMetas)
     override fun withMeta(key: String, value: Any): BoolElementImpl = _withMeta(key, value)
     override fun withoutMetas(): BoolElementImpl = _withoutMetas()
-    
+
     override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -59,5 +59,4 @@ internal class BoolElementImpl(
         // Note: metas intentionally omitted!
         return result
     }
-
 }

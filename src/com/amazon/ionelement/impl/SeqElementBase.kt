@@ -23,7 +23,7 @@ import kotlinx.collections.immutable.PersistentList
 
 internal abstract class SeqElementBase(
     override val values: PersistentList<AnyElement>
-): AnyElementBase(), SeqElement {
+) : AnyElementBase(), SeqElement {
 
     override val containerValues: List<AnyElement> get() = values
     override val seqValues: List<AnyElement> get() = values
@@ -47,5 +47,3 @@ internal abstract class SeqElementBase(
     abstract override fun withMeta(key: String, value: Any): SeqElementBase
     abstract override fun withoutMetas(): SeqElementBase
 }
-
-

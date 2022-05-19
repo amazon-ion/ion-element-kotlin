@@ -21,11 +21,11 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
-internal class ListElementImpl (
+internal class ListElementImpl(
     values: PersistentList<AnyElement>,
     override val annotations: PersistentList<String>,
     override val metas: PersistentMetaContainer
-): SeqElementBase(values), ListElement {
+) : SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
     override val listValues: List<AnyElement> get() = values

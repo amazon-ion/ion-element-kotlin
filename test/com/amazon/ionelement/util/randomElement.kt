@@ -62,7 +62,7 @@ fun randomIonElement(): AnyElement {
             }
             // Generate a scalar value
             else -> {
-                when(random.nextInt(8)) {
+                when (random.nextInt(8)) {
                     0 -> ionNull(ElementType.values()[random.nextInt(ElementType.values().size)])
                     1 -> ionBool(random.nextBoolean())
                     2 -> ionInt(random.nextLong())
