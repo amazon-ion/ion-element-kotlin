@@ -128,7 +128,7 @@ public interface IonElement {
     public fun withoutMetas(): IonElement
 }
 
-/** Represents a Ion bool. */
+/** Represents an Ion bool. */
 public interface BoolElement : IonElement {
     public val booleanValue: Boolean
     override fun copy(annotations: List<String>, metas: MetaContainer): BoolElement
@@ -140,7 +140,7 @@ public interface BoolElement : IonElement {
     override fun withoutMetas(): BoolElement
 }
 
-/** Represents a Ion timestamp. */
+/** Represents an Ion timestamp. */
 public interface TimestampElement : IonElement {
     public val timestampValue: Timestamp
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElement
@@ -161,7 +161,7 @@ public enum class IntElementSize {
     BIG_INTEGER
 }
 
-/** Represents a Ion int. */
+/** Represents an Ion int. */
 public interface IntElement : IonElement {
 
     /** The size of this [IntElement]. */
@@ -188,7 +188,7 @@ public interface IntElement : IonElement {
     override fun withoutMetas(): IntElement
 }
 
-/** Represents a Ion decimal. */
+/** Represents an Ion decimal. */
 public interface DecimalElement : IonElement {
     public val decimalValue: Decimal
     override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElement
@@ -202,7 +202,7 @@ public interface DecimalElement : IonElement {
 }
 
 /**
- * Represents a Ion float.
+ * Represents an Ion float.
  */
 public interface FloatElement : IonElement {
     public val doubleValue: Double
