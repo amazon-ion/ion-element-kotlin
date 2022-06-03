@@ -169,7 +169,7 @@ public interface AnyElement : IonElement {
 
     /**
      * Attempts to narrow this element to a [IntElement] or `null`.
-     * If this element is not an Ion `bool` or `null.null`, throws an [IonElementConstraintException].
+     * If this element is not an Ion `int` or `null.null`, throws an [IonElementConstraintException].
      */
     public fun asIntOrNull(): IntElement?
 
@@ -351,208 +351,208 @@ public interface AnyElement : IonElement {
     public val integerSize: IntElementSize
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `bool`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `bool`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val booleanValue: Boolean
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `bool` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `bool` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val booleanValueOrNull: Boolean?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `int`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `int`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      * Also throws [IonElementConstraintException] if the value is outside the range of a 64-bit signed integer.
      */
     public val longValue: Long
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `long` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `long` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      * Also throws [IonElementConstraintException] if the value is outside the range of a 64-bit signed integer.
      */
     public val longValueOrNull: Long?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `int`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `int`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val bigIntegerValue: BigInteger
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `int` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `int` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val bigIntegerValueOrNull: BigInteger?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `string` or `symbol`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `string` or `symbol`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val textValue: String
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `string` or `symbol` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `string` or `symbol` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val textValueOrNull: String?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `string`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `string`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val stringValue: String
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `string` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `string` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val stringValueOrNull: String?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `symbol`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `symbol`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val symbolValue: String
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `symbol` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `symbol` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val symbolValueOrNull: String?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `decimal`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `decimal`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val decimalValue: Decimal
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `decimal` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `decimal` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val decimalValueOrNull: Decimal?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `float`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `float`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val doubleValue: Double
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `float` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `float` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val doubleValueOrNull: Double?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `timestamp`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `timestamp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val timestampValue: Timestamp
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `timestamp` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `timestamp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val timestampValueOrNull: Timestamp?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `blob` or `clob`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `blob` or `clob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val bytesValue: ByteArrayView
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `blob` or `clob` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `blob` or `clob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val bytesValueOrNull: ByteArrayView?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `blob`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `blob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val blobValue: ByteArrayView
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `blob` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `blob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val blobValueOrNull: ByteArrayView?
 
     /**
-     * Gets the value of the element, assuming that it is a non-null Ion `clob`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is a non-null Ion `clob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val clobValue: ByteArrayView
 
     /**
-     * Gets the value of the element, assuming that it is an Ion `clob` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The value of the element, assuming that the element is an Ion `clob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val clobValueOrNull: ByteArrayView?
 
     /**
-     * Gets a [Collection] of the Ion elements contained in this element, assuming that it is a non-null Ion `list`, `sexp` or `struct`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list`, `sexp` or `struct`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val containerValues: Collection<AnyElement>
 
     /**
-     * Gets a nullable [Collection] of the Ion elements contained in this element, assuming that it is an Ion `list`, `sexp` or `struct` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is an Ion `list`, `sexp` or `struct` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val containerValuesOrNull: Collection<AnyElement>?
 
     /**
-     * Gets a [List] of the Ion elements contained in this element, assuming that it is a non-null Ion `list` or `sexp`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list` or `sexp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val seqValues: List<AnyElement>
 
     /**
-     * Gets a nullable [List] of the Ion elements contained in this element, assuming that it is an Ion `list` or `sexp` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is an Ion `list` or `sexp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val seqValuesOrNull: List<AnyElement>?
 
     /**
-     * Gets a [List] of the Ion elements contained in this element, assuming that it is a non-null Ion `list`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val listValues: List<AnyElement>
 
     /**
-     * Gets a nullable [List] of the Ion elements contained in this element, assuming that it is an Ion `list` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is an Ion `list` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val listValuesOrNull: List<AnyElement>?
 
     /**
-     * Gets a [List] of the Ion elements contained in this element, assuming that it is a non-null Ion `sexp`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `sexp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val sexpValues: List<AnyElement>
 
     /**
-     * Gets a nullable [List] of the Ion elements contained in this element, assuming that it is an Ion `sexp` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The Ion elements contained in this element, assuming that it is an Ion `sexp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val sexpValuesOrNull: List<AnyElement>?
 
     /**
-     * Gets a [Collection] of the fields contained in this element, assuming that it is a non-null Ion `struct`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The fields contained in this element, assuming that it is a non-null Ion `struct`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val structFields: Collection<StructField>
 
     /**
-     * Gets a nullable [Collection] of the fields contained in this element, assuming that it is an Ion `struct` or `null.null`.
-     * If that assumption is violated, throws [IonElementConstraintException].
+     * The fields contained in this element, assuming that it is an Ion `struct` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
      */
     public val structFieldsOrNull: Collection<StructField>?
 
