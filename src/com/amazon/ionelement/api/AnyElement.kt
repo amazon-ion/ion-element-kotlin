@@ -50,7 +50,7 @@ import java.math.BigInteger
  *
  * If either of these expectations is violated an [IonElementConstraintException] is thrown.  If the given element
  * has an [IonLocation] in its metadata, it is included with the [IonElementConstraintException] which can be used to
- * generate error an message that points to the specific location of the failure within the Ion-text document
+ * generate an error message that points to the specific location of the failure within the Ion-text document
  * (i.e. line & column) or within the Ion-binary document (i.e. byte offset).
  *
  * Value Accessor Examples:
@@ -128,14 +128,14 @@ import java.math.BigInteger
  * #### Equality
  *
  * Any accessor function returning [Collection<AnyElement>] or [List<AnyElement]] uses the definition of equality for
- * the [Object.equals] and [Object.hashCode] functions that is defined by [List<T>].  This is different than equality
+ * the [Object.equals] and [Object.hashCode] functions that is defined by [List<T>].  This is different from equality
  * as defined by the Ion specification.
  *
  * For example:
  *
  * ```
  * val list: AnyElement = loadSingleElement("[1, 2, 3]").asAnyElement()
- * val sexp: AnyElement = loadsingleElement("(1 2 3)").asAnyElement()
+ * val sexp: AnyElement = loadSingleElement("(1 2 3)").asAnyElement()
  *
  * // The following is `true` because equality is defined by `List<T>`.
  * sexp.values.equals(list.sexp.values)
@@ -149,100 +149,200 @@ import java.math.BigInteger
  */
 public interface AnyElement : IonElement {
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [BoolElement].
+     * If this element is not an Ion `bool`, or if it is `null.bool`, throws an [IonElementConstraintException].
+     */
     public fun asBoolean(): BoolElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [BoolElement] or `null`.
+     * If this element is not an Ion `bool` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asBooleanOrNull(): BoolElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [IntElement].
+     * If this element is not an Ion `int`, or if it is `null.int`, throws an [IonElementConstraintException].
+     */
     public fun asInt(): IntElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [IntElement] or `null`.
+     * If this element is not an Ion `int` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asIntOrNull(): IntElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [DecimalElement].
+     * If this element is not an Ion `decimal`, or if it is `null.decimal`, throws an [IonElementConstraintException].
+     */
     public fun asDecimal(): DecimalElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [DecimalElement] or `null`.
+     * If this element is not an Ion `decimal` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asDecimalOrNull(): DecimalElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [FloatElement].
+     * If this element is not an Ion `float`, or if it is `null.float`, throws an [IonElementConstraintException].
+     */
     public fun asFloat(): FloatElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [FloatElement] or `null`.
+     * If this element is not an Ion `float` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asFloatOrNull(): FloatElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [TextElement].
+     * If this element is not an Ion `symbol` or `string`, or if it is `null.symbol` or `null.string`, throws an
+     * [IonElementConstraintException].
+     */
     public fun asText(): TextElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [TextElement] or `null`.
+     * If this element is not an Ion `symbol`, Ion `string` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asTextOrNull(): TextElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [StringElement].
+     * If this element is not an Ion `string`, or if it is `null.string`, throws an [IonElementConstraintException].
+     */
     public fun asString(): StringElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [StringElement] or `null`.
+     * If this element is not an Ion `string` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asStringOrNull(): StringElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SymbolElement].
+     * If this element is not an Ion `symbol`, or if it is `null.symbol`, throws an [IonElementConstraintException].
+     */
     public fun asSymbol(): SymbolElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SymbolElement] or `null`.
+     * If this element is not an Ion `symbol` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asSymbolOrNull(): SymbolElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [TimestampElement].
+     * If this element is not an Ion `timestamp`, or if it is `null.timestamp`, throws an [IonElementConstraintException].
+     */
     public fun asTimestamp(): TimestampElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [TimestampElement] or `null`.
+     * If this element is not an Ion `timestamp` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asTimestampOrNull(): TimestampElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [LobElement].
+     * If this element is not an Ion `blob` or `clob`, or if it is `null.blob` or `null.clob`, throws an
+     * [IonElementConstraintException].
+     */
     public fun asLob(): LobElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [LobElement] or `null`.
+     * If this element is not an Ion `blob`, Ion `clob`, or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asLobOrNull(): LobElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [BlobElement].
+     * If this element is not an Ion `blob`, or if it is `null.blob`, throws an [IonElementConstraintException].
+     */
     public fun asBlob(): BlobElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [BlobElement] or `null`.
+     * If this element is not an Ion `blob` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asBlobOrNull(): BlobElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ClobElement].
+     * If this element is not an Ion `clob`, or if it is `null.clob`, throws an [IonElementConstraintException].
+     */
     public fun asClob(): ClobElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ClobElement] or `null`.
+     * If this element is not an Ion `clob` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asClobOrNull(): ClobElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ContainerElement].
+     * If this element is not an Ion `list`, `sexp`, or `struct, or if it is any Ion `null`, throws an
+     * [IonElementConstraintException].
+     */
     public fun asContainer(): ContainerElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ContainerElement] or `null`.
+     * If this element is not an Ion `list`, `sexp`, `struct`, or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asContainerOrNull(): ContainerElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SeqElement].
+     * If this element is not an Ion `list` or `sexp`, or if it is any Ion `null`, throws an
+     * [IonElementConstraintException].
+     */
     public fun asSeq(): SeqElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SeqElement] or `null`.
+     * If this element is not an Ion `list`, `sexp`, or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asSeqOrNull(): SeqElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ListElement].
+     * If this element is not an Ion `list`, or if it is `null.list`, throws an [IonElementConstraintException].
+     */
     public fun asList(): ListElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [ListElement] or `null`.
+     * If this element is not an Ion `list` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asListOrNull(): ListElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SexpElement].
+     * If this element is not an Ion `sexp`, or if it is `null.sexp`, throws an [IonElementConstraintException].
+     */
     public fun asSexp(): SexpElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [SexpElement] or `null`.
+     * If this element is not an Ion `sexp` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asSexpOrNull(): SexpElement?
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [StructElement].
+     * If this element is not an Ion `struct`, or if it is `null.struct`, throws an [IonElementConstraintException].
+     */
     public fun asStruct(): StructElement
 
-    /** See [AnyElement]. */
+    /**
+     * Attempts to narrow this element to a [StructElement] or `null`.
+     * If this element is not an Ion `struct` or `null.null`, throws an [IonElementConstraintException].
+     */
     public fun asStructOrNull(): StructElement?
 
     /**
@@ -250,106 +350,210 @@ public interface AnyElement : IonElement {
      */
     public val integerSize: IntElementSize
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `bool`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val booleanValue: Boolean
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `bool` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val booleanValueOrNull: Boolean?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `int`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     * Also throws [IonElementConstraintException] if the value is outside the range of a 64-bit signed integer.
+     */
     public val longValue: Long
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `long` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     * Also throws [IonElementConstraintException] if the value is outside the range of a 64-bit signed integer.
+     */
     public val longValueOrNull: Long?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `int`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val bigIntegerValue: BigInteger
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `int` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val bigIntegerValueOrNull: BigInteger?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `string` or `symbol`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val textValue: String
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `string` or `symbol` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val textValueOrNull: String?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `string`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val stringValue: String
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `string` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val stringValueOrNull: String?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `symbol`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val symbolValue: String
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `symbol` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val symbolValueOrNull: String?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `decimal`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val decimalValue: Decimal
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `decimal` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val decimalValueOrNull: Decimal?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `float`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val doubleValue: Double
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `float` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val doubleValueOrNull: Double?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `timestamp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val timestampValue: Timestamp
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `timestamp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val timestampValueOrNull: Timestamp?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `blob` or `clob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val bytesValue: ByteArrayView
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `blob` or `clob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val bytesValueOrNull: ByteArrayView?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `blob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val blobValue: ByteArrayView
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `blob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val blobValueOrNull: ByteArrayView?
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is a non-null Ion `clob`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val clobValue: ByteArrayView
 
-    /** See [AnyElement]. */
+    /**
+     * The value of the element, assuming that the element is an Ion `clob` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val clobValueOrNull: ByteArrayView?
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list`, `sexp` or `struct`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val containerValues: Collection<AnyElement>
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is an Ion `list`, `sexp` or `struct` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val containerValuesOrNull: Collection<AnyElement>?
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list` or `sexp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val seqValues: List<AnyElement>
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is an Ion `list` or `sexp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val seqValuesOrNull: List<AnyElement>?
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `list`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val listValues: List<AnyElement>
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is an Ion `list` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val listValuesOrNull: List<AnyElement>?
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is a non-null Ion `sexp`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val sexpValues: List<AnyElement>
 
-    /** See [AnyElement]. */
+    /**
+     * The Ion elements contained in this element, assuming that it is an Ion `sexp` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val sexpValuesOrNull: List<AnyElement>?
 
-    /** See [AnyElement]. */
+    /**
+     * The fields contained in this element, assuming that it is a non-null Ion `struct`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val structFields: Collection<StructField>
 
-    /** See [AnyElement]. */
+    /**
+     * The fields contained in this element, assuming that it is an Ion `struct` or `null.null`.
+     * Attempting to access this property on an element that violates the type assumption will result in an  [IonElementConstraintException].
+     */
     public val structFieldsOrNull: Collection<StructField>?
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement

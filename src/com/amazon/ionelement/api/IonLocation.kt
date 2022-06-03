@@ -19,10 +19,16 @@ internal const val ION_LOCATION_META_TAG: String = "\$ion_location"
 
 public sealed class IonLocation
 
+/**
+ * Represents a location in an Ion text stream using 1-based indexing of the line number and character offset.
+ */
 public data class IonTextLocation(val line: Long, val charOffset: Long) : IonLocation() {
     override fun toString(): String = "$line:$charOffset"
 }
 
+/**
+ * Represents a location in an Ion binary stream as a 0-based offset from the start of the stream.
+ */
 public data class IonBinaryLocation(val byteOffset: Long) : IonLocation() {
     override fun toString(): String = byteOffset.toString()
 }
