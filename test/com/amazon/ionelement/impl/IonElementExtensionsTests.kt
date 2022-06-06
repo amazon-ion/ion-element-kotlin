@@ -1,4 +1,4 @@
-package com.amazon.ionelement
+package com.amazon.ionelement.impl
 
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.*
@@ -7,8 +7,6 @@ import java.math.BigInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 
@@ -127,21 +125,5 @@ class IonElementExtensionsTests : ArgumentsProviderBase() {
         // also check that annotations haven't been lost
         assertEquals(1, noMetas.annotations.size)
         assertTrue(noMetas.annotations.contains("foo"))
-    }
-
-    @Test
-    fun head() {
-        val sexp = loadSingleElement("(1 2 3)").asSexp()
-        assertEquals(ionInt(1).asAnyElement(), sexp.head)
-    }
-
-    @Test
-    fun tail() {
-        val sexp = loadSingleElement("(1 2 3)").asSexp()
-
-        assertEquals(listOf<IonElement>(ionInt(2), ionInt(3)), sexp.tail)
-        assertEquals(listOf<IonElement>(ionInt(3)), sexp.tail.tail)
-        assertEquals(listOf(), sexp.tail.tail.tail)
-        assertThrows<IllegalArgumentException> { sexp.tail.tail.tail.tail }
     }
 }

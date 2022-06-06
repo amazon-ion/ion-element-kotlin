@@ -13,7 +13,9 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.api
+package com.amazon.ionelement.impl
+
+import com.amazon.ionelement.api.*
 
 /** Returns a shallow copy of the current node with the specified additional annotations. */
 internal inline fun <reified T : IonElement> T._withAnnotations(vararg additionalAnnotations: String): T =
@@ -58,40 +60,3 @@ internal inline fun <reified T : IonElement> T._withoutMetas(): T =
         metas.isEmpty() -> this
         else -> copy(metas = emptyMetaContainer(), annotations = annotations) as T
     }
-
-/**
- * Returns the string representation of the symbol in the first element of this container.
- *
- * If the first element is not a symbol or this container has no elements, throws [IonElementException],
- */
-public val SeqElement.tag: String get() = this.head.symbolValue
-
-/**
- * Returns the first element of this container.
- *
- * If this container has no elements, throws [IonElementException].
- */
-public val SeqElement.head: AnyElement
-    get() =
-        when (this.size) {
-            0 -> constraintError(this, "Cannot get head of empty container")
-            else -> this.values.first()
-        }
-
-/**
- * Returns a sub-list containing all elements of this container except the first.
- *
- * If this container has no elements, throws [IonElementException].
- */
-public val SeqElement.tail: List<AnyElement> get() =
-    when (this.size) {
-        0 -> constraintError(this, "Cannot get tail of empty container")
-        else -> this.values.subList(1, this.size)
-    }
-
-/** Returns the first element. */
-public val List<AnyElement>.head: AnyElement
-    get() = this.first()
-
-/** Returns a copy of the list with the first element removed. */
-public val List<AnyElement>.tail: List<AnyElement> get() = this.subList(1, this.size)
