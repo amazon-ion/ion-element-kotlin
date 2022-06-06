@@ -357,14 +357,6 @@ public class com/amazon/ionelement/api/IonElementException : java/lang/Error {
 	public final fun getLocation ()Lcom/amazon/ionelement/api/IonLocation;
 }
 
-public final class com/amazon/ionelement/api/IonElementExtensionsKt {
-	public static final fun getHead (Lcom/amazon/ionelement/api/SeqElement;)Lcom/amazon/ionelement/api/AnyElement;
-	public static final fun getHead (Ljava/util/List;)Lcom/amazon/ionelement/api/AnyElement;
-	public static final fun getTag (Lcom/amazon/ionelement/api/SeqElement;)Ljava/lang/String;
-	public static final fun getTail (Lcom/amazon/ionelement/api/SeqElement;)Ljava/util/List;
-	public static final fun getTail (Ljava/util/List;)Ljava/util/List;
-}
-
 public abstract interface class com/amazon/ionelement/api/IonElementLoader {
 	public abstract fun loadAllElements (Lcom/amazon/ion/IonReader;)Ljava/lang/Iterable;
 	public abstract fun loadAllElements (Ljava/lang/String;)Ljava/lang/Iterable;
