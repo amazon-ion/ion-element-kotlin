@@ -38,6 +38,9 @@ import java.math.BigInteger
  * [SexpElement] and [StructElement]. If the type of an Ion element is not known at compile-time, the type may be easily
  * asserted at runtime and a narrower [IonElement] interface may be obtained instead.
  *
+ * All implementations of [AnyElement] are required to also implement the correct *Element interface for the actual type
+ * of the element (e.g. an [AnyElement] that is an Ion string must also implement [StringElement]).
+ *
  * Two categories of methods are present on this type:
  *
  * - Value accessors (the `*Value` and `*ValueOrNull` properties)
