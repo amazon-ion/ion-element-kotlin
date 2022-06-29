@@ -27,7 +27,7 @@ plugins {
 }
 
 group = "com.amazon.ion"
-version = "0.2.1-SNAPSHOT"
+version = "1.0.0"
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 repositories {
@@ -145,8 +145,8 @@ publishing {
                     developer {
                         name = "Amazon Ion Team"
                         email = "ion-team@amazon.com"
-                        organization = "PartiQL"
-                        organizationUrl = "https://github.com/partiql"
+                        organization = "Amazon Ion"
+                        organizationUrl = "https://github.com/amazon-ion"
                     }
                 }
             }
