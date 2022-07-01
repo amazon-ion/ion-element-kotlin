@@ -20,7 +20,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.20'
     id 'maven-publish'
     id 'signing'
-    id 'org.jetbrains.dokka' version '0.9.18'
+    id 'org.jetbrains.dokka' version '1.6.20'
     id 'jacoco'
     id 'org.jetbrains.kotlinx.binary-compatibility-validator' version '0.9.0'
     id "org.jlleitschuh.gradle.ktlint" version "10.3.0"
@@ -32,9 +32,6 @@ ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 repositories {
     mavenCentral()
-
-    // jcenter required for dokka
-    jcenter()
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -67,19 +64,14 @@ test {
     }
 }
 
-dokka {
-    outputFormat = "html"
-    outputDirectory = "$buildDir/javadoc"
-}
-
 task sourcesJar(type: Jar) {
     from "src"
     archiveClassifier.set("sources")
 }
 
-task javadocJar(type: Jar) {
-    from dokka
-    archiveClassifier.set("javadoc")
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier 'javadoc'
+    from dokkaJavadoc.outputDirectory
 }
 
 java {
