@@ -7,10 +7,6 @@ that is idiomatic to Kotlin and is also usable from Java. It is meant as an alte
 [ion-java](https://github.com/amzn/ion-java) but is not a complete implementation of Ion as it relies on `ion-java`'s
 `IonReader` and `IonWriter` interfaces for reading and writing Ion data.
 
-## Status
-
-This library is complete and mature, however the public API should be considered unstable.
-
 ## Why is `IonElement` Needed?
 
 ### `IonValue.clone()`
