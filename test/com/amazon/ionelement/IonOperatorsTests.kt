@@ -315,7 +315,6 @@ class IonOperatorsTests {
             val x = Random.nextDouble()
             val y = Random.nextDouble()
             assertEquals(ionFloat(-x), -ionFloat(x))
-            assertEquals(ionFloat(+x), +ionFloat(x))
             assertEquals(ionFloat(x.inc()), ionFloat(x).inc())
             assertEquals(ionFloat(x.dec()), ionFloat(x).dec())
 
@@ -360,7 +359,9 @@ class IonOperatorsTests {
         val x = "first test string"
         val y = "second test string"
         assertEquals(ionString(x + y), ionString(x) + y)
+        assertEquals(ionString(x + y), ionString(x) + buildString { append(y) })
         assertEquals(ionSymbol(x + y), ionSymbol(x) + y)
+        assertEquals(ionSymbol(x + y), ionSymbol(x) + buildString { append(y) })
     }
 }
 

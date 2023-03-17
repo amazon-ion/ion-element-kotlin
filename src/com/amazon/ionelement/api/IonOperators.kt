@@ -5,12 +5,6 @@ import com.amazon.ionelement.api.IntElementSize.*
 import java.math.BigDecimal
 import java.math.BigInteger
 
-/*
- * This file contains operator overloads and associated extension functions for various IonElement subclasses.
- * Infix operators that mix IonElement types with native types are only defined for IonElement on the left-hand side.
- * Augmented assignment operators, e.g., '+=' are provided by Kotlin automatically from the associated binary operator.
- */
-
 @RequiresOptIn(message = "This API is experimental and subject to change.")
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
@@ -38,7 +32,7 @@ public infix fun Boolean.and(other: BE): BE = ionBool(this && other.booleanValue
 @IonOperators
 public infix fun Boolean.or(other: BE): BE = ionBool(this || other.booleanValue, other.annotations, other.metas)
 
-/* IntElement unary operators (unaryPlus omitted as bigInteger does not support it) */
+/* IntElement unary operators */
 @IonOperators
 public operator fun IE.unaryMinus(): IE =
     if (useLong(this)) {
@@ -49,21 +43,19 @@ public operator fun IE.unaryMinus(): IE =
 
 @IonOperators
 public operator fun IE.inc(): IE =
-    if (useLong(this)) try {
-        ionInt(Math.incrementExact(this.longValue), this.annotations, this.metas)
-    } catch (e: ArithmeticException) {
+    if (useLong(this) && this.longValue != Long.MAX_VALUE) {
+        ionInt(this.longValue + 1, this.annotations, this.metas)
+    } else {
         ionInt(this.bigIntegerValue.inc(), this.annotations, this.metas)
     }
-    else ionInt(this.bigIntegerValue.inc(), this.annotations, this.metas)
 
 @IonOperators
 public operator fun IE.dec(): IE =
-    if (useLong(this)) try {
-        ionInt(Math.decrementExact(this.longValue), this.annotations, this.metas)
-    } catch (e: ArithmeticException) {
+    if (useLong(this) && this.longValue != Long.MIN_VALUE) {
+        ionInt(this.longValue - 1, this.annotations, this.metas)
+    } else {
         ionInt(this.bigIntegerValue.dec(), this.annotations, this.metas)
     }
-    else ionInt(this.bigIntegerValue.dec(), this.annotations, this.metas)
 
 /* IntElement with IntElement binary operators */
 @IonOperators
@@ -209,7 +201,7 @@ public infix fun BigInteger.lte(other: IE): Boolean = this <= other.bigIntegerVa
 @IonOperators
 public infix fun BigInteger.gte(other: IE): Boolean = this >= other.bigIntegerValue
 
-/* DecimalElement unary operators (unaryPlus() omitted as BigDecimal does not support it) */
+/* DecimalElement unary operators */
 @IonOperators
 public operator fun DE.unaryMinus(): DE = ionDecimal(Decimal.valueOf(-this.decimalValue), this.annotations, this.metas)
 @IonOperators
@@ -277,8 +269,6 @@ public infix fun BigDecimal.gte(other: DE): Boolean = this >= other.decimalValue
 @IonOperators
 public operator fun FE.unaryMinus(): FE = ionFloat(-this.doubleValue, this.annotations, this.metas)
 @IonOperators
-public operator fun FE.unaryPlus(): FE = ionFloat(+this.doubleValue, this.annotations, this.metas)
-@IonOperators
 public operator fun FE.inc(): FE = ionFloat(this.doubleValue.inc(), this.annotations, this.metas)
 @IonOperators
 public operator fun FE.dec(): FE = ionFloat(this.doubleValue.dec(), this.annotations, this.metas)
@@ -341,9 +331,9 @@ public infix fun Double.gte(other: FloatElement): Boolean = this >= other.double
 
 /* Text Element operators */
 @IonOperators
-public operator fun StringElement.plus(other: String): StringElement = ionString(this.textValue + other, this.annotations, this.metas)
+public operator fun StringElement.plus(other: CharSequence): StringElement = ionString(this.textValue + other, this.annotations, this.metas)
 @IonOperators
-public operator fun SymbolElement.plus(other: String): SymbolElement = ionSymbol(this.textValue + other, this.annotations, this.metas)
+public operator fun SymbolElement.plus(other: CharSequence): SymbolElement = ionSymbol(this.textValue + other, this.annotations, this.metas)
 
 /* Integer operator helpers */
 private fun useLong(x: IE): Boolean = x.integerSize == LONG
