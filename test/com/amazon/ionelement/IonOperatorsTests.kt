@@ -7,15 +7,24 @@ import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ArgumentsSource
+import org.junit.jupiter.params.provider.ArgumentsSources
+import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 
 @OptIn(IonOperators::class)
 class IonOperatorsTests {
+
     @Test
-    fun boolElementOperatorsTest() {
+    fun boolElementNotOperatorTests() {
         assertEquals(ionBool(true), !ionBool(false))
         assertEquals(ionBool(false), !ionBool(true))
+    }
 
-        // Mixed-type cases
+    @Test
+    fun boolElementAndOperatorTests() {
         assertEquals(ionBool(true), ionBool(true) and true)
         assertEquals(ionBool(false), ionBool(true) and false)
         assertEquals(ionBool(false), ionBool(false) and true)
@@ -25,7 +34,10 @@ class IonOperatorsTests {
         assertEquals(ionBool(false), true and ionBool(false))
         assertEquals(ionBool(false), false and ionBool(true))
         assertEquals(ionBool(false), false and ionBool(false))
+    }
 
+    @Test
+    fun boolElementOrOperatorTests() {
         assertEquals(ionBool(true), ionBool(true) or true)
         assertEquals(ionBool(true), ionBool(true) or false)
         assertEquals(ionBool(true), ionBool(false) or true)
@@ -38,67 +50,263 @@ class IonOperatorsTests {
     }
 
     @Test
-    fun intElementLongOperatorsTests() {
-        // Check explicitly for overflow cases
-        var x = Long.MAX_VALUE
-        var y = Long.MIN_VALUE
-        var z = Int.MAX_VALUE
-        assertEquals(ionInt(x.toBigInteger().inc()), ionInt(x).inc())
-        assertEquals(ionInt(y.toBigInteger().dec()), ionInt(y).dec())
+    fun longIntElementIncOverflowOperatorTest() {
+        assertEquals(ionInt(Long.MAX_VALUE.toBigInteger().inc()), ionInt(Long.MAX_VALUE).inc())
+    }
 
-        // Mixed Long cases
-        assertEquals(ionInt(x.toBigInteger() + x.toBigInteger()), ionInt(x) + x)
-        assertEquals(ionInt(y.toBigInteger() + y.toBigInteger()), ionInt(y) + y)
-        assertEquals(ionInt(y.toBigInteger() - x.toBigInteger()), ionInt(y) - x)
-        assertEquals(ionInt(x.toBigInteger() * x.toBigInteger()), ionInt(x) * x)
-        assertEquals(ionInt(y.toBigInteger() * y.toBigInteger()), ionInt(y) * y)
-        assertEquals(ionInt(x.toBigInteger() * y.toBigInteger()), ionInt(x) * y)
-        assertEquals(ionInt(x.toBigInteger() + x.toBigInteger()), x + ionInt(x))
-        assertEquals(ionInt(y.toBigInteger() + y.toBigInteger()), y + ionInt(y))
-        assertEquals(ionInt(y.toBigInteger() - x.toBigInteger()), y - ionInt(x))
-        assertEquals(ionInt(x.toBigInteger() * x.toBigInteger()), x * ionInt(x))
-        assertEquals(ionInt(y.toBigInteger() * y.toBigInteger()), y * ionInt(y))
-        assertEquals(ionInt(x.toBigInteger() * y.toBigInteger()), x * ionInt(y))
+    @Test
+    fun longIntElementDecOverflowOperatorTest() {
+        assertEquals(ionInt(Long.MIN_VALUE.toBigInteger().dec()), ionInt(Long.MIN_VALUE).dec())
+    }
 
-        // Mixed Int cases
-        assertEquals(ionInt(x.toBigInteger() + z.toBigInteger()), ionInt(x) + z)
-        assertEquals(ionInt(y.toBigInteger() - z.toBigInteger()), ionInt(y) - z)
-        assertEquals(ionInt(x.toBigInteger() * z.toBigInteger()), ionInt(x) * z)
+    @Test
+    fun longIntElementWithLongPlusOverflowTests() {
+        assertEquals(ionInt(LONG_MAX.toBigInteger() + LONG_MAX.toBigInteger()), ionInt(LONG_MAX) + LONG_MAX)
+        assertEquals(ionInt(LONG_MIN.toBigInteger() + LONG_MIN.toBigInteger()), ionInt(LONG_MIN) + LONG_MIN)
+        assertEquals(ionInt(LONG_MAX.toBigInteger() + LONG_MAX.toBigInteger()), LONG_MAX + ionInt(LONG_MAX))
+        assertEquals(ionInt(LONG_MIN.toBigInteger() + LONG_MIN.toBigInteger()), LONG_MIN + ionInt(LONG_MIN))
+    }
 
-        assertEquals(ionInt(z.toBigInteger() + x.toBigInteger()), z + ionInt(x))
-        assertEquals(ionInt(y.toBigInteger() - z.toBigInteger()), -z + ionInt(y))
-        assertEquals(ionInt(z.toBigInteger() * x.toBigInteger()), z * ionInt(x))
+    @Test
+    fun longIntElementWithIntPlusOverflowTests() {
+        assertEquals(ionInt(LONG_MAX.toBigInteger() + INT_MAX.toBigInteger()), ionInt(LONG_MAX) + INT_MAX)
+        assertEquals(ionInt(INT_MAX.toBigInteger() + LONG_MAX.toBigInteger()), INT_MAX + ionInt(LONG_MAX))
+    }
 
-        // Check explicitly for non-overflow cases
-        x = Random.nextInt().toLong()
-        y = Random.nextInt().toLong()
+    @Test
+    fun longIntElementWithLongMinusOverflowTests() {
+        assertEquals(ionInt(LONG_MIN.toBigInteger() - LONG_MAX.toBigInteger()), ionInt(LONG_MIN) - LONG_MAX)
+        assertEquals(ionInt(LONG_MIN.toBigInteger() - LONG_MAX.toBigInteger()), LONG_MIN - ionInt(LONG_MAX))
+    }
 
-        assertEquals(ionInt(x + y), ionInt(x) + y)
-        assertEquals(ionInt(x - y), ionInt(x) - y)
-        assertEquals(ionInt(x * y), ionInt(x) * y)
-        assertEquals(ionInt(x / y), ionInt(x) / y)
-        assertEquals(ionInt(x % y), ionInt(x) % y)
+    @Test
+    fun longIntElementWithIntMinusOverflowTests() {
+        assertEquals(ionInt(LONG_MIN.toBigInteger() - INT_MAX.toBigInteger()), ionInt(LONG_MIN) - INT_MAX)
+        assertEquals(ionInt(LONG_MIN.toBigInteger() - INT_MAX.toBigInteger()), -INT_MAX + ionInt(LONG_MIN))
+    }
 
-        assertEquals(ionInt(x + y), x + ionInt(y))
-        assertEquals(ionInt(x - y), x - ionInt(y))
-        assertEquals(ionInt(x * y), x * ionInt(y))
-        assertEquals(ionInt(x / y), x / ionInt(y))
-        assertEquals(ionInt(x % y), x % ionInt(y))
+
+    @Test
+    fun longIntElementWithLongTimesOverflowTests() {
+        assertEquals(ionInt(LONG_MAX.toBigInteger() * LONG_MAX.toBigInteger()), ionInt(LONG_MAX) * LONG_MAX)
+        assertEquals(ionInt(LONG_MIN.toBigInteger() * LONG_MIN.toBigInteger()), ionInt(LONG_MIN) * LONG_MIN)
+        assertEquals(ionInt(LONG_MAX.toBigInteger() * LONG_MIN.toBigInteger()), ionInt(LONG_MAX) * LONG_MIN)
+
+        assertEquals(ionInt(LONG_MAX.toBigInteger() * LONG_MAX.toBigInteger()), LONG_MAX * ionInt(LONG_MAX))
+        assertEquals(ionInt(LONG_MIN.toBigInteger() * LONG_MIN.toBigInteger()), LONG_MIN * ionInt(LONG_MIN))
+        assertEquals(ionInt(LONG_MAX.toBigInteger() * LONG_MIN.toBigInteger()), LONG_MAX * ionInt(LONG_MIN))
+    }
+
+    @Test
+    fun longIntElementWithIntTimesOverflowTests() {
+        assertEquals(ionInt(LONG_MAX.toBigInteger() * INT_MAX.toBigInteger()), ionInt(LONG_MAX) * INT_MAX)
+        assertEquals(ionInt(INT_MAX.toBigInteger() * LONG_MAX.toBigInteger()), INT_MAX * ionInt(LONG_MAX))
+    }
+
+    @Test
+    fun longIntElementWithLongPlusNoOverflowTests() {
+        assertEquals(ionInt(1 + 2), ionInt(1) + 2)
+        assertEquals(ionInt(1 + 2), 1 + ionInt(2))
+    }
+
+    @Test
+    fun longIntElementWithLongMinusNoOverflowTests() {
+        assertEquals(ionInt(1 - 2), ionInt(1) - 2)
+        assertEquals(ionInt(1 - 2), 1 - ionInt(2))
+    }
+
+    @Test
+    fun longIntElementWithLongTimesNoOverflowTests() {
+        assertEquals(ionInt(1 * 2), ionInt(1) * 2)
+        assertEquals(ionInt(1 * 2), 1 * ionInt(2)
+    }
+
+    @Test
+    fun longIntElementWithLongDivideByZeroTest() {
+        assertThrows<ArithmeticException> {
+            ionInt(1) / 0
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongPlusRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = Random.nextLong()
+            assertEquals(ionInt(x + y), x + ionInt(y), "failed on arguments: $x and $y")
+            assertEquals(ionInt(x + y), ionInt(x) + y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongMinusRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = Random.nextLong()
+            assertEquals(ionInt(x - y), x - ionInt(y), "failed on arguments: $x and $y")
+            assertEquals(ionInt(x - y), ionInt(x) - y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongTimesRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = Random.nextLong()
+            assertEquals(ionInt(x * y), x * ionInt(y), "failed on arguments: $x and $y")
+            assertEquals(ionInt(x * y), ionInt(x) * y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongDivideRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextLong()) {if (this == 0L) 1L else this}
+            assertEquals(ionInt(x / y), x / ionInt(y), "failed on arguments: $x and $y")
+            assertEquals(ionInt(x / y), ionInt(x) / y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongRemainderRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextLong()) {if (this == 0L) 1L else this}
+            assertEquals(ionInt(x % y), x % ionInt(y), "failed on arguments: $x and $y")
+            assertEquals(ionInt(x % y), ionInt(x) % y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementNegationRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            assertEquals(ionInt(-x), -ionInt(x), "failed on argument: $x")
+        }
+    }
+
+    @Test
+    fun longIntElementIncRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            assertEquals(ionInt(x.inc()), ionInt(x).inc(), "failed on argument: $x")
+        }
+    }
+
+    @Test
+    fun longIntElementDecRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            assertEquals(ionInt(x.dec()), ionInt(x).dec(), "failed on argument: $x")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongEqRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextBoolean()) { if(this) x else Random.nextLong() }
+            assertEquals(x == y, ionInt(x) eq ionInt(y), "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongLtRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextBoolean()) { if(this) x else Random.nextLong() }
+            assertEquals(x < y, ionInt(x) lt ionInt(y), "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongGtRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextBoolean()) { if(this) x else Random.nextLong() }
+            assertEquals(x > y, ionInt(x) gt ionInt(y), "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongLteRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextBoolean()) { if(this) x else Random.nextLong() }
+            assertEquals(x <= y, ionInt(x) lte ionInt(y), "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithLongGteRandomTests() {
+        repeat(500) {
+            val x = Random.nextLong()
+            val y = with(Random.nextBoolean()) { if(this) x else Random.nextLong() }
+            assertEquals(x >= y, ionInt(x) gte ionInt(y), "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithIntPlusRandomTest() {
+        repeat(500) {
+            val x = Random.nextInt()
+            val y = Random.nextInt()
+            assertEquals(ionInt((x + y).toLong()), x + ionInt(y.toLong()), "failed on arguments: $x and $y")
+            assertEquals(ionInt((x + y).toLong()), ionInt(x.toLong()) + y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithIntMinusRandomTest() {
+        repeat(500) {
+            val x = Random.nextInt()
+            val y = Random.nextInt()
+            assertEquals(ionInt((x - y).toLong()), x - ionInt(y.toLong()), "failed on arguments: $x and $y")
+            assertEquals(ionInt((x - y).toLong()), ionInt(x.toLong()) - y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithIntTimesRandomTest() {
+        repeat(500) {
+            val x = Random.nextInt()
+            val y = Random.nextInt()
+            assertEquals(ionInt((x * y).toLong()), x * ionInt(y.toLong()), "failed on arguments: $x and $y")
+            assertEquals(ionInt((x * y).toLong()), ionInt(x.toLong()) * y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithIntDivideRandomTest() {
+        repeat(500) {
+            val x = Random.nextInt()
+            val y = with(Random.nextInt()) {if (this == 0) 1 else this}
+            assertEquals(ionInt((x / y).toLong()), x / ionInt(y.toLong()), "failed on arguments: $x and $y")
+            assertEquals(ionInt((x / y).toLong()), ionInt(x.toLong()) / y, "failed on arguments: $x and $y")
+        }
+    }
+
+    @Test
+    fun longIntElementWithIntRemainderRandomTest() {
+        repeat(500) {
+            val x = Random.nextInt()
+            val y = with(Random.nextInt()) {if (this == 0) 1 else this}
+            assertEquals(ionInt((x % y).toLong()), x % ionInt(y.toLong()), "failed on arguments: $x and $y")
+            assertEquals(ionInt((x % y).toLong()), ionInt(x.toLong()) % y, "failed on arguments: $x and $y")
+        }
+    }
+
+
+
+    @Test
+    fun testRemainderNoOverflowTests() {
 
         // Additional randomized tests
         repeat(1000) {
             x = Random.nextLong()
             y = Random.nextLong()
-            assertEquals(ionInt(-x), -ionInt(x))
-            assertEquals(ionInt(x.inc()), ionInt(x).inc())
-            assertEquals(ionInt(x.dec()), ionInt(x).dec())
 
-            assertEquals(x == y, ionInt(x) eq ionInt(y))
-            assertTrue(ionInt(x) eq ionInt(x))
-            assertEquals(x < y, ionInt(x) lt ionInt(y))
-            assertEquals(x > y, ionInt(x) gt ionInt(y))
-            assertEquals(x <= y, ionInt(x) lte ionInt(y))
-            assertEquals(x >= y, ionInt(x) gte ionInt(y))
 
             // Mixed-type cases
             z = Random.nextInt()
@@ -364,6 +572,10 @@ class IonOperatorsTests {
         assertEquals(ionSymbol(x + y), ionSymbol(x) + buildString { append(y) })
     }
 }
+
+private const val LONG_MAX = Long.MAX_VALUE
+private const val LONG_MIN = Long.MIN_VALUE
+private const val INT_MAX = Int.MAX_VALUE
 
 private val annotations = listOf("annotation1", "annotation2")
 private val metas = mapOf("key1" to "value1", "key2" to listOf("value2", "value3"), "key3" to 1)
