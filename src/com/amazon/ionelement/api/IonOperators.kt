@@ -11,10 +11,10 @@ import java.math.BigInteger
 public annotation class IonOperators
 
 /* Type aliases for readability */
-private typealias BE = BoolElement
-private typealias IE = IntElement
-private typealias DE = DecimalElement
-private typealias FE = FloatElement
+internal typealias BE = BoolElement
+internal typealias IE = IntElement
+internal typealias DE = DecimalElement
+internal typealias FE = FloatElement
 
 /* BoolElement unary operators */
 @IonOperators
