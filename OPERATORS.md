@@ -3,7 +3,7 @@
 
 `ion-element` operators is an experimental API that enables the use of some standard operations between Ion values and 
 built in types. Using the API requires explicit opt-in. To opt in to the API for a single use, annotate the usage with
-`@IonOperatores`. To opt in for an entire module, add the following compiler argument:
+`@IonOperators`. To opt in for an entire module, add the following compiler argument:
 ```
 -opt-in=com.amazon.ionelement.api.IonOperators
 ```
