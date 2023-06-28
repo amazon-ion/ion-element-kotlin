@@ -362,6 +362,8 @@ public interface SeqElement : ContainerElement {
     override fun withMetas(additionalMetas: MetaContainer): SeqElement
     override fun withMeta(key: String, value: Any): SeqElement
     override fun withoutMetas(): SeqElement
+
+    public fun withValueAtIndex(index: Int, value: IonElement): SeqElement
 }
 /**
  * Represents an Ion list.
@@ -450,4 +452,7 @@ public interface StructElement : ContainerElement {
     override fun withMetas(additionalMetas: MetaContainer): StructElement
     override fun withMeta(key: String, value: Any): StructElement
     override fun withoutMetas(): StructElement
+
+    /** Copy the struct, replacing all occurrences of fields with names that match the provided fields **/
+    public fun withFields(vararg fields: StructField): StructElement
 }

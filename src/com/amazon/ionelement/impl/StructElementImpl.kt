@@ -86,6 +86,13 @@ internal class StructElementImpl(
     override fun withMeta(key: String, value: Any): StructElementImpl = _withMeta(key, value)
     override fun withoutMetas(): StructElementImpl = _withoutMetas()
 
+    override fun withFields(vararg fields: StructField): StructElement {
+        val fieldNameSet = fields.map { it.name }.toSet()
+        return ionStructOf(
+            this.allFields.filter { fieldNameSet.contains(it.name) } + fields
+        )
+    }
+
     override fun writeContentTo(writer: IonWriter) {
         writer.stepIn(IonType.STRUCT)
         fields.forEach {
