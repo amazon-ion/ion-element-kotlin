@@ -4,7 +4,7 @@ import com.amazon.ionelement.api.*
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 
-class IonPathDemo {
+class StructUpdateDemo {
     private val testStruct = loadSingleElement(
         """
         {

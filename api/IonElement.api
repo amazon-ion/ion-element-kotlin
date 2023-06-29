@@ -183,6 +183,17 @@ public final class com/amazon/ionelement/api/ElementTypeKt {
 	public static final fun toElementType (Lcom/amazon/ion/IonType;)Lcom/amazon/ionelement/api/ElementType;
 }
 
+public final class com/amazon/ionelement/api/Field : com/amazon/ionelement/api/IonPathElement {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/amazon/ionelement/api/Field;
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/Field;Ljava/lang/String;ILjava/lang/Object;)Lcom/amazon/ionelement/api/Field;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFieldName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class com/amazon/ionelement/api/FloatElement : com/amazon/ionelement/api/IonElement {
 	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
 	public abstract fun getDoubleValue ()D
@@ -192,6 +203,17 @@ public abstract interface class com/amazon/ionelement/api/FloatElement : com/ama
 	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
 	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/FloatElement;
 	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/FloatElement;
+}
+
+public final class com/amazon/ionelement/api/Index : com/amazon/ionelement/api/IonPathElement {
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lcom/amazon/ionelement/api/Index;
+	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/Index;IILjava/lang/Object;)Lcom/amazon/ionelement/api/Index;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class com/amazon/ionelement/api/IntElement : com/amazon/ionelement/api/IonElement {
@@ -534,6 +556,33 @@ public final class com/amazon/ionelement/api/IonOperatorsKt {
 	public static final fun unaryMinus (Lcom/amazon/ionelement/api/IntElement;)Lcom/amazon/ionelement/api/IntElement;
 }
 
+public final class com/amazon/ionelement/api/IonPath : java/util/Collection, kotlin/jvm/internal/markers/KMappedMarker {
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> ([Lcom/amazon/ionelement/api/IonPathElement;)V
+	public fun add (Lcom/amazon/ionelement/api/IonPathElement;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun clear ()V
+	public fun contains (Lcom/amazon/ionelement/api/IonPathElement;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public final fun getElements ()Ljava/util/List;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public final fun tail ()Lcom/amazon/ionelement/api/IonPath;
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+}
+
+public abstract class com/amazon/ionelement/api/IonPathElement {
+}
+
 public final class com/amazon/ionelement/api/IonTextLocation : com/amazon/ionelement/api/IonLocation {
 	public fun <init> (JJ)V
 	public final fun component1 ()J
@@ -580,6 +629,7 @@ public abstract interface class com/amazon/ionelement/api/SeqElement : com/amazo
 	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/SeqElement;
 	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/SeqElement;
 	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/SeqElement;
+	public abstract fun withValueAtIndex (ILcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/SeqElement;
 	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/SeqElement;
 	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/SeqElement;
 }
@@ -613,6 +663,7 @@ public abstract interface class com/amazon/ionelement/api/StructElement : com/am
 	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun withFields ([Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/StructElement;
@@ -624,6 +675,28 @@ public abstract interface class com/amazon/ionelement/api/StructField {
 	public abstract fun component2 ()Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getValue ()Lcom/amazon/ionelement/api/AnyElement;
+}
+
+public final class com/amazon/ionelement/api/StructUpdateBuilder {
+	public fun <init> (Lcom/amazon/ionelement/api/StructElement;Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;)V
+	public final fun build ()Lcom/amazon/ionelement/api/StructElement;
+	public final fun get (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public final fun set (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)V
+	public final fun set (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;)V
+}
+
+public final class com/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode : java/lang/Enum {
+	public static final field ADD Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;
+	public static final field REPLACE Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;
+	public static fun valueOf (Ljava/lang/String;)Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;
+	public static fun values ()[Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;
+}
+
+public final class com/amazon/ionelement/api/StructUpdateBuilderKt {
+	public static final fun get (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/IonPath;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun getPath (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/IonPath;)Lcom/amazon/ionelement/api/IonElement;
+	public static final fun update (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun update$default (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/StructUpdateBuilder$FieldUpdateMode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 }
 
 public abstract interface class com/amazon/ionelement/api/SymbolElement : com/amazon/ionelement/api/TextElement {
