@@ -60,10 +60,17 @@ internal class StructElementImpl(
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
-                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList() }
+                        .map { structFieldGroup ->
+                            structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList()
+                        }
                         .toMap().toPersistentMap()
             }
             return fieldsByNameBackingField!!
+        }
+
+    override val mutableFields: MutableStructFields
+        get() {
+            return MutableStructFieldsImpl(fieldsByName.mapValues { it.value.toMutableList() }.toMutableMap())
         }
 
     override fun get(fieldName: String): AnyElement =
@@ -76,11 +83,19 @@ internal class StructElementImpl(
 
     override fun containsField(fieldName: String): Boolean = fieldsByName.containsKey(fieldName)
 
+    override fun copy(fields: Iterable<StructField>): StructElement {
+        return mutableFields.setAll(fields).toStruct(annotations, metas)
+    }
+
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
-    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
-    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl =
+        _withAnnotations(*additionalAnnotations)
+
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl =
+        _withAnnotations(additionalAnnotations)
+
     override fun withoutAnnotations(): StructElementImpl = _withoutAnnotations()
     override fun withMetas(additionalMetas: MetaContainer): StructElementImpl = _withMetas(additionalMetas)
     override fun withMeta(key: String, value: Any): StructElementImpl = _withMeta(key, value)

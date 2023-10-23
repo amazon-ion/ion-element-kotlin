@@ -425,6 +425,9 @@ public interface StructElement : ContainerElement {
     /** This struct's unordered collection of fields. */
     public val fields: Collection<StructField>
 
+    /** A mutable shallow copy of this struct's fields */
+    public val mutableFields: MutableStructFields
+
     /**
      * Retrieves the value of the first field found with the specified name.
      *
@@ -442,6 +445,13 @@ public interface StructElement : ContainerElement {
 
     /** Returns true if this StructElement has at least one field with the given field name. */
     public fun containsField(fieldName: String): Boolean
+
+    /**
+     * Creates a shallow copy of this struct with its fields replaced by the given [fields] that have the same name.
+     *
+     * If multiple fields with the same name exist they are all replaced by the new fields.
+     */
+    public fun copy(fields: Iterable<StructField>): StructElement
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
     override fun withAnnotations(vararg additionalAnnotations: String): StructElement
