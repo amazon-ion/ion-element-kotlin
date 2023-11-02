@@ -47,7 +47,10 @@ public interface MutableStructFields : Iterable<StructField> {
     /** Adds the given field to the collection. The collection may have multiple fields with the same name. */
     public fun add(field: StructField): MutableStructFields
 
-    /** Removes a random occurrence of a field found with the given name or does nothing if no field exists */
+    /**
+     * Removes an occurrence of a field found with the given name or does nothing if no field exists.
+     * If more than one field exists with the given name, one is chosen arbitrarily to be the one removed.
+     */
     public fun remove(fieldName: String): MutableStructFields
 
     /** Removes all fields found with the given name or does nothing if no fields exist */
