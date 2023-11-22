@@ -1,5 +1,6 @@
 package com.amazon.ionelement
 
+import com.amazon.ionelement.api.buildStruct
 import com.amazon.ionelement.api.field
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.ionListOf
@@ -7,7 +8,6 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.loadSingleElement
-import com.amazon.ionelement.impl.buildStruct
 import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.assertThrows
 class MutableStructFieldsTests {
     @Test
     fun `StructElement to mutable fields back to StructElement`() {
-        assertEquals(testStruct, testStruct.mutableFields.toStruct())
+        assertEquals(testStruct, ionStructOf(testStruct.mutableFields()))
     }
 
     @Test
@@ -29,13 +29,13 @@ class MutableStructFieldsTests {
                 .withAnnotations("foo", "bar")
                 .withMeta("meta", 1),
 
-            testStruct.mutableFields.toStruct(listOf("foo", "bar"), mapOf("meta" to 1))
+            ionStructOf(testStruct.mutableFields(), listOf("foo", "bar"), mapOf("meta" to 1))
         )
     }
 
     @Test
     fun get() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         assertEquals(ionString("123-456-789"), mutableFields["isbn"].asString())
         assertThrows<IllegalArgumentException> {
             mutableFields["nothing"]
@@ -44,14 +44,14 @@ class MutableStructFieldsTests {
 
     @Test
     fun getOptional() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         assertNull(mutableFields.getOptional("nothing"))
         assertEquals(ionString("123-456-789"), mutableFields.getOptional("isbn")?.asString())
     }
 
     @Test
     fun getAll() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         assertEquals(2, mutableFields.getAll("author").count())
         assertEquals(
             setOf(
@@ -65,7 +65,7 @@ class MutableStructFieldsTests {
 
     @Test
     fun containsField() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         assertTrue(mutableFields.containsField("author"))
         assertTrue(mutableFields.containsField("isbn"))
         assertFalse(mutableFields.containsField("nothing"))
@@ -73,7 +73,7 @@ class MutableStructFieldsTests {
 
     @Test
     fun set() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         mutableFields["nothing"] = ionInt(0)
         mutableFields["isbn"] = ionInt(1)
         mutableFields["author"] = ionInt(2)
@@ -86,7 +86,7 @@ class MutableStructFieldsTests {
 
     @Test
     fun setAll() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         mutableFields.setAll(
             listOf(
                 field("year", ionInt(2000)),
@@ -112,7 +112,7 @@ class MutableStructFieldsTests {
 
     @Test
     fun add() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         mutableFields.add(field("year", ionInt(2000)))
         mutableFields.add("year", ionInt(2012))
         mutableFields.add("author", ionString("Alice"))
@@ -130,7 +130,7 @@ class MutableStructFieldsTests {
 
     @Test
     fun plusAssign() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         mutableFields += field("year", ionInt(2000))
         mutableFields += listOf(field("year", ionInt(2012)), field("year", ionInt(2021)))
 
@@ -142,16 +142,16 @@ class MutableStructFieldsTests {
 
     @Test
     fun remove() {
-        val mutableFields = testStruct.mutableFields
-        mutableFields.remove("author")
-        mutableFields.remove("author")
+        val mutableFields = testStruct.mutableFields()
+        mutableFields.remove(field("author", loadSingleElement("{lastname: \"Doe\", firstname: \"Jane\" }")))
+        mutableFields.remove(field("author", loadSingleElement("{lastname: \"Smith\", firstname: \"Jane\" }")))
 
         assertNull(mutableFields.getOptional("author"))
     }
 
     @Test
     fun removeAll() {
-        val mutableFields = testStruct.mutableFields
+        val mutableFields = testStruct.mutableFields()
         mutableFields.removeAll("author")
 
         assertNull(mutableFields.getOptional("author"))

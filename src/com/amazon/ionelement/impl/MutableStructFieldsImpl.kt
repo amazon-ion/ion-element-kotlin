@@ -2,15 +2,11 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.MutableStructFields
-import com.amazon.ionelement.api.StructElement
 import com.amazon.ionelement.api.StructField
-import com.amazon.ionelement.api.emptyIonStruct
 import com.amazon.ionelement.api.field
-import com.amazon.ionelement.api.ionStructOf
 
-internal class MutableStructFieldsImpl(override val fields: MutableMap<String, MutableList<AnyElement>>) :
+internal class MutableStructFieldsImpl(private val fields: MutableMap<String, MutableList<AnyElement>>) :
     MutableStructFields {
 
     override fun get(fieldName: String): AnyElement {
@@ -23,7 +19,7 @@ internal class MutableStructFieldsImpl(override val fields: MutableMap<String, M
         return fields[fieldName]?.firstOrNull()
     }
 
-    override fun getAll(fieldName: String): Iterable<AnyElement> {
+    override fun getAll(fieldName: String): Collection<AnyElement> {
         return fields[fieldName] ?: mutableListOf()
     }
 
@@ -32,14 +28,9 @@ internal class MutableStructFieldsImpl(override val fields: MutableMap<String, M
     }
 
     override fun set(fieldName: String, value: IonElement): MutableStructFields {
-        value as AnyElement
-        if (fieldName in fields) {
-            fields[fieldName]?.clear()
-            fields[fieldName]?.add(value)
-        } else {
-            fields[fieldName] = mutableListOf(value)
-        }
-
+        val values = fields.getOrPut(fieldName, ::mutableListOf)
+        values.clear()
+        values.add(value as AnyElement)
         return this
     }
 
@@ -67,8 +58,8 @@ internal class MutableStructFieldsImpl(override val fields: MutableMap<String, M
         return this
     }
 
-    override fun remove(fieldName: String): MutableStructFields {
-        fields[fieldName]?.removeAt(0)
+    override fun remove(field: StructField): MutableStructFields {
+        fields[field.name]?.remove(field.value)
         return this
     }
 
@@ -85,14 +76,6 @@ internal class MutableStructFieldsImpl(override val fields: MutableMap<String, M
         fields.forEach { add(it) }
     }
 
-    override fun toStruct(annotations: List<String>, metas: MetaContainer): StructElement {
-        return ionStructOf(this, annotations, metas)
-    }
-
-    override fun toStruct(): StructElement {
-        return ionStructOf(this)
-    }
-
     override fun iterator(): Iterator<StructField> {
         return fields.flatMap { (fieldName, values) ->
             values.map { value ->
@@ -100,10 +83,4 @@ internal class MutableStructFieldsImpl(override val fields: MutableMap<String, M
             }
         }.iterator()
     }
-}
-
-public fun buildStruct(body: MutableStructFields.() -> Unit): StructElement {
-    val fields = emptyIonStruct().mutableFields
-    body(fields)
-    return fields.toStruct(emptyList(), emptyMap())
 }

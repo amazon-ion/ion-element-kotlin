@@ -215,6 +215,10 @@ public final class com/amazon/ionelement/api/IntElementSize : java/lang/Enum {
 }
 
 public final class com/amazon/ionelement/api/Ion {
+	public static final fun buildStruct (Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun buildStruct (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun buildStruct (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun buildStruct$default (Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun emptyBlob ()Lcom/amazon/ionelement/api/BlobElement;
 	public static final fun emptyClob ()Lcom/amazon/ionelement/api/ClobElement;
 	public static final fun emptyIonList ()Lcom/amazon/ionelement/api/ListElement;
@@ -578,17 +582,14 @@ public abstract interface class com/amazon/ionelement/api/MutableStructFields : 
 	public abstract fun add (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/MutableStructFields;
 	public abstract fun containsField (Ljava/lang/String;)Z
 	public abstract fun get (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
-	public abstract fun getAll (Ljava/lang/String;)Ljava/lang/Iterable;
-	public abstract fun getFields ()Ljava/util/Map;
+	public abstract fun getAll (Ljava/lang/String;)Ljava/util/Collection;
 	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun plusAssign (Lcom/amazon/ionelement/api/StructField;)V
 	public abstract fun plusAssign (Ljava/lang/Iterable;)V
-	public abstract fun remove (Ljava/lang/String;)Lcom/amazon/ionelement/api/MutableStructFields;
+	public abstract fun remove (Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/MutableStructFields;
 	public abstract fun removeAll (Ljava/lang/String;)Lcom/amazon/ionelement/api/MutableStructFields;
 	public abstract fun set (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/MutableStructFields;
 	public abstract fun setAll (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun toStruct ()Lcom/amazon/ionelement/api/StructElement;
-	public abstract fun toStruct (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
 }
 
 public abstract interface class com/amazon/ionelement/api/SeqElement : com/amazon/ionelement/api/ContainerElement {
@@ -624,13 +625,13 @@ public abstract interface class com/amazon/ionelement/api/StringElement : com/am
 
 public abstract interface class com/amazon/ionelement/api/StructElement : com/amazon/ionelement/api/ContainerElement {
 	public abstract fun containsField (Ljava/lang/String;)Z
-	public abstract fun copy (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun get (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun getAll (Ljava/lang/String;)Ljava/lang/Iterable;
 	public abstract fun getFields ()Ljava/util/Collection;
-	public abstract fun getMutableFields ()Lcom/amazon/ionelement/api/MutableStructFields;
 	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
+	public abstract fun mutableFields ()Lcom/amazon/ionelement/api/MutableStructFields;
+	public abstract fun update (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
@@ -676,9 +677,5 @@ public abstract interface class com/amazon/ionelement/api/TimestampElement : com
 	public abstract fun withMetas (Ljava/util/Map;)Lcom/amazon/ionelement/api/TimestampElement;
 	public abstract fun withoutAnnotations ()Lcom/amazon/ionelement/api/TimestampElement;
 	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/TimestampElement;
-}
-
-public final class com/amazon/ionelement/impl/MutableStructFieldsImplKt {
-	public static final fun buildStruct (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
 }
 
