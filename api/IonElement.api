@@ -577,19 +577,19 @@ public abstract interface class com/amazon/ionelement/api/LobElement : com/amazo
 	public abstract fun withoutMetas ()Lcom/amazon/ionelement/api/LobElement;
 }
 
-public abstract interface class com/amazon/ionelement/api/MutableStructFields : java/lang/Iterable, kotlin/jvm/internal/markers/KMappedMarker {
-	public abstract fun add (Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun add (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/MutableStructFields;
+public abstract interface class com/amazon/ionelement/api/MutableStructFields : java/util/Collection, kotlin/jvm/internal/markers/KMutableCollection {
+	public abstract fun add (Lcom/amazon/ionelement/api/StructField;)Z
+	public abstract fun add (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Z
+	public abstract fun clearField (Ljava/lang/String;)Z
 	public abstract fun containsField (Ljava/lang/String;)Z
 	public abstract fun get (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun getAll (Ljava/lang/String;)Ljava/util/Collection;
 	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
-	public abstract fun plusAssign (Lcom/amazon/ionelement/api/StructField;)V
-	public abstract fun plusAssign (Ljava/lang/Iterable;)V
-	public abstract fun remove (Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun removeAll (Ljava/lang/String;)Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun set (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun setAll (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/MutableStructFields;
+	public abstract fun plusAssign (Ljava/util/Collection;)V
+	public abstract fun remove (Lcom/amazon/ionelement/api/StructField;)Z
+	public abstract fun removeAll (Ljava/util/Collection;)Z
+	public abstract fun set (Ljava/lang/String;Lcom/amazon/ionelement/api/IonElement;)V
+	public abstract fun setAll (Ljava/lang/Iterable;)V
 }
 
 public abstract interface class com/amazon/ionelement/api/SeqElement : com/amazon/ionelement/api/ContainerElement {

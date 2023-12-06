@@ -1,6 +1,7 @@
 package com.amazon.ionelement
 
 import com.amazon.ionelement.api.buildStruct
+import com.amazon.ionelement.api.emptyIonStruct
 import com.amazon.ionelement.api.field
 import com.amazon.ionelement.api.ionInt
 import com.amazon.ionelement.api.ionListOf
@@ -8,7 +9,6 @@ import com.amazon.ionelement.api.ionString
 import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.ionSymbol
 import com.amazon.ionelement.api.loadSingleElement
-import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -19,6 +19,7 @@ import org.junit.jupiter.api.assertThrows
 class MutableStructFieldsTests {
     @Test
     fun `StructElement to mutable fields back to StructElement`() {
+        testStruct.mutableFields().size
         assertEquals(testStruct, ionStructOf(testStruct.mutableFields()))
     }
 
@@ -152,9 +153,160 @@ class MutableStructFieldsTests {
     @Test
     fun removeAll() {
         val mutableFields = testStruct.mutableFields()
-        mutableFields.removeAll("author")
 
-        assertNull(mutableFields.getOptional("author"))
+        mutableFields.removeAll(
+            listOf(
+                field(
+                    "author",
+                    buildStruct {
+                        add("lastname", ionString("Doe"))
+                        add("firstname", ionString("Jane"))
+                    }
+                ),
+                field(
+                    "author",
+                    buildStruct {
+                        add("lastname", ionString("Smith"))
+                        add("firstname", ionString("Jane"))
+                    }
+                )
+            )
+        )
+
+        val expected = buildStruct {
+            add("isbn", ionString("123-456-789"))
+            add("title", ionString("AWS User Guide"))
+            add("category", ionListOf(ionSymbol("Non-Fiction"), ionSymbol("Technology")))
+        }
+
+        assertEquals(expected, ionStructOf(mutableFields))
+    }
+
+    @Test
+    fun retainAll() {
+        val mutableFields = testStruct.mutableFields()
+
+        mutableFields.retainAll(
+            listOf(
+                field(
+                    "author",
+                    buildStruct {
+                        add("lastname", ionString("Doe"))
+                        add("firstname", ionString("Jane"))
+                    }
+                ),
+                field(
+                    "author",
+                    buildStruct {
+                        add("lastname", ionString("Smith"))
+                        add("firstname", ionString("Jane"))
+                    }
+                )
+            ).toSet()
+        )
+
+        val updated = ionStructOf(mutableFields)
+
+        val expected = testStruct.update {
+            this.removeIf {
+                it.name in setOf("isbn", "title", "category")
+            }
+        }
+
+        assertEquals(expected, updated)
+    }
+
+    @Test
+    fun testIterator() {
+        val mutableFields = testStruct.mutableFields()
+
+        // Ensure the iterator works properly when fields have been removed
+        mutableFields.add("foo", ionString("999-999"))
+        mutableFields.add("foo", ionString("999-999"))
+        mutableFields.add("bar", ionString("999-999"))
+        mutableFields.remove(field("foo", ionString("999-999")))
+        mutableFields.remove(field("foo", ionString("999-999")))
+        mutableFields.remove(field("bar", ionString("999-999")))
+
+        val output = buildStruct {
+            for (field in testStruct.mutableFields()) {
+                add(field)
+            }
+        }
+
+        assertEquals(testStruct, output)
+    }
+
+    @Test
+    fun testMutableIterator() {
+        val mutableFields = testStruct.mutableFields()
+
+        val it = mutableFields.iterator()
+        while (it.hasNext()) {
+            val field = it.next()
+            if (field.name in setOf("title", "author", "category")) {
+                it.remove()
+            }
+        }
+
+        val updated = ionStructOf(mutableFields)
+
+        assertEquals(ionStructOf(field("isbn", ionString("123-456-789"))), updated)
+    }
+
+    @Test
+    fun testMutableIteratorAfterRemovingAll() {
+        val mutableFields = testStruct.mutableFields()
+
+        val it = mutableFields.iterator()
+        while (it.hasNext()) {
+            it.next()
+            it.remove()
+        }
+
+        val updated = ionStructOf(mutableFields)
+
+        assertEquals(emptyIonStruct(), updated)
+        assertFalse(it.hasNext())
+        assertThrows<NoSuchElementException> {
+            it.next()
+        }
+    }
+
+    @Test
+    fun testIteratorFailureCases() {
+        val it = testStruct.mutableFields().iterator()
+
+        assertThrows<IllegalStateException> {
+            it.remove()
+        }
+
+        while (it.hasNext()) {
+            it.next()
+        }
+
+        assertThrows<NoSuchElementException> {
+            it.next()
+        }
+
+        assertThrows<IllegalStateException> {
+            it.remove()
+        }
+    }
+
+    @Test
+    fun testEmptyIterator() {
+        val it = emptyIonStruct().mutableFields().iterator()
+
+        assertFalse(it.hasNext())
+
+        assertThrows<NoSuchElementException> {
+            it.next()
+        }
+
+        assertThrows<IllegalStateException> {
+            it.remove()
+        }
     }
 
     @Test

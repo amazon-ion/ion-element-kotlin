@@ -1,12 +1,11 @@
 package com.amazon.ionelement.demos.kotlin
 
 import com.amazon.ionelement.api.ionInt
-import com.amazon.ionelement.api.ionStructOf
 import com.amazon.ionelement.api.loadSingleElement
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 
-class MutableStructFields {
+class MutableStructFieldsDemo {
     @Test
     fun `create updated struct from existing struct`() {
         val original = loadSingleElement(
@@ -23,27 +22,26 @@ class MutableStructFields {
 
         val expected = loadSingleElement(
             """
-                        {
-                            name: "Alice",               
-                            scores: {
-                                darts: 100,
-                                billiards: 30,
-                                pingPong: 200,
-                            }
-                        }
+                {
+                    name: "Alice",               
+                    scores: {
+                        darts: 100,
+                        billiards: 30,
+                        pingPong: 200,
+                    }
+                }
             """.trimIndent()
         ).asStruct()
 
-        val updated = ionStructOf(
-            original.mutableFields().set(
+        val updated = original.update {
+            set(
                 "scores",
-                ionStructOf(
-                    original["scores"].asStruct().mutableFields()
-                        .set("pingPong", ionInt(200))
-                        .set("billiards", ionInt(30))
-                )
+                original["scores"].asStruct().update {
+                    set("pingPong", ionInt(200))
+                    set("billiards", ionInt(30))
+                }
             )
-        )
+        }
 
         assertEquals(expected, updated)
     }

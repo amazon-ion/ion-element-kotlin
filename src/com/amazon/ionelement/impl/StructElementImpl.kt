@@ -69,8 +69,12 @@ internal class StructElementImpl(
         }
 
     override fun mutableFields(): MutableStructFields {
-        val internalMap = mutableMapOf<String, MutableList<AnyElement>>()
-        return MutableStructFieldsImpl(fieldsByName.mapValuesTo(internalMap) { it.value.toMutableList() })
+        val internalMap = mutableMapOf<String, MutableList<StructField>>()
+        return MutableStructFieldsImpl(
+            fieldsByName.mapValuesTo(internalMap) { (name, values) ->
+                values.map { field(name, it) }.toMutableList()
+            }
+        )
     }
 
     override fun update(body: MutableStructFields.() -> Unit): StructElement {
@@ -92,9 +96,11 @@ internal class StructElementImpl(
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
-    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl =
+        _withAnnotations(*additionalAnnotations)
 
-    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl = _withAnnotations(additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl =
+        _withAnnotations(additionalAnnotations)
 
     override fun withoutAnnotations(): StructElementImpl = _withoutAnnotations()
     override fun withMetas(additionalMetas: MetaContainer): StructElementImpl = _withMetas(additionalMetas)
