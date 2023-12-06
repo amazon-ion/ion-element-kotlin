@@ -3,13 +3,11 @@ package com.amazon.ionelement.demos.java;
 import com.amazon.ionelement.api.Ion;
 import com.amazon.ionelement.api.StructElement;
 import kotlin.Unit;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.amazon.ionelement.api.ElementLoader.loadSingleElement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled
 public class MutableStructFieldsDemo {
 
     @Test

@@ -217,6 +217,111 @@ class MutableStructFieldsTests {
     }
 
     @Test
+    fun testClear() {
+        val mutableFields = testStruct.mutableFields()
+        mutableFields.clear()
+
+        assertEquals(emptyIonStruct(), ionStructOf(mutableFields))
+        assertTrue(mutableFields.size == 0)
+        assertFalse(mutableFields.iterator().hasNext())
+    }
+
+    @Test
+    fun testClearField() {
+        val mutableFields = testStruct.mutableFields()
+        mutableFields.clearField("author")
+
+        val expected = testStruct.update {
+            removeAll(
+                listOf(
+                    field(
+                        "author",
+                        buildStruct {
+                            add("lastname", ionString("Doe"))
+                            add("firstname", ionString("Jane"))
+                        }
+                    ),
+                    field(
+                        "author",
+                        buildStruct {
+                            add("lastname", ionString("Smith"))
+                            add("firstname", ionString("Jane"))
+                        }
+                    )
+                )
+            )
+        }
+
+        assertEquals(expected, ionStructOf(mutableFields))
+    }
+
+    @Test
+    fun testContains() {
+        val mutableFields = testStruct.mutableFields()
+
+        assertTrue(
+            mutableFields.contains(
+                field(
+                    "author",
+                    buildStruct {
+                        add("lastname", ionString("Doe"))
+                        add("firstname", ionString("Jane"))
+                    }
+                )
+            )
+        )
+
+        assertFalse(mutableFields.contains(field("foo", ionString("bar"))))
+    }
+
+    @Test
+    fun testContainsAll() {
+        val mutableFields = testStruct.mutableFields()
+
+        assertTrue(
+            mutableFields.containsAll(
+                listOf(
+                    field(
+                        "author",
+                        buildStruct {
+                            add("lastname", ionString("Doe"))
+                            add("firstname", ionString("Jane"))
+                        }
+                    ),
+                    field(
+                        "author",
+                        buildStruct {
+                            add("lastname", ionString("Smith"))
+                            add("firstname", ionString("Jane"))
+                        }
+                    )
+                )
+            )
+        )
+
+        assertFalse(
+            mutableFields.containsAll(
+                listOf(
+                    field("foo", ionString("bar")),
+                    field("isbn", ionString("123-456-789"))
+                )
+            )
+        )
+    }
+
+    @Test
+    fun testIsEmpty() {
+        val mutableFields = testStruct.mutableFields()
+
+        assertFalse(mutableFields.isEmpty())
+
+        mutableFields.clear()
+
+        assertTrue(mutableFields.isEmpty())
+        assertTrue(emptyIonStruct().mutableFields().isEmpty())
+    }
+
+    @Test
     fun testIterator() {
         val mutableFields = testStruct.mutableFields()
 
