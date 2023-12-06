@@ -94,11 +94,9 @@ internal class StructElementImpl(
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
-    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl =
-        _withAnnotations(*additionalAnnotations)
+    override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
 
-    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl =
-        _withAnnotations(additionalAnnotations)
+    override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl = _withAnnotations(additionalAnnotations)
 
     override fun withoutAnnotations(): StructElementImpl = _withoutAnnotations()
     override fun withMetas(additionalMetas: MetaContainer): StructElementImpl = _withMetas(additionalMetas)
