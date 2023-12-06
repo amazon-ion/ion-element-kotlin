@@ -60,9 +60,7 @@ internal class StructElementImpl(
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
-                        .map { structFieldGroup ->
-                            structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList()
-                        }
+                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList() }
                         .toMap().toPersistentMap()
             }
             return fieldsByNameBackingField!!
