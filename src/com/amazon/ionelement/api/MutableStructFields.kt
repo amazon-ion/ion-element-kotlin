@@ -27,8 +27,6 @@ public interface MutableStructFields : MutableCollection<StructField> {
      * If one or more fields with the specified name already exists, this replaces all of them with the value provided.
      *
      * Otherwise, a new field with the given name and value is added to the collection.
-     *
-     * Returns true if a field was replaced.
      */
     public operator fun set(fieldName: String, value: IonElement)
 
