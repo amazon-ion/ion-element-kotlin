@@ -66,6 +66,21 @@ internal class StructElementImpl(
             return fieldsByNameBackingField!!
         }
 
+    override fun mutableFields(): MutableStructFields {
+        val internalMap = mutableMapOf<String, MutableList<StructField>>()
+        return MutableStructFieldsImpl(
+            fieldsByName.mapValuesTo(internalMap) { (name, values) ->
+                values.map { field(name, it) }.toMutableList()
+            }
+        )
+    }
+
+    override fun update(body: MutableStructFields.() -> Unit): StructElement {
+        val mutableFields = mutableFields()
+        body(mutableFields)
+        return ionStructOf(mutableFields, annotations, metas)
+    }
+
     override fun get(fieldName: String): AnyElement =
         fieldsByName[fieldName]?.firstOrNull() ?: constraintError(this, "Required struct field '$fieldName' missing")
 
@@ -80,7 +95,9 @@ internal class StructElementImpl(
         StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
+
     override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElementImpl = _withAnnotations(additionalAnnotations)
+
     override fun withoutAnnotations(): StructElementImpl = _withoutAnnotations()
     override fun withMetas(additionalMetas: MetaContainer): StructElementImpl = _withMetas(additionalMetas)
     override fun withMeta(key: String, value: Any): StructElementImpl = _withMeta(key, value)

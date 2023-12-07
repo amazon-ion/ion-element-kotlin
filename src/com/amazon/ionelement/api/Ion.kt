@@ -471,6 +471,17 @@ public fun ionStructOf(
         metas
     )
 
+@JvmOverloads
+public fun buildStruct(
+    annotations: Annotations = emptyList(),
+    metas: MetaContainer = emptyMetaContainer(),
+    body: MutableStructFields.() -> Unit
+): StructElement {
+    val fields = emptyIonStruct().mutableFields()
+    body(fields)
+    return ionStructOf(fields, annotations, metas)
+}
+
 // Memoized empty PersistentList for the memoized container types and null values
 private val EMPTY_PERSISTENT_LIST: PersistentList<Nothing> = emptyList<Nothing>().toPersistentList()
 

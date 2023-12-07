@@ -443,6 +443,16 @@ public interface StructElement : ContainerElement {
     /** Returns true if this StructElement has at least one field with the given field name. */
     public fun containsField(fieldName: String): Boolean
 
+    /** A mutable shallow copy of this struct's fields */
+    public fun mutableFields(): MutableStructFields
+
+    /** Creates a new struct from this struct after executing the lambda body with [MutableStructFields] as the
+     * receiver.
+     *
+     * Annotations and metas are preserved.
+     */
+    public fun update(body: MutableStructFields.() -> Unit): StructElement
+
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
     override fun withAnnotations(vararg additionalAnnotations: String): StructElement
     override fun withAnnotations(additionalAnnotations: Iterable<String>): StructElement
