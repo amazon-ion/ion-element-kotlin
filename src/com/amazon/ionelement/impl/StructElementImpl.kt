@@ -20,6 +20,7 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.constraintError
+import java.util.function.Consumer
 import kotlinx.collections.immutable.PersistentCollection
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -75,9 +76,15 @@ internal class StructElementImpl(
         )
     }
 
-    override fun update(body: MutableStructFields.() -> Unit): StructElement {
+    override fun update(mutator: MutableStructFields.() -> Unit): StructElement {
         val mutableFields = mutableFields()
-        body(mutableFields)
+        mutableFields.apply(mutator)
+        return ionStructOf(mutableFields, annotations, metas)
+    }
+
+    override fun update(mutator: Consumer<MutableStructFields>): StructElement {
+        val mutableFields = mutableFields()
+        mutator.accept(mutableFields)
         return ionStructOf(mutableFields, annotations, metas)
     }
 

@@ -18,15 +18,13 @@ public class MutableStructFieldsDemo {
         StructElement expected = loadSingleElement(
                 "{name:\"Alice\",scores:{darts:100,billiards:30,pingPong:200,}}").asStruct();
 
-        StructElement updated = original.update(fields -> {
+        StructElement updated = original.update(fields ->
             fields.set("scores",
-                    original.get("scores").asStruct().update(scoreFields -> {
+                    fields.get("scores").asStruct().update(scoreFields -> {
                         scoreFields.add("pingPong", Ion.ionInt(200));
                         scoreFields.set("billiards", Ion.ionInt(30));
-                        return Unit.INSTANCE;
-                    }));
-            return Unit.INSTANCE;
-        });
+                    })
+        ));
 
         assertEquals(expected, updated);
     }
