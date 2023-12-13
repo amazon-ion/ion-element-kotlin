@@ -631,7 +631,8 @@ public abstract interface class com/amazon/ionelement/api/StructElement : com/am
 	public abstract fun getFields ()Ljava/util/Collection;
 	public abstract fun getOptional (Ljava/lang/String;)Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun mutableFields ()Lcom/amazon/ionelement/api/MutableStructFields;
-	public abstract fun update (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract fun update (Ljava/util/function/Consumer;)Lcom/amazon/ionelement/api/StructElement;
+	public abstract synthetic fun update (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withAnnotations ([Ljava/lang/String;)Lcom/amazon/ionelement/api/StructElement;
 	public abstract fun withMeta (Ljava/lang/String;Ljava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;

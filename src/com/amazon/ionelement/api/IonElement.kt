@@ -4,6 +4,7 @@ import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
 import com.amazon.ion.Timestamp
 import java.math.BigInteger
+import java.util.function.Consumer
 
 /**
  * Represents an immutable Ion element.
@@ -446,12 +447,43 @@ public interface StructElement : ContainerElement {
     /** A mutable shallow copy of this struct's fields */
     public fun mutableFields(): MutableStructFields
 
-    /** Creates a new struct from this struct after executing the lambda body with [MutableStructFields] as the
-     * receiver.
+    /*
+     * Note about the update() functions
+     *
+     *     fun update(body: MutableStructFields.() -> Unit)
+     *
+     * This gives us an idiomatic Kotlin experience, but requires Java callers to add `return Unit.INSTANCE` to any
+     * lambda functions. Therefore, we also have:
+     *
+     *     fun update(mutator: Consumer<MutableStructFields>)
+     *
+     * This gives us an idiomatic Java experience because Java callers can now pass in a lambda function with a
+     * void return. However, it clashes with the Kotlin-specific function if you try to pass in a lambda without the
+     * enclosing curly braces. E.g.:
+     *
+     *     myStruct.update(s -> s.clearField("foo"));
+     *
+     *     Ambiguous method call. Both update (Function1<? super MutableStructFields, Unit>) in StructElement and
+     *     update(Consumer<MutableStructFields>) in StructElement match
+     *
+     * In order to solve this, the Kotlin-specific version of the function is marked with @JvmSynthetic to make it
+     * inaccessible from Java at compile time.
+     */
+
+    /**
+     * Creates a new copy of this struct with the updates in [mutator] applied to the fields of the new struct.
      *
      * Annotations and metas are preserved.
      */
-    public fun update(body: MutableStructFields.() -> Unit): StructElement
+    @JvmSynthetic
+    public fun update(mutator: MutableStructFields.() -> Unit): StructElement
+
+    /**
+     * Creates a new copy of this struct with the updates in [mutator] applied to the fields of the new struct.
+     *
+     * Annotations and metas are preserved.
+     */
+    public fun update(mutator: Consumer<MutableStructFields>): StructElement
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElement
     override fun withAnnotations(vararg additionalAnnotations: String): StructElement
