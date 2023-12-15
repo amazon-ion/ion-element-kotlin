@@ -40,6 +40,10 @@ internal class SexpElementImpl(
     override fun withMeta(key: String, value: Any): SexpElementImpl = _withMeta(key, value)
     override fun withoutMetas(): SexpElementImpl = _withoutMetas()
 
+    override fun withValueAtIndex(index: Int, value: IonElement): SexpElement {
+        return ionSexpOf(values.add(index, value.asAnyElement()))
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

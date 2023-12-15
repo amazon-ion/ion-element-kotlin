@@ -16,9 +16,7 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.MetaContainer
-import com.amazon.ionelement.api.SeqElement
+import com.amazon.ionelement.api.*
 import kotlinx.collections.immutable.PersistentList
 
 internal abstract class SeqElementBase(
@@ -46,4 +44,6 @@ internal abstract class SeqElementBase(
     abstract override fun withMetas(additionalMetas: MetaContainer): SeqElementBase
     abstract override fun withMeta(key: String, value: Any): SeqElementBase
     abstract override fun withoutMetas(): SeqElementBase
+
+    abstract override fun withValueAtIndex(index: Int, value: IonElement): SeqElement
 }

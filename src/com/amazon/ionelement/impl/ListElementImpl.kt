@@ -40,6 +40,10 @@ internal class ListElementImpl(
     override fun withMeta(key: String, value: Any): ListElementImpl = _withMeta(key, value)
     override fun withoutMetas(): ListElementImpl = _withoutMetas()
 
+    override fun withValueAtIndex(index: Int, value: IonElement): ListElement {
+        return ionListOf(values.add(index, value.asAnyElement()))
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
