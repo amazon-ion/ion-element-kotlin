@@ -13,9 +13,10 @@ internal class ByteArrayViewImpl(private val bytes: ByteArray) : ByteArrayView {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is ByteArrayViewImpl) return false
+        if (other !is ByteArrayView) return false
 
-        if (!bytes.contentEquals(other.bytes)) return false
+        val otherBytes = if (other is ByteArrayViewImpl) other.bytes else other.copyOfBytes()
+        if (!bytes.contentEquals(otherBytes)) return false
 
         return true
     }

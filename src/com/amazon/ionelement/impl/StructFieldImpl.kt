@@ -24,4 +24,17 @@ import com.amazon.ionelement.api.StructField
 internal data class StructFieldImpl(
     override val name: String,
     override val value: AnyElement
-) : StructField
+) : StructField {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is StructField) return false
+        if (name != other.name) return false
+        if (value != other.value) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode() * 31 + value.hashCode()
+    }
+}

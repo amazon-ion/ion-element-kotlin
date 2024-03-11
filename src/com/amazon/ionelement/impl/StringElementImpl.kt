@@ -44,9 +44,7 @@ internal class StringElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeString(textValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as StringElementImpl
+        if (other !is StringElement) return false
 
         if (textValue != other.textValue) return false
         if (annotations != other.annotations) return false

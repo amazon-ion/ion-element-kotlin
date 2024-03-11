@@ -42,9 +42,7 @@ internal class SexpElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as SexpElementImpl
+        if (other !is SexpElement) return false
 
         if (values != other.values) return false
         if (annotations != other.annotations) return false

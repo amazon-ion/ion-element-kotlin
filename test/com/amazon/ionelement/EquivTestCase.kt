@@ -15,10 +15,7 @@
 
 package com.amazon.ionelement
 
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.IonElement
-import com.amazon.ionelement.api.createIonElementLoader
-import com.amazon.ionelement.api.ionStructOf
+import com.amazon.ionelement.api.*
 import org.junit.jupiter.api.Assertions
 
 data class EquivTestCase(val left: String, val right: String, val isEquiv: Boolean) {
@@ -83,8 +80,98 @@ data class EquivTestCase(val left: String, val right: String, val isEquiv: Boole
         checkIt(leftElement, rightElement)
         checkIt(rightElement, leftElement)
 
+        // Try using a proxy to make sure that equivalence is not tied to a particular implementation.
+        val leftProxy = leftElement.proxy()
+        val rightProxy = rightElement.proxy()
+
+        Assertions.assertEquals(leftElement, leftProxy)
+        Assertions.assertEquals(rightProxy, rightElement)
+
+        checkIt(leftElement, rightProxy)
+        checkIt(leftProxy, rightElement)
+        checkIt(leftProxy, rightProxy)
+
         // Adding metas to one side should not have any effect
         checkIt(leftElement, rightElement.withMeta("foo", 123))
         checkIt(rightElement, leftElement.withMeta("bar", 456))
+    }
+
+    /**
+     * Returns an anonymous class that is a proxy for this IonElement.
+     */
+    private inline fun <reified T : IonElement> T.proxy(): T {
+        val delegate = this
+        return when (delegate) {
+            is BoolElement -> object : BoolElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is IntElement -> object : IntElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is FloatElement -> object : FloatElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is DecimalElement -> object : DecimalElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is TimestampElement -> object : TimestampElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is StringElement -> object : StringElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is SymbolElement -> object : SymbolElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is BlobElement -> object : BlobElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is ClobElement -> object : ClobElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is ListElement -> object : ListElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is SexpElement -> object : SexpElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is StructElement -> object : StructElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            is AnyElement -> object : AnyElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+            else -> object : IonElement by delegate {
+                override fun equals(other: Any?): Boolean = delegate == other
+                override fun hashCode(): Int = delegate.hashCode()
+                override fun toString(): String = "AnonymousProxy($delegate)"
+            }
+        } as T
     }
 }

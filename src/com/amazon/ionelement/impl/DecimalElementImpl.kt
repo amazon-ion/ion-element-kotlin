@@ -43,9 +43,7 @@ internal class DecimalElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as DecimalElementImpl
+        if (other !is DecimalElement) return false
 
         // `==` considers `0d0` and `-0d0` to be equivalent.  `Decimal.equals` does not.
         if (!Decimal.equals(decimalValue, other.decimalValue)) return false

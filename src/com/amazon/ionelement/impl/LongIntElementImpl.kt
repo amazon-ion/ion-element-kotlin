@@ -46,11 +46,12 @@ internal class LongIntElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other !is IntElement) return false
 
-        other as LongIntElementImpl
-
-        if (longValue != other.longValue) return false
+        when (other.integerSize) {
+            IntElementSize.LONG -> if (longValue != other.longValue) return false
+            IntElementSize.BIG_INTEGER -> if (bigIntegerValue != other.bigIntegerValue) return false
+        }
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!
 

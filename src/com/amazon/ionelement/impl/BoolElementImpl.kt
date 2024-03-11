@@ -42,9 +42,7 @@ internal class BoolElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeBool(booleanValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as BoolElementImpl
+        if (other !is BoolElement) return false
 
         if (booleanValue != other.booleanValue) return false
         if (annotations != other.annotations) return false

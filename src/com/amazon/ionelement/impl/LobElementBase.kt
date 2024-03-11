@@ -36,9 +36,9 @@ internal abstract class LobElementBase(
     override fun equals(other: Any?): Boolean {
         return when {
             this === other -> true
-            other !is LobElementBase -> false
+            other !is LobElement -> false
             type != other.type -> false
-            !bytes.contentEquals(other.bytes) -> false
+            bytesValue != other.bytesValue -> false
             annotations != other.annotations -> false
             // Metas are intentionally omitted here.
             else -> true

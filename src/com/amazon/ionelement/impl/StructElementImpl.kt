@@ -27,6 +27,7 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
+// TODO: Consider creating a StructElement variant with optimizations that assume no duplicate field names.
 internal class StructElementImpl(
     private val allFields: PersistentList<StructField>,
     override val annotations: PersistentList<String>,
@@ -121,41 +122,38 @@ internal class StructElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is StructElementImpl) return false
+        if (other !is StructElement) return false
         if (annotations != other.annotations) return false
 
-        // We might avoid materializing fieldsByName by checking fields.size first
-        if (this.size != other.size) return false
-        if (this.fieldsByName.size != other.fieldsByName.size) return false
+        // We might avoid potentially expensive checks if the `fields` are the same instance
+        if (fields !== other.fields) {
 
-        // If we make it this far we can compare the list of field names in both
-        if (this.fieldsByName.keys != other.fieldsByName.keys) return false
+            // We might avoid materializing fieldsByName by checking fields.size first
+            if (this.size != other.size) return false
 
-        // If we make it this far then we have to take the expensive approach of comparing the individual values in
-        // [this] and [other].
-        //
-        // A field group is a list of fields with the same name. Within each field group we count the number of times
-        // each value appears in both [this] and [other]. Each field group is equivalent if every value that appears n
-        // times in one group also appears n times in the other group.
-
-        this.fieldsByName.forEach { thisFieldGroup ->
-            val thisSubGroup: Map<AnyElement, Int> = thisFieldGroup.value.groupingBy { it }.eachCount()
-
-            // [otherGroup] should never be null due to the `if` statement above.
-            val otherGroup = other.fieldsByName[thisFieldGroup.key]
-                ?: error("unexpectedly missing other field named '${thisFieldGroup.key}'")
-
-            val otherSubGroup: Map<AnyElement, Int> = otherGroup.groupingBy { it }.eachCount()
-
-            // Simple equality should work from here
-            if (thisSubGroup != otherSubGroup) {
-                return false
+            if (other is StructElementImpl) {
+                if (this.fieldsByName.size != other.fieldsByName.size) return false
+                // If we make it this far we can compare the list of field names in both
+                if (this.fieldsByName.keys != other.fieldsByName.keys) return false
             }
-        }
 
+            // This is potentially expensive, but so is a deep comparison, and at least hashcode can be cached.
+            if (this.hashCode() != other.hashCode()) return false
+
+            // Compare the frequency of every StructField to make sure they occur the same number of times.
+            if (fieldCounts() != other.fieldCounts()) return false
+        }
         // Metas intentionally not included here.
 
         return true
+    }
+
+    private fun StructElement.fieldCounts(): Map<StructField, Int> {
+        val counts = mutableMapOf<StructField, Int>()
+        fields.forEach {
+            counts[it] = 1 + (counts[it] ?: 0)
+        }
+        return counts
     }
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and

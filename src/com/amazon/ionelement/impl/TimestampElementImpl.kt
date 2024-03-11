@@ -44,9 +44,7 @@ internal class TimestampElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as TimestampElementImpl
+        if (other !is TimestampElement) return false
 
         if (timestampValue != other.timestampValue) return false
         if (annotations != other.annotations) return false

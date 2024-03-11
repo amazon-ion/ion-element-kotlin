@@ -55,9 +55,7 @@ internal class BigIntIntElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as BigIntIntElementImpl
+        if (other !is IntElement) return false
 
         if (bigIntegerValue != other.bigIntegerValue) return false
         if (annotations != other.annotations) return false

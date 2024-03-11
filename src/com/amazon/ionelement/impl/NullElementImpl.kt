@@ -44,10 +44,9 @@ internal class NullElementImpl(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other !is IonElement) return false
 
-        other as NullElementImpl
-
+        if (!other.isNull) return false
         if (type != other.type) return false
         if (annotations != other.annotations) return false
         // Note: metas intentionally omitted!

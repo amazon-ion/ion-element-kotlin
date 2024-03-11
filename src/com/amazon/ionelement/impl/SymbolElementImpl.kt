@@ -44,9 +44,7 @@ internal class SymbolElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as SymbolElementImpl
+        if (other !is SymbolElement) return false
 
         if (textValue != other.textValue) return false
         if (annotations != other.annotations) return false

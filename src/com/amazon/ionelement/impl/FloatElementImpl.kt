@@ -42,9 +42,7 @@ internal class FloatElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as FloatElementImpl
+        if (other !is FloatElement) return false
 
         // compareTo() distinguishes between 0.0 and -0.0 while `==` operator does not.
         if (doubleValue.compareTo(other.doubleValue) != 0) return false
