@@ -20,7 +20,6 @@ import com.amazon.ion.Timestamp
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class TimestampElementImpl(
@@ -31,7 +30,7 @@ internal class TimestampElementImpl(
 
     override val type: ElementType get() = ElementType.TIMESTAMP
     override fun copy(annotations: List<String>, metas: MetaContainer): TimestampElementImpl =
-        TimestampElementImpl(timestampValue, annotations.toPersistentList(), metas.toPersistentMap())
+        TimestampElementImpl(timestampValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): TimestampElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): TimestampElementImpl = _withAnnotations(additionalAnnotations)

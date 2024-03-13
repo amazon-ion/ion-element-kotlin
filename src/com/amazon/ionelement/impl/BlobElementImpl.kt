@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class BlobElementImpl(
@@ -33,7 +32,7 @@ internal class BlobElementImpl(
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BlobElementImpl =
-        BlobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
+        BlobElementImpl(bytes, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): BlobElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): BlobElementImpl = _withAnnotations(additionalAnnotations)

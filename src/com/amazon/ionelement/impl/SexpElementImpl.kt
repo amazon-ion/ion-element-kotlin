@@ -18,7 +18,6 @@ package com.amazon.ionelement.impl
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class SexpElementImpl(
@@ -31,7 +30,7 @@ internal class SexpElementImpl(
     override val sexpValues: List<AnyElement> get() = seqValues
 
     override fun copy(annotations: List<String>, metas: MetaContainer): SexpElementImpl =
-        SexpElementImpl(values, annotations.toPersistentList(), metas.toPersistentMap())
+        SexpElementImpl(values, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): SexpElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): SexpElementImpl = _withAnnotations(additionalAnnotations)

@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class FloatElementImpl(
@@ -30,7 +29,7 @@ internal class FloatElementImpl(
     override val type: ElementType get() = ElementType.FLOAT
 
     override fun copy(annotations: List<String>, metas: MetaContainer): FloatElementImpl =
-        FloatElementImpl(doubleValue, annotations.toPersistentList(), metas.toPersistentMap())
+        FloatElementImpl(doubleValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): FloatElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): FloatElementImpl = _withAnnotations(additionalAnnotations)

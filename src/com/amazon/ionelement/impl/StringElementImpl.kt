@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class StringElementImpl(
@@ -32,7 +31,7 @@ internal class StringElementImpl(
     override val stringValue: String get() = textValue
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StringElementImpl =
-        StringElementImpl(textValue, annotations.toPersistentList(), metas.toPersistentMap())
+        StringElementImpl(textValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): StringElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): StringElementImpl = _withAnnotations(additionalAnnotations)

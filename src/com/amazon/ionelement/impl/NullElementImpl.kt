@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class NullElementImpl(
@@ -31,7 +30,7 @@ internal class NullElementImpl(
     override val isNull: Boolean get() = true
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
-        NullElementImpl(type, annotations.toPersistentList(), metas.toPersistentMap())
+        NullElementImpl(type, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): AnyElement = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): AnyElement = _withAnnotations(additionalAnnotations)

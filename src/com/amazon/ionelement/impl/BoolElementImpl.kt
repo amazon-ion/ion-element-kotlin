@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class BoolElementImpl(
@@ -30,7 +29,7 @@ internal class BoolElementImpl(
     override val type: ElementType get() = ElementType.BOOL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BoolElementImpl =
-        BoolElementImpl(booleanValue, annotations.toPersistentList(), metas.toPersistentMap())
+        BoolElementImpl(booleanValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): BoolElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): BoolElementImpl = _withAnnotations(additionalAnnotations)
