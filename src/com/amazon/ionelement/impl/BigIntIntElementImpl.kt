@@ -21,7 +21,6 @@ import com.amazon.ionelement.api.PersistentMetaContainer
 import com.amazon.ionelement.api.constraintError
 import java.math.BigInteger
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class BigIntIntElementImpl(
@@ -42,7 +41,7 @@ internal class BigIntIntElementImpl(
     }
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BigIntIntElementImpl =
-        BigIntIntElementImpl(bigIntegerValue, annotations.toPersistentList(), metas.toPersistentMap())
+        BigIntIntElementImpl(bigIntegerValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): BigIntIntElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): BigIntIntElementImpl = _withAnnotations(additionalAnnotations)

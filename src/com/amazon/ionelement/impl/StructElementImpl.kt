@@ -24,7 +24,6 @@ import java.util.function.Consumer
 import kotlinx.collections.immutable.PersistentCollection
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class StructElementImpl(
@@ -42,7 +41,7 @@ internal class StructElementImpl(
     override val values: Collection<AnyElement>
         get() {
             if (valuesBackingField == null) {
-                valuesBackingField = fields.map { it.value }.toPersistentList()
+                valuesBackingField = fields.mapToEmptyOrPersistentList { it.value }
             }
             return valuesBackingField!!
         }
@@ -61,7 +60,7 @@ internal class StructElementImpl(
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
-                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value }.toPersistentList() }
+                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.mapToEmptyOrPersistentList { it.value } }
                         .toMap().toPersistentMap()
             }
             return fieldsByNameBackingField!!
@@ -99,7 +98,7 @@ internal class StructElementImpl(
     override fun containsField(fieldName: String): Boolean = fieldsByName.containsKey(fieldName)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
-        StructElementImpl(allFields, annotations.toPersistentList(), metas.toPersistentMap())
+        StructElementImpl(allFields, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
 

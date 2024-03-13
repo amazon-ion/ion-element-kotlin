@@ -20,7 +20,6 @@ import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import java.math.BigInteger
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class LongIntElementImpl(
@@ -34,7 +33,7 @@ internal class LongIntElementImpl(
     override val bigIntegerValue: BigInteger get() = BigInteger.valueOf(longValue)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): LongIntElementImpl =
-        LongIntElementImpl(longValue, annotations.toPersistentList(), metas.toPersistentMap())
+        LongIntElementImpl(longValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): LongIntElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): LongIntElementImpl = _withAnnotations(additionalAnnotations)

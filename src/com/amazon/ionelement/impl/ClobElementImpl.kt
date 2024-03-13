@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class ClobElementImpl(
@@ -32,7 +31,7 @@ internal class ClobElementImpl(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
     override fun copy(annotations: List<String>, metas: MetaContainer): ClobElementImpl =
-        ClobElementImpl(bytes, annotations.toPersistentList(), metas.toPersistentMap())
+        ClobElementImpl(bytes, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): ClobElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): ClobElementImpl = _withAnnotations(additionalAnnotations)

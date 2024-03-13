@@ -35,6 +35,7 @@ import com.amazon.ionelement.impl.SymbolElementImpl
 import com.amazon.ionelement.impl.TimestampElementImpl
 import java.math.BigInteger
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
@@ -124,7 +125,7 @@ public fun ionString(
     metas: MetaContainer = emptyMetaContainer()
 ): StringElement = StringElementImpl(
     value = s,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 /** Creates a [StringElement] that represents an Ion `symbol`. */
@@ -141,7 +142,7 @@ public fun ionSymbol(
     metas: MetaContainer = emptyMetaContainer()
 ): SymbolElement = SymbolElementImpl(
     value = s,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -159,7 +160,7 @@ public fun ionTimestamp(
     metas: MetaContainer = emptyMetaContainer()
 ): TimestampElement = TimestampElementImpl(
     timestampValue = Timestamp.valueOf(s),
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -177,7 +178,7 @@ public fun ionTimestamp(
     metas: MetaContainer = emptyMetaContainer()
 ): TimestampElement = TimestampElementImpl(
     timestampValue = timestamp,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -196,7 +197,7 @@ public fun ionInt(
 ): IntElement =
     LongIntElementImpl(
         longValue = l,
-        annotations = annotations.toPersistentList(),
+        annotations = annotations.toEmptyOrPersistentList(),
         metas = metas.toPersistentMap()
     )
 
@@ -214,7 +215,7 @@ public fun ionInt(
     metas: MetaContainer = emptyMetaContainer()
 ): IntElement = BigIntIntElementImpl(
     bigIntegerValue = bigInt,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -232,7 +233,7 @@ public fun ionBool(
     metas: MetaContainer = emptyMetaContainer()
 ): BoolElement = BoolElementImpl(
     booleanValue = b,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -250,7 +251,7 @@ public fun ionFloat(
     metas: MetaContainer = emptyMetaContainer()
 ): FloatElement = FloatElementImpl(
     doubleValue = d,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -268,7 +269,7 @@ public fun ionDecimal(
     metas: MetaContainer = emptyMetaContainer()
 ): DecimalElement = DecimalElementImpl(
     decimalValue = bigDecimal,
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -290,7 +291,7 @@ public fun ionBlob(
     metas: MetaContainer = emptyMetaContainer()
 ): BlobElement = BlobElementImpl(
     bytes = bytes.clone(),
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 
@@ -319,7 +320,7 @@ public fun ionClob(
     metas: MetaContainer = emptyMetaContainer()
 ): ClobElement = ClobElementImpl(
     bytes = bytes.clone(),
-    annotations = annotations.toPersistentList(),
+    annotations = annotations.toEmptyOrPersistentList(),
     metas = metas.toPersistentMap()
 )
 /**
@@ -343,8 +344,8 @@ public fun ionListOf(
     metas: MetaContainer = emptyMetaContainer()
 ): ListElement =
     ListElementImpl(
-        values = iterable.map { it.asAnyElement() }.toPersistentList(),
-        annotations = annotations.toPersistentList(),
+        values = iterable.mapToEmptyOrPersistentList { it.asAnyElement() },
+        annotations = annotations.toEmptyOrPersistentList(),
         metas = metas.toPersistentMap()
     )
 
@@ -392,8 +393,8 @@ public fun ionSexpOf(
     metas: MetaContainer = emptyMetaContainer()
 ): SexpElement =
     SexpElementImpl(
-        values = iterable.map { it.asAnyElement() }.toPersistentList(),
-        annotations = annotations.toPersistentList(),
+        values = iterable.mapToEmptyOrPersistentList { it.asAnyElement() },
+        annotations = annotations.toEmptyOrPersistentList(),
         metas = metas.toPersistentMap()
     )
 
@@ -434,8 +435,8 @@ public fun ionStructOf(
     metas: MetaContainer = emptyMetaContainer()
 ): StructElement =
     StructElementImpl(
-        allFields = fields.toPersistentList(),
-        annotations = annotations.toPersistentList(),
+        allFields = fields.toEmptyOrPersistentList(),
+        annotations = annotations.toEmptyOrPersistentList(),
         metas = metas.toPersistentMap()
     )
 
@@ -454,7 +455,7 @@ public fun ionStructOf(
 ): StructElement =
     ionStructOf(
         fields = fields.asIterable(),
-        annotations = annotations.toPersistentList(),
+        annotations = annotations.toEmptyOrPersistentList(),
         metas = metas
     )
 
@@ -482,8 +483,46 @@ public fun buildStruct(
     return ionStructOf(fields, annotations, metas)
 }
 
+/**
+ * Converts an `Iterable` to a `PersistentList`.
+ *
+ * ### Why is this needed?
+ * `kotlinx.collections.immutable` <= 0.3.7 has a bug that causes it to unnecessarily allocate empty `PersistentList`s
+ * instead of using a singleton instance. The fix is in
+ * [kotlinx.collections.immutable#176](https://github.com/Kotlin/kotlinx.collections.immutable/pull/176),
+ * but we cannot use it because the version of `kotlinx.collections.immutable` that will have (or has) the fix
+ * requires Kotlin stdlib >=1.9.2, and `ion-element-kotlin` supports consumers using Kotlin >= 1.3.0.
+ */
+internal fun <E> Iterable<E>.toEmptyOrPersistentList(): PersistentList<E> {
+    val isEmpty = if (this is Collection<*>) {
+        this.isEmpty()
+    } else {
+        !this.iterator().hasNext()
+    }
+    return if (isEmpty) EMPTY_PERSISTENT_LIST else toPersistentList()
+}
+
+/**
+ * Converts an `Iterable` to a `PersistentList`, transforming each element using [block].
+ *
+ * ### Why is this needed?
+ * `kotlinx.collections.immutable` <= 0.3.7 has a bug that causes it to unnecessarily allocate empty `PersistentList`s
+ * instead of using a singleton instance. The fix is in
+ * [kotlinx.collections.immutable#176](https://github.com/Kotlin/kotlinx.collections.immutable/pull/176),
+ * but we cannot use it because the version of `kotlinx.collections.immutable` that will have (or has) the fix
+ * requires Kotlin stdlib >=1.9.2, and `ion-element-kotlin` supports consumers using Kotlin >= 1.3.0.
+ */
+internal inline fun <T, R> Iterable<T>.mapToEmptyOrPersistentList(block: (T) -> R): PersistentList<R> {
+    val isEmpty = if (this is Collection<*>) {
+        this.isEmpty()
+    } else {
+        !this.iterator().hasNext()
+    }
+    return if (isEmpty) EMPTY_PERSISTENT_LIST else mapTo(persistentListOf<R>().builder(), block).build()
+}
+
 // Memoized empty PersistentList for the memoized container types and null values
-private val EMPTY_PERSISTENT_LIST: PersistentList<Nothing> = emptyList<Nothing>().toPersistentList()
+internal val EMPTY_PERSISTENT_LIST: PersistentList<Nothing> = persistentListOf()
 
 // Memoized empty instances of our container types.
 private val EMPTY_LIST = ListElementImpl(EMPTY_PERSISTENT_LIST, EMPTY_PERSISTENT_LIST, EMPTY_METAS)

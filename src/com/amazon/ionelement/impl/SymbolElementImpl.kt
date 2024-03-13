@@ -19,7 +19,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class SymbolElementImpl(
@@ -32,7 +31,7 @@ internal class SymbolElementImpl(
     override val symbolValue: String get() = textValue
 
     override fun copy(annotations: List<String>, metas: MetaContainer): SymbolElementImpl =
-        SymbolElementImpl(textValue, annotations.toPersistentList(), metas.toPersistentMap())
+        SymbolElementImpl(textValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): SymbolElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): SymbolElementImpl = _withAnnotations(additionalAnnotations)

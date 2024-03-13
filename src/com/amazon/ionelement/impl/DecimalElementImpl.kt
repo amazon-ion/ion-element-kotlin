@@ -20,7 +20,6 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.api.PersistentMetaContainer
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class DecimalElementImpl(
@@ -31,7 +30,7 @@ internal class DecimalElementImpl(
     override val type get() = ElementType.DECIMAL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElementImpl =
-        DecimalElementImpl(decimalValue, annotations.toPersistentList(), metas.toPersistentMap())
+        DecimalElementImpl(decimalValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): DecimalElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): DecimalElementImpl = _withAnnotations(additionalAnnotations)
