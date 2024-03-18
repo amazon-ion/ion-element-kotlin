@@ -28,6 +28,8 @@ internal class BlobElementImpl(
     override val metas: PersistentMetaContainer
 ) : LobElementBase(bytes), BlobElement {
 
+    override val type: ElementType get() = ElementType.BLOB
+
     override val blobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeBlob(bytes)
@@ -42,5 +44,6 @@ internal class BlobElementImpl(
     override fun withMeta(key: String, value: Any): BlobElementImpl = _withMeta(key, value)
     override fun withoutMetas(): BlobElementImpl = _withoutMetas()
 
-    override val type: ElementType get() = ElementType.BLOB
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

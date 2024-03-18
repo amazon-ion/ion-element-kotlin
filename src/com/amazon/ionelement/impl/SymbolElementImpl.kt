@@ -42,21 +42,7 @@ internal class SymbolElementImpl(
     override fun withoutMetas(): SymbolElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeSymbol(textValue)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is SymbolElement) return false
 
-        if (textValue != other.textValue) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omittted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = textValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omittted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

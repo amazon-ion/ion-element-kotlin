@@ -42,21 +42,6 @@ internal class TimestampElementImpl(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeTimestamp(timestampValue)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is TimestampElement) return false
-
-        if (timestampValue != other.timestampValue) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = timestampValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

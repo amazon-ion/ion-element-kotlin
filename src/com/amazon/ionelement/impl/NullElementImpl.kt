@@ -42,22 +42,6 @@ internal class NullElementImpl(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeNull(type.toIonType())
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is IonElement) return false
-
-        if (!other.isNull) return false
-        if (type != other.type) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = type.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

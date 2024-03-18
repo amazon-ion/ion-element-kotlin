@@ -125,7 +125,8 @@ internal class StructElementImpl(
         if (other !is StructElement) return false
         if (annotations != other.annotations) return false
 
-        // We might avoid potentially expensive checks if the `fields` are the same instance
+        // We might avoid potentially expensive checks if the `fields` are the same instance, which
+        // could occur if the only difference between the two StructElements is the metas.
         if (fields !== other.fields) {
 
             // We might avoid materializing fieldsByName by checking fields.size first
@@ -148,12 +149,19 @@ internal class StructElementImpl(
         return true
     }
 
+    /** Creates a map of [StructField] to its [Int] frequency in this [StructElement]. */
     private fun StructElement.fieldCounts(): Map<StructField, Int> {
         val counts = mutableMapOf<StructField, Int>()
-        fields.forEach {
-            counts[it] = 1 + (counts[it] ?: 0)
-        }
+        fields.forEach { counts.increment(it) }
         return counts
+    }
+
+    /**
+     * Increments the value for [key]. If [key] is not present, the current value is assumed to be 0 and [key] is added
+     * to the map with a value of 1.
+     */
+    private fun <K> MutableMap<K, Int>.increment(key: K) {
+        set(key, 1 + (get(key) ?: 0))
     }
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
@@ -161,13 +169,7 @@ internal class StructElementImpl(
     private var cachedHashCode: Int? = null
     override fun hashCode(): Int {
         if (this.cachedHashCode == null) {
-            // Sorting the hash codes of the individual fields makes their order irrelevant.
-            var result = fields.map { it.hashCode() }.sorted().hashCode()
-
-            result = 31 * result + annotations.hashCode()
-
-            // Metas intentionally not included here.
-            cachedHashCode = result
+            cachedHashCode = hashElement(this)
         }
         return this.cachedHashCode!!
     }

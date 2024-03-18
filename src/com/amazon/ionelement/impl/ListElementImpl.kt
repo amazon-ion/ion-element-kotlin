@@ -40,22 +40,6 @@ internal class ListElementImpl(
     override fun withMeta(key: String, value: Any): ListElementImpl = _withMeta(key, value)
     override fun withoutMetas(): ListElementImpl = _withoutMetas()
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ListElement) return false
-
-        if (values != other.values) return false
-        if (annotations != other.annotations) return false
-        // Note: [metas] intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = values.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: [metas] intentionally omitted!
-
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

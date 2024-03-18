@@ -41,6 +41,9 @@ import java.util.function.Consumer
  * All implementations of [IonElement] implement [Object.equals] and [Object.hashCode] according to the Ion
  * specification.
  *
+ * The hash algorithm is not part of the API and may change. Therefore, any implementations of [IonElement] must call
+ * [hashElement] rather than calculating their own hashcode.
+ *
  * Collections returned from the following properties implement [Object.equals] and [Object.hashCode] according to the
  * requirements of [List<T>], wherein order is significant.
  *
@@ -49,7 +52,7 @@ import java.util.function.Consumer
  * - [ListElement.values]
  * - [SexpElement.values]
  * - [StructElement.values]
-
+ *
  * Be aware that this can yield inconsistent results when working with structs, due to their unordered nature.
  *
  * ```
@@ -95,6 +98,22 @@ public interface IonElement {
 
     /** Converts the current element to Ion text. */
     override fun toString(): String
+
+    /**
+     * Indicates whether some other [IonElement] is "equal to" this one.
+     *
+     * Implementations of [IonElement] must implement this method in such a way that it is consistent with
+     * [areElementsEqual] as well as conforming to the general requirements of [Any.equals].
+     */
+    public override fun equals(other: Any?): Boolean
+
+    /**
+     * Returns a hash code value for an [IonElement].
+     *
+     * In order to fulfill the general contract for [Any.hashCode], implementations of [IonElement] MUST call
+     * [hashElement] rather than calculating their own hash code value.
+     */
+    public override fun hashCode(): Int
 
     /*
      * The following `with*` mutators are repeated on every sub-interface because any approach using generics that is
@@ -165,7 +184,12 @@ public enum class IntElementSize {
 /** Represents an Ion int. */
 public interface IntElement : IonElement {
 
-    /** The size of this [IntElement]. */
+    /**
+     * The size of this [IntElement].
+     *
+     * This indicates the magnitude of the integer, but does not imply a particular in-memory representation.
+     * Two equal [IntElement]s will always return the same [integerSize].
+     */
     public val integerSize: IntElementSize
 
     /**

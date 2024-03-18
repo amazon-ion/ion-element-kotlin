@@ -42,21 +42,7 @@ internal class StringElementImpl(
     override fun withoutMetas(): StringElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeString(textValue)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is StringElement) return false
 
-        if (textValue != other.textValue) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = textValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

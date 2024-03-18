@@ -15,7 +15,13 @@
 
 package com.amazon.ionelement.api
 
-/** An immutable wrapper over a [byte[]]. */
+/**
+ * An immutable wrapper over a [ByteArray].
+ *
+ * This type uses value-based equality—two [ByteArrayView]s are equal if they have equal content.
+ * Implementations MUST override [Any.hashCode] to return the same integer that would be return by calling
+ * [copyOfBytes]`()`.[contentHashCode][ByteArray.contentHashCode]`()`.
+ */
 public interface ByteArrayView : Iterable<Byte> {
     public fun size(): Int
     public operator fun get(index: Int): Byte
