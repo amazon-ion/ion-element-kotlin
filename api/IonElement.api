@@ -183,6 +183,13 @@ public final class com/amazon/ionelement/api/ElementTypeKt {
 	public static final fun toElementType (Lcom/amazon/ion/IonType;)Lcom/amazon/ionelement/api/ElementType;
 }
 
+public final class com/amazon/ionelement/api/Equivalence {
+	public static final fun areElementsEqual (Lcom/amazon/ionelement/api/IonElement;Lcom/amazon/ionelement/api/IonElement;)Z
+	public static final fun areFieldsEqual (Lcom/amazon/ionelement/api/StructField;Lcom/amazon/ionelement/api/StructField;)Z
+	public static final fun hashElement (Lcom/amazon/ionelement/api/IonElement;)I
+	public static final fun hashField (Lcom/amazon/ionelement/api/StructField;)I
+}
+
 public abstract interface class com/amazon/ionelement/api/FloatElement : com/amazon/ionelement/api/IonElement {
 	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/FloatElement;
 	public abstract fun getDoubleValue ()D
@@ -334,9 +341,11 @@ public final class com/amazon/ionelement/api/IonBinaryLocation : com/amazon/ione
 public abstract interface class com/amazon/ionelement/api/IonElement {
 	public abstract fun asAnyElement ()Lcom/amazon/ionelement/api/AnyElement;
 	public abstract fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/IonElement;
+	public abstract fun equals (Ljava/lang/Object;)Z
 	public abstract fun getAnnotations ()Ljava/util/List;
 	public abstract fun getMetas ()Ljava/util/Map;
 	public abstract fun getType ()Lcom/amazon/ionelement/api/ElementType;
+	public abstract fun hashCode ()I
 	public abstract fun isNull ()Z
 	public abstract fun toString ()Ljava/lang/String;
 	public abstract fun withAnnotations (Ljava/lang/Iterable;)Lcom/amazon/ionelement/api/IonElement;
