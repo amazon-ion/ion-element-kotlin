@@ -86,7 +86,9 @@ private fun AnyElement.isEquivalentTo(other: AnyElement): Boolean {
 /**
  * Calculates the hash code of an [IonElement].
  *
- * Implementations of [IonElement] MAY NOT calculate their own hash codes, but MAY cache the result of this function.
+ * Implementations of [IonElement] MAY NOT calculate their own hash codes. However, they MAY store the result of this
+ * function as a private field. The result of this function may change from one release to another—do not put this
+ * value in any persistent storage.
  */
 public fun hashElement(ionElement: IonElement): Int {
     val element = ionElement.asAnyElement()
@@ -121,6 +123,10 @@ public fun hashElement(ionElement: IonElement): Int {
 
 /**
  * Calculates the hash code of a [StructField].
+ *
+ * Implementations of [StructField] MAY NOT calculate their own hash codes. However, they MAY store the result of this
+ * function as a private field. The result of this function may change from one release to another—do not put this
+ * value in any persistent storage.
  */
 public fun hashField(structField: StructField): Int {
     return structField.name.hashCode() * 31 + structField.value.hashCode()
