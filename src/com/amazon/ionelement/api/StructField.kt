@@ -17,6 +17,9 @@ package com.amazon.ionelement.api
 
 /**
  * A field within an Ion struct.
+ *
+ * This type uses value-based equality—two [StructField]s are equal if their names and values are equal.
+ * All implementations of [StructField] MUST use [hashField] to override [Any.hashCode].
  */
 public interface StructField {
     public val name: String

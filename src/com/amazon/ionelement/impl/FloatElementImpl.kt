@@ -39,25 +39,7 @@ internal class FloatElementImpl(
     override fun withoutMetas(): FloatElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeFloat(doubleValue)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as FloatElementImpl
-
-        // compareTo() distinguishes between 0.0 and -0.0 while `==` operator does not.
-        if (doubleValue.compareTo(other.doubleValue) != 0) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = doubleValue.compareTo(0.0).hashCode() // <-- causes 0e0 to have a different hash code than -0e0
-        result = 31 * result + doubleValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

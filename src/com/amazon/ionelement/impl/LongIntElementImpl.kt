@@ -43,23 +43,7 @@ internal class LongIntElementImpl(
     override fun withoutMetas(): LongIntElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(longValue)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as LongIntElementImpl
-
-        if (longValue != other.longValue) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = longValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

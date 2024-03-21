@@ -15,8 +15,7 @@
 
 package com.amazon.ionelement.impl
 
-import com.amazon.ionelement.api.AnyElement
-import com.amazon.ionelement.api.StructField
+import com.amazon.ionelement.api.*
 
 /**
  * Provides an interface for storing an Ion `struct`'s field and its value.
@@ -24,4 +23,15 @@ import com.amazon.ionelement.api.StructField
 internal data class StructFieldImpl(
     override val name: String,
     override val value: AnyElement
-) : StructField
+) : StructField {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is StructField) return false
+        if (name != other.name) return false
+        if (value != other.value) return false
+        return true
+    }
+
+    override fun hashCode(): Int = hashField(this)
+}

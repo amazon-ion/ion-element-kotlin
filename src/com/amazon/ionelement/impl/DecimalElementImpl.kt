@@ -40,25 +40,7 @@ internal class DecimalElementImpl(
     override fun withoutMetas(): DecimalElementImpl = _withoutMetas()
 
     override fun writeContentTo(writer: IonWriter) = writer.writeDecimal(decimalValue)
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as DecimalElementImpl
-
-        // `==` considers `0d0` and `-0d0` to be equivalent.  `Decimal.equals` does not.
-        if (!Decimal.equals(decimalValue, other.decimalValue)) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = decimalValue.isNegativeZero.hashCode()
-        result = 31 * result + decimalValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

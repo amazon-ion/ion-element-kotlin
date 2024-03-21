@@ -122,9 +122,9 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                                         val bigIntValue = ionReader.bigIntegerValue()
                                         // Ion java's IonReader appears to determine integerSize based on number of bits,
                                         // not on the actual value, which means if we have a padded int that is > 63 bits,
-                                        // but who's value only uses <= 63 bits then integerSize is still BIG_INTEGER.
+                                        // but whose value only uses <= 63 bits then integerSize is still BIG_INTEGER.
                                         // Compensate for that here...
-                                        if (bigIntValue > MAX_LONG_AS_BIG_INT || bigIntValue < MIN_LONG_AS_BIG_INT)
+                                        if (bigIntValue !in RANGE_OF_LONG)
                                             ionInt(bigIntValue)
                                         else {
                                             ionInt(ionReader.longValue())

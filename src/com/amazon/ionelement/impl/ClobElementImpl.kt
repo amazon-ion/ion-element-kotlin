@@ -27,6 +27,8 @@ internal class ClobElementImpl(
     override val metas: PersistentMetaContainer
 ) : LobElementBase(bytes), ClobElement {
 
+    override val type: ElementType get() = ElementType.CLOB
+
     override val clobValue: ByteArrayView get() = bytesValue
 
     override fun writeContentTo(writer: IonWriter) = writer.writeClob(bytes)
@@ -40,5 +42,6 @@ internal class ClobElementImpl(
     override fun withMeta(key: String, value: Any): ClobElementImpl = _withMeta(key, value)
     override fun withoutMetas(): ClobElementImpl = _withoutMetas()
 
-    override val type: ElementType get() = ElementType.CLOB
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }

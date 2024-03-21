@@ -31,10 +31,11 @@ internal class BigIntIntElementImpl(
 
     override val type: ElementType get() = ElementType.INT
 
-    override val integerSize: IntElementSize get() = IntElementSize.BIG_INTEGER
+    override val integerSize: IntElementSize
+        get() = if (bigIntegerValue in RANGE_OF_LONG) IntElementSize.LONG else IntElementSize.BIG_INTEGER
 
     override val longValue: Long get() {
-        if (bigIntegerValue > MAX_LONG_AS_BIG_INT || bigIntegerValue < MIN_LONG_AS_BIG_INT) {
+        if (integerSize != IntElementSize.LONG) {
             constraintError(this, "Ion integer value outside of range of 64 bit signed integer, use bigIntegerValue instead.")
         }
         return bigIntegerValue.longValueExact()
@@ -52,26 +53,8 @@ internal class BigIntIntElementImpl(
 
     override fun writeContentTo(writer: IonWriter) = writer.writeInt(bigIntegerValue)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as BigIntIntElementImpl
-
-        if (bigIntegerValue != other.bigIntegerValue) return false
-        if (annotations != other.annotations) return false
-        // Note: metas intentionally omitted!
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = bigIntegerValue.hashCode()
-        result = 31 * result + annotations.hashCode()
-        // Note: metas intentionally omitted!
-        return result
-    }
+    override fun equals(other: Any?): Boolean = isEquivalentTo(other)
+    override fun hashCode(): Int = hashElement(this)
 }
 
-internal val MAX_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MAX_VALUE)
-internal val MIN_LONG_AS_BIG_INT = BigInteger.valueOf(Long.MIN_VALUE)
+internal val RANGE_OF_LONG = BigInteger.valueOf(Long.MIN_VALUE)..BigInteger.valueOf(Long.MAX_VALUE)
