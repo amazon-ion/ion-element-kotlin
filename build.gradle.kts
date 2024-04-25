@@ -24,7 +24,7 @@ version = "1.3.0-SNAPSHOT"
 description = "An immutable in-memory representation of Amazon Ion for Kotlin"
 
 val isCI: Boolean = System.getenv("CI") == "true"
-val githubRepositoryUrl = "https://github.com/amazon-ion/ion-java/"
+val githubRepositoryUrl = "https://github.com/amazon-ion/ion-element-kotlin/"
 val isReleaseVersion: Boolean = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
@@ -115,9 +115,9 @@ publishing {
             description.set(project.description)
             url.set(githubRepositoryUrl)
             scm {
-                connection.set("scm:git:git@github.com:amazon-ion/ion-java.git")
-                developerConnection.set("scm:git:git@github.com:amazon-ion/ion-java.git")
-                url.set("git@github.com:amazon-ion/ion-java.git")
+                connection.set("scm:git:git@github.com:amazon-ion/ion-element-kotlin.git")
+                developerConnection.set("scm:git:git@github.com:amazon-ion/ion-element-kotlin.git")
+                url.set("git@github.com:amazon-ion/ion-element-kotlin.git")
             }
             licenses {
                 license {
@@ -137,7 +137,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("https://aws.oss.sonatype.org/service/local/staging/deploy/maven2")
+            url = uri("https://aws.oss.sonatype.org/service/local/")
             credentials {
                 username = properties["ossrhUsername"].toString()
                 password = properties["ossrhPassword"].toString()
