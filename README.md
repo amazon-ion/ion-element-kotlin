@@ -1,4 +1,6 @@
 ![Build Pipeline](https://github.com/amzn/ion-element-kotlin/workflows/Build%20Pipeline/badge.svg)
+![Maven Central Version](https://img.shields.io/maven-central/v/com.amazon.ion/ion-element)
+[![Javadoc](https://javadoc.io/badge2/com.amazon.ion/ion-element/javadoc.svg)](https://javadoc.io/doc/com.amazon.ion/ion-element) 
 
 # `ion-element`
 
