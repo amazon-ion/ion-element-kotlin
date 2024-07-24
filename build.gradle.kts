@@ -74,7 +74,7 @@ tasks {
 
     sourcesJar = create<Jar>("sourcesJar") sourcesJar@{
         archiveClassifier.set("sources")
-        from(sourceSets.named("main"))
+        from(sourceSets.main.get().allSource)
     }
 
     javadocJar = create<Jar>("javadocJar") javadocJar@{
@@ -105,8 +105,9 @@ tasks {
 }
 
 publishing {
-    publications.create<MavenPublication>("ion-element") {
-        // from(components.java)
+    publications.create<MavenPublication>("IonElement") {
+        artifactId = "ion-element"
+        artifact(tasks.jar)
         artifact(sourcesJar)
         artifact(javadocJar)
 
