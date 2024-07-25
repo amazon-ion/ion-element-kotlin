@@ -1,22 +1,28 @@
-package com.amazon.ionelement.demos.java;
+package com.amazon.ionelement.demos;
 
 import com.amazon.ionelement.api.Ion;
 import com.amazon.ionelement.api.StructElement;
-import kotlin.Unit;
 import org.junit.jupiter.api.Test;
 
 import static com.amazon.ionelement.api.ElementLoader.loadSingleElement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MutableStructFieldsDemo {
+public class MutableStructFieldsJavaDemo {
 
     @Test
     void createUpdatedStructFromExistingStruct() {
         StructElement original = loadSingleElement(
                 "{name:\"Alice\",scores:{darts:100,billiards:15,}}").asStruct();
 
-        StructElement expected = loadSingleElement(
-                "{name:\"Alice\",scores:{darts:100,billiards:30,pingPong:200,}}").asStruct();
+        StructElement expected = Ion.ionStructOf(a -> {
+            a.add("name", Ion.ionString("Alice"));
+            a.add("scores", Ion.ionStructOf(b -> {
+                    b.add("darts", Ion.ionInt(100));
+                    b.add("billiards", Ion.ionInt(30));
+                    b.add("pingPong", Ion.ionInt(200));
+                }
+            ));
+        });
 
         StructElement updated = original.update(fields ->
             fields.set("scores",

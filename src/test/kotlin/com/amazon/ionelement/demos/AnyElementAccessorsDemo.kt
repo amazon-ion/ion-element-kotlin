@@ -13,7 +13,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.amazon.ionelement.demos.kotlin
+package com.amazon.ionelement.demos
 
 import com.amazon.ion.Decimal
 import com.amazon.ionelement.api.AnyElement

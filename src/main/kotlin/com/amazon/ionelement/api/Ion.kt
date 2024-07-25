@@ -18,6 +18,7 @@ package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.Timestamp
+import com.amazon.ionelement.impl.*
 import com.amazon.ionelement.impl.BigIntIntElementImpl
 import com.amazon.ionelement.impl.BlobElementImpl
 import com.amazon.ionelement.impl.BoolElementImpl
@@ -34,6 +35,7 @@ import com.amazon.ionelement.impl.StructFieldImpl
 import com.amazon.ionelement.impl.SymbolElementImpl
 import com.amazon.ionelement.impl.TimestampElementImpl
 import java.math.BigInteger
+import java.util.function.Consumer
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -472,7 +474,45 @@ public fun ionStructOf(
         metas
     )
 
+@JvmSynthetic
+public fun ionStructOf(
+    annotations: Annotations = emptyList(),
+    metas: MetaContainer = emptyMetaContainer(),
+    builder: MutableStructFields.() -> Unit
+): StructElement {
+    return ionStructOf(emptyIonStruct().mutableFields().apply(builder), annotations, metas)
+}
+
 @JvmOverloads
+public fun ionStructOf(
+    annotations: Annotations = emptyList(),
+    metas: MetaContainer = emptyMetaContainer(),
+    builder: Consumer<MutableStructFields>
+): StructElement {
+    val fields = emptyIonStruct().mutableFields()
+    builder.accept(fields)
+    return ionStructOf(fields, annotations, metas)
+}
+
+@Deprecated("Use `com.amazon.ionelement.api.Ion.ionStructOf()` instead")
+@JvmOverloads
+/**
+ * For Kotlin, replace with:
+ * ```
+ * fun ionStructOf(
+ *     annotations: Annotations = emptyList(),
+ *     metas: MetaContainer = emptyMetaContainer(),
+ *     builder: MutableStructFields.() -> Unit
+ * ): StructElement
+ * ```
+ *
+ * For Java, replace with one of:
+ * ```
+ * StructElement ionStructOf(Consumer<MutableStructFields> builder)
+ * StructElement ionStructOf(List<String> annotations, Consumer<MutableStructFields> builder)
+ * StructElement ionStructOf(List<String> annotations, Map<String, Object> metas, Consumer<MutableStructFields> builder)
+ * ```
+ */
 public fun buildStruct(
     annotations: Annotations = emptyList(),
     metas: MetaContainer = emptyMetaContainer(),

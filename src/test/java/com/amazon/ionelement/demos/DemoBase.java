@@ -1,4 +1,4 @@
-package com.amazon.ionelement.demos.java;
+package com.amazon.ionelement.demos;
 
 import com.amazon.ionelement.api.AnyElement;
 import com.amazon.ionelement.api.ElementLoader;
