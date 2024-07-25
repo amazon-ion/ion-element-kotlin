@@ -45,24 +45,32 @@ public interface MutableStructFields : MutableCollection<StructField> {
      */
     public fun add(fieldName: String, value: IonElement): Boolean
 
-    /** Adds the given field to the collection. The collection may have multiple fields with the same name.
+    /**
+     * Adds the given field to the collection. The collection may have multiple fields with the same name.
      *
-     * Repeated fields are allowed, so this will always return true. */
+     * Repeated fields are allowed, so this will always return true.
+     */
     public override fun add(element: StructField): Boolean
 
-    /** Removes a random occurrence of a field the matches the given field, or does nothing if no field exists.
+    /**
+     * Removes an arbitrary occurrence of a field the matches the given field, or does nothing if no field exists.
      *
-     * Returns true is a field was removed. */
+     * Returns true is a field was removed.
+     */
     public override fun remove(element: StructField): Boolean
 
-    /** Removes all occurrence of a field the matches the given field name, or does nothing if no field exists.
+    /**
+     * Removes all occurrences of a field the matches the given field name, or does nothing if no field exists.
      *
-     * Returns true if a field was removed. */
+     * Returns true if a field was removed.
+     */
     public fun clearField(fieldName: String): Boolean
 
-    /** Removes all of this collection's elements that are also contained in the specified collection.
+    /**
+     * Removes all of this collection's elements that are also contained in the specified collection.
      *
-     *  At most one field per element in the give collection is removed. */
+     * At most one field per element in the give collection is removed.
+     */
     public override fun removeAll(elements: Collection<StructField>): Boolean
 
     /** Adds all the given fields to the collection */

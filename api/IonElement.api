@@ -301,6 +301,10 @@ public final class com/amazon/ionelement/api/Ion {
 	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf (Ljava/lang/Iterable;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/util/List;Ljava/util/Map;Ljava/util/function/Consumer;)Lcom/amazon/ionelement/api/StructElement;
+	public static final synthetic fun ionStructOf (Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/util/List;Ljava/util/function/Consumer;)Lcom/amazon/ionelement/api/StructElement;
+	public static final fun ionStructOf (Ljava/util/function/Consumer;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
@@ -308,6 +312,8 @@ public final class com/amazon/ionelement/api/Ion {
 	public static final fun ionStructOf ([Lkotlin/Pair;Ljava/util/List;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionStructOf ([Lkotlin/Pair;Ljava/util/List;Ljava/util/Map;)Lcom/amazon/ionelement/api/StructElement;
 	public static synthetic fun ionStructOf$default (Ljava/lang/Iterable;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun ionStructOf$default (Ljava/util/List;Ljava/util/Map;Ljava/util/function/Consumer;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
+	public static synthetic fun ionStructOf$default (Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 	public static synthetic fun ionStructOf$default ([Lcom/amazon/ionelement/api/StructField;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 	public static synthetic fun ionStructOf$default ([Lkotlin/Pair;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/amazon/ionelement/api/StructElement;
 	public static final fun ionSymbol (Ljava/lang/String;)Lcom/amazon/ionelement/api/SymbolElement;

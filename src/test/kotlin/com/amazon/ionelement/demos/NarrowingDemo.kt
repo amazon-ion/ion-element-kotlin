@@ -1,4 +1,4 @@
-package com.amazon.ionelement.demos.kotlin
+package com.amazon.ionelement.demos
 
 import com.amazon.ionelement.api.IntElement
 import com.amazon.ionelement.api.IonElement

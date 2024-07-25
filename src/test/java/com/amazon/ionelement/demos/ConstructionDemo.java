@@ -1,4 +1,4 @@
-package com.amazon.ionelement.demos.java;
+package com.amazon.ionelement.demos;
 
 import com.amazon.ion.Decimal;
 import com.amazon.ion.Timestamp;
