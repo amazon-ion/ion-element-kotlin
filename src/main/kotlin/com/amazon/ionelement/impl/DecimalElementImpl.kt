@@ -18,19 +18,18 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.Decimal
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentMap
+import com.amazon.ionelement.api.ImmutableMetaContainer
+import com.amazon.ionelement.impl.collections.*
 
 internal class DecimalElementImpl(
     override val decimalValue: Decimal,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : AnyElementBase(), DecimalElement {
     override val type get() = ElementType.DECIMAL
 
     override fun copy(annotations: List<String>, metas: MetaContainer): DecimalElementImpl =
-        DecimalElementImpl(decimalValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        DecimalElementImpl(decimalValue, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): DecimalElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): DecimalElementImpl = _withAnnotations(additionalAnnotations)

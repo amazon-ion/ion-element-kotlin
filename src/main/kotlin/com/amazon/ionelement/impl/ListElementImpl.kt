@@ -16,21 +16,20 @@
 package com.amazon.ionelement.impl
 
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentMap
+import com.amazon.ionelement.api.ImmutableMetaContainer
+import com.amazon.ionelement.impl.collections.*
 
 internal class ListElementImpl(
-    values: PersistentList<AnyElement>,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    values: ImmutableList<AnyElement>,
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : SeqElementBase(values), ListElement {
     override val type: ElementType get() = ElementType.LIST
 
     override val listValues: List<AnyElement> get() = values
 
     override fun copy(annotations: List<String>, metas: MetaContainer): ListElementImpl =
-        ListElementImpl(values, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        ListElementImpl(values, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): ListElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): ListElementImpl = _withAnnotations(additionalAnnotations)

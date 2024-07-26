@@ -24,7 +24,7 @@ import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.*
-import kotlinx.collections.immutable.toPersistentMap
+import com.amazon.ionelement.impl.collections.*
 
 internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
@@ -42,6 +42,16 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                 description = "IonException occurred, likely due to malformed Ion data (see cause)",
                 cause = e
             )
+        }
+    }
+
+    private fun IonReader.getSpanProvider(): SpanProvider? = this.asFacet(SpanProvider::class.java)
+
+    private fun SpanProvider.currentLocation(): IonLocation? {
+        return when (val currentSpan = currentSpan()) {
+            is TextSpan -> IonTextLocation(currentSpan.startLine, currentSpan.startColumn)
+            is OffsetSpan -> IonBinaryLocation(currentSpan.startOffset)
+            else -> null
         }
     }
 
@@ -89,18 +99,13 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
         return handleReaderException(ionReader) {
             val valueType = requireNotNull(ionReader.type) { "The IonReader was not positioned at an element." }
 
-            val annotations = ionReader.typeAnnotations!!.asList().toEmptyOrPersistentList()
+            val annotations = ionReader.typeAnnotations!!.toImmutableListUnsafe()
 
-            val metas = when {
-                options.includeLocationMeta -> {
-                    val location = ionReader.currentLocation()
-                    when {
-                        location != null -> metaContainerOf(ION_LOCATION_META_TAG to location)
-                        else -> emptyMetaContainer()
-                    }
-                }
-                else -> emptyMetaContainer()
-            }.toPersistentMap()
+            var metas = EMPTY_METAS
+            if (options.includeLocationMeta) {
+                val location = ionReader.currentLocation()
+                if (location != null) metas = location.toMetaContainer()
+            }
 
             if (ionReader.isNullValue) {
                 ionNull(valueType.toElementType(), annotations, metas)
@@ -133,13 +138,13 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.BLOB -> BlobElementImpl(ionReader.newBytes(), annotations, metas)
                     IonType.LIST -> {
                         ionReader.stepIn()
-                        val list = ListElementImpl(loadAllElements(ionReader).toEmptyOrPersistentList(), annotations, metas)
+                        val list = ListElementImpl(loadAllElements(ionReader).toImmutableListUnsafe(), annotations, metas)
                         ionReader.stepOut()
                         list
                     }
                     IonType.SEXP -> {
                         ionReader.stepIn()
-                        val sexp = SexpElementImpl(loadAllElements(ionReader).toEmptyOrPersistentList(), annotations, metas)
+                        val sexp = SexpElementImpl(loadAllElements(ionReader).toImmutableListUnsafe(), annotations, metas)
                         ionReader.stepOut()
                         sexp
                     }
@@ -155,7 +160,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                             )
                         }
                         ionReader.stepOut()
-                        StructElementImpl(fields.toEmptyOrPersistentList(), annotations, metas)
+                        StructElementImpl(fields.toImmutableListUnsafe(), annotations, metas)
                     }
                     IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
                     IonType.NULL -> error("IonType.NULL branch should be unreachable")

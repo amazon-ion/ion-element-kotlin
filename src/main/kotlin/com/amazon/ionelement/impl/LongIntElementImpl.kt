@@ -17,15 +17,14 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
+import com.amazon.ionelement.api.ImmutableMetaContainer
+import com.amazon.ionelement.impl.collections.*
 import java.math.BigInteger
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentMap
 
 internal class LongIntElementImpl(
     override val longValue: Long,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : AnyElementBase(), IntElement {
     override val integerSize: IntElementSize get() = IntElementSize.LONG
     override val type: ElementType get() = ElementType.INT
@@ -33,7 +32,7 @@ internal class LongIntElementImpl(
     override val bigIntegerValue: BigInteger get() = BigInteger.valueOf(longValue)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): LongIntElementImpl =
-        LongIntElementImpl(longValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        LongIntElementImpl(longValue, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): LongIntElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): LongIntElementImpl = _withAnnotations(additionalAnnotations)

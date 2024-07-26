@@ -17,20 +17,19 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentMap
+import com.amazon.ionelement.api.ImmutableMetaContainer
+import com.amazon.ionelement.impl.collections.*
 
 internal class NullElementImpl(
     override val type: ElementType = ElementType.NULL,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : AnyElementBase() {
 
     override val isNull: Boolean get() = true
 
     override fun copy(annotations: List<String>, metas: MetaContainer): AnyElement =
-        NullElementImpl(type, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        NullElementImpl(type, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): AnyElement = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): AnyElement = _withAnnotations(additionalAnnotations)

@@ -4,7 +4,6 @@ import com.amazon.ion.Decimal;
 import com.amazon.ion.Timestamp;
 import com.amazon.ionelement.api.*;
 import kotlin.Pair;
-import kotlinx.collections.immutable.PersistentList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

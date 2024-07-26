@@ -18,7 +18,6 @@ package com.amazon.ionelement.api
 
 import com.amazon.ion.Decimal
 import com.amazon.ion.Timestamp
-import com.amazon.ionelement.impl.*
 import com.amazon.ionelement.impl.BigIntIntElementImpl
 import com.amazon.ionelement.impl.BlobElementImpl
 import com.amazon.ionelement.impl.BoolElementImpl
@@ -34,12 +33,9 @@ import com.amazon.ionelement.impl.StructElementImpl
 import com.amazon.ionelement.impl.StructFieldImpl
 import com.amazon.ionelement.impl.SymbolElementImpl
 import com.amazon.ionelement.impl.TimestampElementImpl
+import com.amazon.ionelement.impl.collections.*
 import java.math.BigInteger
 import java.util.function.Consumer
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentMap
 
 internal typealias Annotations = List<String>
 
@@ -127,8 +123,8 @@ public fun ionString(
     metas: MetaContainer = emptyMetaContainer()
 ): StringElement = StringElementImpl(
     value = s,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 /** Creates a [StringElement] that represents an Ion `symbol`. */
 public fun ionString(
@@ -144,8 +140,8 @@ public fun ionSymbol(
     metas: MetaContainer = emptyMetaContainer()
 ): SymbolElement = SymbolElementImpl(
     value = s,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [SymbolElement] that represents an Ion `symbol`. */
@@ -162,8 +158,8 @@ public fun ionTimestamp(
     metas: MetaContainer = emptyMetaContainer()
 ): TimestampElement = TimestampElementImpl(
     timestampValue = Timestamp.valueOf(s),
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
@@ -180,8 +176,8 @@ public fun ionTimestamp(
     metas: MetaContainer = emptyMetaContainer()
 ): TimestampElement = TimestampElementImpl(
     timestampValue = timestamp,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [TimestampElement] that represents an Ion `timestamp`. */
@@ -199,8 +195,8 @@ public fun ionInt(
 ): IntElement =
     LongIntElementImpl(
         longValue = l,
-        annotations = annotations.toEmptyOrPersistentList(),
-        metas = metas.toPersistentMap()
+        annotations = annotations.toImmutableList(),
+        metas = metas.toImmutableMap()
     )
 
 /** Creates an [IntElement] that represents an Ion `int`. */
@@ -217,8 +213,8 @@ public fun ionInt(
     metas: MetaContainer = emptyMetaContainer()
 ): IntElement = BigIntIntElementImpl(
     bigIntegerValue = bigInt,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates an [IntElement] that represents an Ion `BitInteger`. */
@@ -235,8 +231,8 @@ public fun ionBool(
     metas: MetaContainer = emptyMetaContainer()
 ): BoolElement = BoolElementImpl(
     booleanValue = b,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [BoolElement] that represents an Ion `bool`. */
@@ -253,8 +249,8 @@ public fun ionFloat(
     metas: MetaContainer = emptyMetaContainer()
 ): FloatElement = FloatElementImpl(
     doubleValue = d,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [FloatElement] that represents an Ion `float`. */
@@ -271,8 +267,8 @@ public fun ionDecimal(
     metas: MetaContainer = emptyMetaContainer()
 ): DecimalElement = DecimalElementImpl(
     decimalValue = bigDecimal,
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /** Creates a [DecimalElement] that represents an Ion `decimall`. */
@@ -293,8 +289,8 @@ public fun ionBlob(
     metas: MetaContainer = emptyMetaContainer()
 ): BlobElement = BlobElementImpl(
     bytes = bytes.clone(),
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 
 /**
@@ -322,8 +318,8 @@ public fun ionClob(
     metas: MetaContainer = emptyMetaContainer()
 ): ClobElement = ClobElementImpl(
     bytes = bytes.clone(),
-    annotations = annotations.toEmptyOrPersistentList(),
-    metas = metas.toPersistentMap()
+    annotations = annotations.toImmutableList(),
+    metas = metas.toImmutableMap()
 )
 /**
  * Creates a [ClobElement] that represents an Ion `clob`.
@@ -346,9 +342,9 @@ public fun ionListOf(
     metas: MetaContainer = emptyMetaContainer()
 ): ListElement =
     ListElementImpl(
-        values = iterable.mapToEmptyOrPersistentList { it.asAnyElement() },
-        annotations = annotations.toEmptyOrPersistentList(),
-        metas = metas.toPersistentMap()
+        values = iterable.map { it.asAnyElement() }.toImmutableListUnsafe(),
+        annotations = annotations.toImmutableList(),
+        metas = metas.toImmutableMap()
     )
 
 /** Creates a [ListElement] that represents an Ion `list`. */
@@ -395,9 +391,9 @@ public fun ionSexpOf(
     metas: MetaContainer = emptyMetaContainer()
 ): SexpElement =
     SexpElementImpl(
-        values = iterable.mapToEmptyOrPersistentList { it.asAnyElement() },
-        annotations = annotations.toEmptyOrPersistentList(),
-        metas = metas.toPersistentMap()
+        values = iterable.map { it.asAnyElement() }.toImmutableListUnsafe(),
+        annotations = annotations.toImmutableList(),
+        metas = metas.toImmutableMap()
     )
 
 /** Creates an [SexpElement] that represents an Ion `sexp`. */
@@ -437,9 +433,9 @@ public fun ionStructOf(
     metas: MetaContainer = emptyMetaContainer()
 ): StructElement =
     StructElementImpl(
-        allFields = fields.toEmptyOrPersistentList(),
-        annotations = annotations.toEmptyOrPersistentList(),
-        metas = metas.toPersistentMap()
+        allFields = fields.toImmutableList(),
+        annotations = annotations.toImmutableList(),
+        metas = metas.toImmutableMap()
     )
 
 /** Creates a [StructElement] that represents an Ion `struct` with the specified fields. */
@@ -457,7 +453,7 @@ public fun ionStructOf(
 ): StructElement =
     ionStructOf(
         fields = fields.asIterable(),
-        annotations = annotations.toEmptyOrPersistentList(),
+        annotations = annotations.toImmutableList(),
         metas = metas
     )
 
@@ -523,55 +519,14 @@ public fun buildStruct(
     return ionStructOf(fields, annotations, metas)
 }
 
-/**
- * Converts an `Iterable` to a `PersistentList`.
- *
- * ### Why is this needed?
- * `kotlinx.collections.immutable` <= 0.3.7 has a bug that causes it to unnecessarily allocate empty `PersistentList`s
- * instead of using a singleton instance. The fix is in
- * [kotlinx.collections.immutable#176](https://github.com/Kotlin/kotlinx.collections.immutable/pull/176),
- * but we cannot use it because the version of `kotlinx.collections.immutable` that will have (or has) the fix
- * requires Kotlin stdlib >=1.9.2, and `ion-element-kotlin` supports consumers using Kotlin >= 1.3.0.
- */
-internal fun <E> Iterable<E>.toEmptyOrPersistentList(): PersistentList<E> {
-    val isEmpty = if (this is Collection<*>) {
-        this.isEmpty()
-    } else {
-        !this.iterator().hasNext()
-    }
-    return if (isEmpty) EMPTY_PERSISTENT_LIST else toPersistentList()
-}
-
-/**
- * Converts an `Iterable` to a `PersistentList`, transforming each element using [block].
- *
- * ### Why is this needed?
- * `kotlinx.collections.immutable` <= 0.3.7 has a bug that causes it to unnecessarily allocate empty `PersistentList`s
- * instead of using a singleton instance. The fix is in
- * [kotlinx.collections.immutable#176](https://github.com/Kotlin/kotlinx.collections.immutable/pull/176),
- * but we cannot use it because the version of `kotlinx.collections.immutable` that will have (or has) the fix
- * requires Kotlin stdlib >=1.9.2, and `ion-element-kotlin` supports consumers using Kotlin >= 1.3.0.
- */
-internal inline fun <T, R> Iterable<T>.mapToEmptyOrPersistentList(block: (T) -> R): PersistentList<R> {
-    val isEmpty = if (this is Collection<*>) {
-        this.isEmpty()
-    } else {
-        !this.iterator().hasNext()
-    }
-    return if (isEmpty) EMPTY_PERSISTENT_LIST else mapTo(persistentListOf<R>().builder(), block).build()
-}
-
-// Memoized empty PersistentList for the memoized container types and null values
-internal val EMPTY_PERSISTENT_LIST: PersistentList<Nothing> = persistentListOf()
-
 // Memoized empty instances of our container types.
-private val EMPTY_LIST = ListElementImpl(EMPTY_PERSISTENT_LIST, EMPTY_PERSISTENT_LIST, EMPTY_METAS)
-private val EMPTY_SEXP = SexpElementImpl(EMPTY_PERSISTENT_LIST, EMPTY_PERSISTENT_LIST, EMPTY_METAS)
-private val EMPTY_STRUCT = StructElementImpl(EMPTY_PERSISTENT_LIST, EMPTY_PERSISTENT_LIST, EMPTY_METAS)
-private val EMPTY_BLOB = BlobElementImpl(ByteArray(0), EMPTY_PERSISTENT_LIST, EMPTY_METAS)
-private val EMPTY_CLOB = ClobElementImpl(ByteArray(0), EMPTY_PERSISTENT_LIST, EMPTY_METAS)
+private val EMPTY_LIST = ListElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
+private val EMPTY_SEXP = SexpElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
+private val EMPTY_STRUCT = StructElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
+private val EMPTY_BLOB = BlobElementImpl(ByteArray(0), ImmutableList.EMPTY, EMPTY_METAS)
+private val EMPTY_CLOB = ClobElementImpl(ByteArray(0), ImmutableList.EMPTY, EMPTY_METAS)
 
 // Memoized instances of all of our null values.
 private val ALL_NULLS = ElementType.values().map {
-    it to NullElementImpl(it, EMPTY_PERSISTENT_LIST, EMPTY_METAS) as IonElement
+    it to NullElementImpl(it, ImmutableList.EMPTY, EMPTY_METAS) as IonElement
 }.toMap()
