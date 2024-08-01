@@ -24,6 +24,7 @@ import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.*
+import kotlinx.collections.immutable.toPersistentMap
 
 internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
@@ -59,9 +60,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
         }
 
     override fun loadSingleElement(ionText: String): AnyElement =
-        IonReaderBuilder.standard().build(ionText).use { ionReader ->
-            loadSingleElement(ionReader)
-        }
+        IonReaderBuilder.standard().build(ionText).use(::loadSingleElement)
 
     override fun loadSingleElement(ionReader: IonReader): AnyElement {
         return handleReaderException(ionReader) {
@@ -75,28 +74,22 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
 
     override fun loadAllElements(ionReader: IonReader): List<AnyElement> {
         return handleReaderException(ionReader) {
-            mutableListOf<AnyElement>().also { fields ->
-                ionReader.forEachValue { fields.add(loadCurrentElement(ionReader)) }
+            val elements = mutableListOf<AnyElement>()
+            while (ionReader.next() != null) {
+                elements.add(loadCurrentElement(ionReader))
             }
+            elements
         }
     }
 
     override fun loadAllElements(ionText: String): List<AnyElement> =
-        IonReaderBuilder.standard().build(ionText).use { ionReader ->
-            return ArrayList<AnyElement>().also { list ->
-                ionReader.forEachValue {
-                    list.add(loadCurrentElement(ionReader))
-                }
-            }.toList()
-        }
+        IonReaderBuilder.standard().build(ionText).use(::loadAllElements)
 
     override fun loadCurrentElement(ionReader: IonReader): AnyElement {
         return handleReaderException(ionReader) {
-            require(ionReader.type != null) { "The IonReader was not positioned at an element." }
+            val valueType = requireNotNull(ionReader.type) { "The IonReader was not positioned at an element." }
 
-            val valueType = ionReader.type
-
-            val annotations = ionReader.typeAnnotations!!
+            val annotations = ionReader.typeAnnotations!!.asList().toEmptyOrPersistentList()
 
             val metas = when {
                 options.includeLocationMeta -> {
@@ -107,83 +100,67 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     }
                 }
                 else -> emptyMetaContainer()
-            }
+            }.toPersistentMap()
 
-            var element: AnyElement = when {
-                ionReader.type == IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
-                ionReader.isNullValue -> ionNull(valueType.toElementType())
-                else -> {
-                    when {
-                        !IonType.isContainer(valueType) -> {
-                            when (valueType) {
-                                IonType.BOOL -> ionBool(ionReader.booleanValue())
-                                IonType.INT -> when (ionReader.integerSize!!) {
-                                    IntegerSize.BIG_INTEGER -> {
-                                        val bigIntValue = ionReader.bigIntegerValue()
-                                        // Ion java's IonReader appears to determine integerSize based on number of bits,
-                                        // not on the actual value, which means if we have a padded int that is > 63 bits,
-                                        // but whose value only uses <= 63 bits then integerSize is still BIG_INTEGER.
-                                        // Compensate for that here...
-                                        if (bigIntValue !in RANGE_OF_LONG)
-                                            ionInt(bigIntValue)
-                                        else {
-                                            ionInt(ionReader.longValue())
-                                        }
-                                    }
-                                    IntegerSize.LONG, IntegerSize.INT -> ionInt(ionReader.longValue())
-                                }
-                                IonType.FLOAT -> ionFloat(ionReader.doubleValue())
-                                IonType.DECIMAL -> ionDecimal(ionReader.decimalValue())
-                                IonType.TIMESTAMP -> ionTimestamp(ionReader.timestampValue())
-                                IonType.STRING -> ionString(ionReader.stringValue())
-                                IonType.SYMBOL -> ionSymbol(ionReader.stringValue())
-                                IonType.CLOB -> ionClob(ionReader.newBytes())
-                                IonType.BLOB -> ionBlob(ionReader.newBytes())
-                                else ->
-                                    error("Unexpected Ion type for scalar Ion data type ${ionReader.type}.")
+            if (ionReader.isNullValue) {
+                ionNull(valueType.toElementType(), annotations, metas)
+            } else {
+                when (valueType) {
+                    IonType.BOOL -> BoolElementImpl(ionReader.booleanValue(), annotations, metas)
+                    IonType.INT -> when (ionReader.integerSize!!) {
+                        IntegerSize.BIG_INTEGER -> {
+                            val bigIntValue = ionReader.bigIntegerValue()
+                            // Ion java's IonReader appears to determine integerSize based on number of bits,
+                            // not on the actual value, which means if we have a padded int that is > 63 bits,
+                            // but whose value only uses <= 63 bits then integerSize is still BIG_INTEGER.
+                            // Compensate for that here...
+                            if (bigIntValue !in RANGE_OF_LONG)
+                                BigIntIntElementImpl(bigIntValue, annotations, metas)
+                            else {
+                                LongIntElementImpl(ionReader.longValue(), annotations, metas)
                             }
                         }
-                        else -> {
-                            ionReader.stepIn()
-                            when (valueType) {
-                                IonType.LIST -> {
-                                    ionListOf(loadAllElements(ionReader))
-                                }
-                                IonType.SEXP -> {
-                                    ionSexpOf(loadAllElements(ionReader))
-                                }
-                                IonType.STRUCT -> {
-                                    val fields = mutableListOf<StructField>()
-                                    ionReader.forEachValue { fields.add(StructFieldImpl(ionReader.fieldName, loadCurrentElement(ionReader))) }
-                                    ionStructOf(fields)
-                                }
-                                else -> error("Unexpected Ion type for container Ion data type ${ionReader.type}.")
-                            }.also {
-                                ionReader.stepOut()
-                            }
-                        }
+                        IntegerSize.LONG,
+                        IntegerSize.INT -> LongIntElementImpl(ionReader.longValue(), annotations, metas)
                     }
+
+                    IonType.FLOAT -> FloatElementImpl(ionReader.doubleValue(), annotations, metas)
+                    IonType.DECIMAL -> DecimalElementImpl(ionReader.decimalValue(), annotations, metas)
+                    IonType.TIMESTAMP -> TimestampElementImpl(ionReader.timestampValue(), annotations, metas)
+                    IonType.STRING -> StringElementImpl(ionReader.stringValue(), annotations, metas)
+                    IonType.SYMBOL -> SymbolElementImpl(ionReader.stringValue(), annotations, metas)
+                    IonType.CLOB -> ClobElementImpl(ionReader.newBytes(), annotations, metas)
+                    IonType.BLOB -> BlobElementImpl(ionReader.newBytes(), annotations, metas)
+                    IonType.LIST -> {
+                        ionReader.stepIn()
+                        val list = ListElementImpl(loadAllElements(ionReader).toEmptyOrPersistentList(), annotations, metas)
+                        ionReader.stepOut()
+                        list
+                    }
+                    IonType.SEXP -> {
+                        ionReader.stepIn()
+                        val sexp = SexpElementImpl(loadAllElements(ionReader).toEmptyOrPersistentList(), annotations, metas)
+                        ionReader.stepOut()
+                        sexp
+                    }
+                    IonType.STRUCT -> {
+                        val fields = mutableListOf<StructField>()
+                        ionReader.stepIn()
+                        while (ionReader.next() != null) {
+                            fields.add(
+                                StructFieldImpl(
+                                    ionReader.fieldName,
+                                    loadCurrentElement(ionReader)
+                                )
+                            )
+                        }
+                        ionReader.stepOut()
+                        StructElementImpl(fields.toEmptyOrPersistentList(), annotations, metas)
+                    }
+                    IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
+                    IonType.NULL -> error("IonType.NULL branch should be unreachable")
                 }
             }.asAnyElement()
-
-            if (annotations.any()) {
-                element = element._withAnnotations(*annotations)
-            }
-            if (metas.any()) {
-                element = element._withMetas(metas)
-            }
-
-            element
         }
-    }
-}
-
-/**
- * Calls [IonReader.next] and invokes [block] until all values at the current level in the [IonReader]
- * have been exhausted.
- * */
-private fun <T> IonReader.forEachValue(block: () -> T) {
-    while (this.next() != null) {
-        block()
     }
 }
