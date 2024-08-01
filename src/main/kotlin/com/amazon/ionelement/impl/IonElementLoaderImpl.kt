@@ -24,8 +24,6 @@ import com.amazon.ion.SpanProvider
 import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.*
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentMap
 
 internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
