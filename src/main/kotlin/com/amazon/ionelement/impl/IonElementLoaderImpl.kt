@@ -45,16 +45,6 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
         }
     }
 
-    private fun IonReader.getSpanProvider(): SpanProvider? = this.asFacet(SpanProvider::class.java)
-
-    private fun SpanProvider.currentLocation(): IonLocation? {
-        return when (val currentSpan = currentSpan()) {
-            is TextSpan -> IonTextLocation(currentSpan.startLine, currentSpan.startColumn)
-            is OffsetSpan -> IonBinaryLocation(currentSpan.startOffset)
-            else -> null
-        }
-    }
-
     private fun IonReader.currentLocation(): IonLocation? =
         when {
             // Can't attempt to get a SpanProvider unless we're on a value
