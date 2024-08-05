@@ -18,19 +18,16 @@ package com.amazon.ionelement.impl
 import com.amazon.ion.IonType
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
+import com.amazon.ionelement.api.ImmutableMetaContainer
 import com.amazon.ionelement.api.constraintError
+import com.amazon.ionelement.impl.collections.*
 import java.util.function.Consumer
-import kotlinx.collections.immutable.PersistentCollection
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.toPersistentMap
 
 // TODO: Consider creating a StructElement variant with optimizations that assume no duplicate field names.
 internal class StructElementImpl(
-    private val allFields: PersistentList<StructField>,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    private val allFields: ImmutableList<StructField>,
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
@@ -38,11 +35,11 @@ internal class StructElementImpl(
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!
-    private var valuesBackingField: PersistentCollection<AnyElement>? = null
+    private var valuesBackingField: ImmutableList<AnyElement>? = null
     override val values: Collection<AnyElement>
         get() {
             if (valuesBackingField == null) {
-                valuesBackingField = fields.mapToEmptyOrPersistentList { it.value }
+                valuesBackingField = fields.map { it.value }.toImmutableListUnsafe()
             }
             return valuesBackingField!!
         }
@@ -52,7 +49,7 @@ internal class StructElementImpl(
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!
-    private var fieldsByNameBackingField: PersistentMap<String, PersistentList<AnyElement>>? = null
+    private var fieldsByNameBackingField: ImmutableMap<String, ImmutableList<AnyElement>>? = null
 
     /** Lazily calculated map of field names and lists of their values. */
     private val fieldsByName: Map<String, List<AnyElement>>
@@ -61,8 +58,9 @@ internal class StructElementImpl(
                 fieldsByNameBackingField =
                     fields
                         .groupBy { it.name }
-                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.mapToEmptyOrPersistentList { it.value } }
-                        .toMap().toPersistentMap()
+                        .map { structFieldGroup -> structFieldGroup.key to structFieldGroup.value.map { it.value }.toImmutableListUnsafe() }
+                        .toMap()
+                        .toImmutableMapUnsafe()
             }
             return fieldsByNameBackingField!!
         }
@@ -99,7 +97,7 @@ internal class StructElementImpl(
     override fun containsField(fieldName: String): Boolean = fieldsByName.containsKey(fieldName)
 
     override fun copy(annotations: List<String>, metas: MetaContainer): StructElementImpl =
-        StructElementImpl(allFields, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        StructElementImpl(allFields, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): StructElementImpl = _withAnnotations(*additionalAnnotations)
 

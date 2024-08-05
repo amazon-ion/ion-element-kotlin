@@ -17,16 +17,15 @@ package com.amazon.ionelement.impl
 
 import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.*
-import com.amazon.ionelement.api.PersistentMetaContainer
+import com.amazon.ionelement.api.ImmutableMetaContainer
 import com.amazon.ionelement.api.constraintError
+import com.amazon.ionelement.impl.collections.*
 import java.math.BigInteger
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentMap
 
 internal class BigIntIntElementImpl(
     override val bigIntegerValue: BigInteger,
-    override val annotations: PersistentList<String>,
-    override val metas: PersistentMetaContainer
+    override val annotations: ImmutableList<String>,
+    override val metas: ImmutableMetaContainer
 ) : AnyElementBase(), IntElement {
 
     override val type: ElementType get() = ElementType.INT
@@ -42,7 +41,7 @@ internal class BigIntIntElementImpl(
     }
 
     override fun copy(annotations: List<String>, metas: MetaContainer): BigIntIntElementImpl =
-        BigIntIntElementImpl(bigIntegerValue, annotations.toEmptyOrPersistentList(), metas.toPersistentMap())
+        BigIntIntElementImpl(bigIntegerValue, annotations.toImmutableList(), metas.toImmutableMap())
 
     override fun withAnnotations(vararg additionalAnnotations: String): BigIntIntElementImpl = _withAnnotations(*additionalAnnotations)
     override fun withAnnotations(additionalAnnotations: Iterable<String>): BigIntIntElementImpl = _withAnnotations(additionalAnnotations)

@@ -19,10 +19,10 @@ import com.amazon.ion.IonWriter
 import com.amazon.ionelement.api.AnyElement
 import com.amazon.ionelement.api.MetaContainer
 import com.amazon.ionelement.api.SeqElement
-import kotlinx.collections.immutable.PersistentList
+import com.amazon.ionelement.impl.collections.*
 
 internal abstract class SeqElementBase(
-    override val values: PersistentList<AnyElement>
+    override val values: ImmutableList<AnyElement>
 ) : AnyElementBase(), SeqElement {
 
     override val containerValues: List<AnyElement> get() = values
