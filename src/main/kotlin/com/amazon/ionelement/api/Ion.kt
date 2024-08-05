@@ -520,13 +520,13 @@ public fun buildStruct(
 }
 
 // Memoized empty instances of our container types.
-private val EMPTY_LIST = ListElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
-private val EMPTY_SEXP = SexpElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
-private val EMPTY_STRUCT = StructElementImpl(ImmutableList.EMPTY, ImmutableList.EMPTY, EMPTY_METAS)
-private val EMPTY_BLOB = BlobElementImpl(ByteArray(0), ImmutableList.EMPTY, EMPTY_METAS)
-private val EMPTY_CLOB = ClobElementImpl(ByteArray(0), ImmutableList.EMPTY, EMPTY_METAS)
+private val EMPTY_LIST = ListElementImpl(EMPTY_IMMUTABLE_LIST, EMPTY_IMMUTABLE_LIST, EMPTY_METAS)
+private val EMPTY_SEXP = SexpElementImpl(EMPTY_IMMUTABLE_LIST, EMPTY_IMMUTABLE_LIST, EMPTY_METAS)
+private val EMPTY_STRUCT = StructElementImpl(EMPTY_IMMUTABLE_LIST, EMPTY_IMMUTABLE_LIST, EMPTY_METAS)
+private val EMPTY_BLOB = BlobElementImpl(ByteArray(0), EMPTY_IMMUTABLE_LIST, EMPTY_METAS)
+private val EMPTY_CLOB = ClobElementImpl(ByteArray(0), EMPTY_IMMUTABLE_LIST, EMPTY_METAS)
 
 // Memoized instances of all of our null values.
 private val ALL_NULLS = ElementType.values().map {
-    it to NullElementImpl(it, ImmutableList.EMPTY, EMPTY_METAS) as IonElement
+    it to NullElementImpl(it, EMPTY_IMMUTABLE_LIST, EMPTY_METAS) as IonElement
 }.toMap()
