@@ -30,6 +30,7 @@ val isReleaseVersion: Boolean = !version.toString().endsWith("SNAPSHOT")
 dependencies {
     api("com.amazon.ion:ion-java:[1.4.0,)")
     compileOnly("com.amazon.ion:ion-java:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.4")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
