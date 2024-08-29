@@ -3,6 +3,7 @@ package com.amazon.ionelement.demos;
 import com.amazon.ion.IonReader;
 import com.amazon.ionelement.api.AnyElement;
 import com.amazon.ionelement.api.ElementLoader;
+import com.amazon.ionelement.api.IonElementLoaderOptions;
 import com.amazon.ionelement.util.TestUtils;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,26 @@ import java.util.Iterator;
 public class ElementLoaderDemo extends DemoBase {
     private static final String ION_TEXT_STRUCT = "{ a_field: \"hello!\"}";
     private static final String ION_TEXT_MULTIPLE_VALUES = "1 2 3";
+
+    @Test
+    void createIonElementLoaderOptions() {
+        IonElementLoaderOptions opts = IonElementLoaderOptions.builder()
+            .withIncludeLocationMeta(true)
+            .withUseRecursiveLoad(false)
+            .build();
+
+        assertTrue(opts.getIncludeLocationMeta());
+        assertFalse(opts.getUseRecursiveLoad());
+
+        IonElementLoaderOptions copy = opts.toBuilder()
+            .withUseRecursiveLoad(true)
+            .build();
+
+        // Unchanged
+        assertTrue(copy.getIncludeLocationMeta());
+        // Changed
+        assertTrue(copy.getUseRecursiveLoad());
+    }
 
     @Test
     void loadSingleElement_text() {

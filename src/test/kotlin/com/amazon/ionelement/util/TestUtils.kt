@@ -36,4 +36,4 @@ fun convertToString(ionValue: IonValue): String {
  *
  * This is to support this somewhat commonly used scenario.
  */
-val INCLUDE_LOCATION_META = IonElementLoaderOptions(includeLocationMeta = true)
+val INCLUDE_LOCATION_META = IonElementLoaderOptions { includeLocationMeta = true }
