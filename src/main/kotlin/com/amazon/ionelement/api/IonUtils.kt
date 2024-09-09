@@ -42,6 +42,8 @@ public fun IonElement.toIonValue(factory: ValueFactory): IonValue {
  * Bridge function that converts from the mutable [IonValue] to an [AnyElement].
  *
  * New code that does not need to integrate with uses of the mutable DOM should not use this.
+ *
+ * This will fail for IonDatagram if the IonDatagram does not contain exactly one user value.
  */
 public fun IonValue.toIonElement(): AnyElement =
     this.system.newReader(this).use { reader ->

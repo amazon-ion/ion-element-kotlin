@@ -31,7 +31,7 @@ internal class StructElementImpl(
 ) : AnyElementBase(), StructElement {
 
     override val type: ElementType get() = ElementType.STRUCT
-    override val size = allFields.size
+    override val size: Int get() = allFields.size
 
     // Note that we are not using `by lazy` here because it requires 2 additional allocations and
     // has been demonstrated to significantly increase memory consumption!

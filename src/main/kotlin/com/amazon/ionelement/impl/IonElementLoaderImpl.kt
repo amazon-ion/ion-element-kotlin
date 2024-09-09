@@ -25,8 +25,18 @@ import com.amazon.ion.TextSpan
 import com.amazon.ion.system.IonReaderBuilder
 import com.amazon.ionelement.api.*
 import com.amazon.ionelement.impl.collections.*
+import java.util.ArrayDeque
+import java.util.ArrayList
+import kotlinx.collections.immutable.adapters.ImmutableListAdapter
 
 internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
+
+    // TODO: It seems like some data can be read faster with a recursive approach, but other data is
+    //       faster with an iterative approach. Consider making this configurable. It probably doesn't
+    //       need to be finely-tune-able—just 0 or 100 (i.e. on/off) is probably sufficient.
+    companion object {
+        private const val MAX_RECURSION_DEPTH: Int = 100
+    }
 
     /**
      * Catches an [IonException] occurring in [block] and throws an [IonElementLoaderException] with
@@ -86,6 +96,10 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
         IonReaderBuilder.standard().build(ionText).use(::loadAllElements)
 
     override fun loadCurrentElement(ionReader: IonReader): AnyElement {
+        return loadCurrentElementRecursively(ionReader)
+    }
+
+    private fun loadCurrentElementRecursively(ionReader: IonReader): AnyElement {
         return handleReaderException(ionReader) {
             val valueType = requireNotNull(ionReader.type) { "The IonReader was not positioned at an element." }
 
@@ -128,26 +142,41 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.BLOB -> BlobElementImpl(ionReader.newBytes(), annotations, metas)
                     IonType.LIST -> {
                         ionReader.stepIn()
-                        val list = ListElementImpl(loadAllElements(ionReader).toImmutableListUnsafe(), annotations, metas)
+                        val listContent = ArrayList<AnyElement>()
+                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                            while (ionReader.next() != null) {
+                                listContent.add(loadCurrentElementRecursively(ionReader))
+                            }
+                        } else {
+                            loadAllElementsIteratively(ionReader, listContent as MutableList<Any>)
+                        }
                         ionReader.stepOut()
-                        list
+                        ListElementImpl(listContent.toImmutableListUnsafe(), annotations, metas)
                     }
                     IonType.SEXP -> {
                         ionReader.stepIn()
-                        val sexp = SexpElementImpl(loadAllElements(ionReader).toImmutableListUnsafe(), annotations, metas)
+                        val sexpContent = ArrayList<AnyElement>()
+                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                            while (ionReader.next() != null) {
+                                sexpContent.add(loadCurrentElementRecursively(ionReader))
+                            }
+                        } else {
+                            loadAllElementsIteratively(ionReader, sexpContent as MutableList<Any>)
+                        }
                         ionReader.stepOut()
-                        sexp
+                        SexpElementImpl(sexpContent.toImmutableListUnsafe(), annotations, metas)
                     }
                     IonType.STRUCT -> {
-                        val fields = mutableListOf<StructField>()
+                        val fields = ArrayList<StructField>()
                         ionReader.stepIn()
-                        while (ionReader.next() != null) {
-                            fields.add(
-                                StructFieldImpl(
-                                    ionReader.fieldName,
-                                    loadCurrentElement(ionReader)
-                                )
-                            )
+                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                            while (ionReader.next() != null) {
+                                val fieldName = ionReader.fieldName
+                                val element = loadCurrentElementRecursively(ionReader)
+                                fields.add(StructFieldImpl(fieldName, element))
+                            }
+                        } else {
+                            loadAllElementsIteratively(ionReader, fields as MutableList<Any>)
                         }
                         ionReader.stepOut()
                         StructElementImpl(fields.toImmutableListUnsafe(), annotations, metas)
@@ -156,6 +185,111 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.NULL -> error("IonType.NULL branch should be unreachable")
                 }
             }.asAnyElement()
+        }
+    }
+
+    private fun loadAllElementsIteratively(ionReader: IonReader, into: MutableList<Any>) {
+        // Intentionally not using a "recycling" stack because we have mutable lists that we are going to wrap as
+        // ImmutableLists and then forget about the reference to the mutable list.
+        val openContainerStack = ArrayDeque<MutableList<Any>>()
+        var elements: MutableList<Any> = into
+
+        while (true) {
+            val valueType = ionReader.next()
+
+            // End of container or input
+            if (valueType == null) {
+                // We're at the top (relative to where we started)
+                if (elements === into) {
+                    return
+                } else {
+                    ionReader.stepOut()
+                    elements = openContainerStack.pop()
+                    continue
+                }
+            }
+
+            // Read a value
+            val annotations = ionReader.typeAnnotations!!.toImmutableListUnsafe()
+
+            var metas = EMPTY_METAS
+            if (options.includeLocationMeta) {
+                val location = ionReader.currentLocation()
+                if (location != null) metas = location.toMetaContainer()
+            }
+
+            if (ionReader.isNullValue) {
+                elements.addContainerElement(ionReader, ionNull(valueType.toElementType(), annotations, metas).asAnyElement())
+                continue
+            } else when (valueType) {
+                IonType.BOOL -> elements.addContainerElement(ionReader, BoolElementImpl(ionReader.booleanValue(), annotations, metas))
+                IonType.INT -> {
+                    val intValue = when (ionReader.integerSize!!) {
+                        IntegerSize.BIG_INTEGER -> {
+                            val bigIntValue = ionReader.bigIntegerValue()
+                            if (bigIntValue !in RANGE_OF_LONG)
+                                BigIntIntElementImpl(bigIntValue, annotations, metas)
+                            else {
+                                LongIntElementImpl(ionReader.longValue(), annotations, metas)
+                            }
+                        }
+                        IntegerSize.LONG,
+                        IntegerSize.INT -> LongIntElementImpl(ionReader.longValue(), annotations, metas)
+                    }
+                    elements.addContainerElement(ionReader, intValue)
+                }
+                IonType.FLOAT -> elements.addContainerElement(ionReader, FloatElementImpl(ionReader.doubleValue(), annotations, metas))
+                IonType.DECIMAL -> elements.addContainerElement(ionReader, DecimalElementImpl(ionReader.decimalValue(), annotations, metas))
+                IonType.TIMESTAMP -> elements.addContainerElement(ionReader, TimestampElementImpl(ionReader.timestampValue(), annotations, metas))
+                IonType.STRING -> elements.addContainerElement(ionReader, StringElementImpl(ionReader.stringValue(), annotations, metas))
+                IonType.SYMBOL -> elements.addContainerElement(ionReader, SymbolElementImpl(ionReader.stringValue(), annotations, metas))
+                IonType.CLOB -> elements.addContainerElement(ionReader, ClobElementImpl(ionReader.newBytes(), annotations, metas))
+                IonType.BLOB -> elements.addContainerElement(ionReader, BlobElementImpl(ionReader.newBytes(), annotations, metas))
+                IonType.LIST -> {
+                    val listContent = ArrayList<AnyElement>()
+                    // `listContent` gets wrapped in an `ImmutableListWrapper` so that we can create a ListElementImpl
+                    // right away. Then, we add child elements to `ListContent`. Technically, this is a violation of the
+                    // contract for `ImmutableListAdapter`, but it is safe to do so here because no reads will occur
+                    // after we are done modifying the backing list.
+                    // Same thing applies for `sexpContent` and `structContent` in their respective branches.
+                    elements.addContainerElement(ionReader, ListElementImpl(ImmutableListAdapter(listContent), annotations, metas))
+                    ionReader.stepIn()
+                    openContainerStack.push(elements)
+                    elements = listContent as MutableList<Any>
+                }
+                IonType.SEXP -> {
+                    val sexpContent = ArrayList<AnyElement>()
+                    elements.addContainerElement(ionReader, SexpElementImpl(ImmutableListAdapter(sexpContent), annotations, metas))
+                    ionReader.stepIn()
+                    openContainerStack.push(elements)
+                    elements = sexpContent as MutableList<Any>
+                }
+                IonType.STRUCT -> {
+                    val structContent = ArrayList<StructField>()
+                    elements.addContainerElement(
+                        ionReader,
+                        StructElementImpl(
+                            ImmutableListAdapter(structContent),
+                            annotations,
+                            metas
+                        )
+                    )
+                    ionReader.stepIn()
+                    openContainerStack.push(elements)
+                    elements = structContent as MutableList<Any>
+                }
+                IonType.DATAGRAM -> error("IonElementLoaderImpl does not know what to do with IonType.DATAGRAM")
+                IonType.NULL -> error("IonType.NULL branch should be unreachable")
+            }
+        }
+    }
+
+    private fun MutableList<Any>.addContainerElement(ionReader: IonReader, value: AnyElement) {
+        val fieldName = ionReader.fieldName
+        if (fieldName != null) {
+            add(StructFieldImpl(fieldName, value))
+        } else {
+            add(value)
         }
     }
 }
