@@ -20,7 +20,7 @@ repositories {
 }
 
 group = "com.amazon.ion"
-version = "1.3.0-SNAPSHOT"
+version = "1.3.0"
 description = "An immutable in-memory representation of Amazon Ion for Kotlin"
 
 val isCI: Boolean = System.getenv("CI") == "true"
