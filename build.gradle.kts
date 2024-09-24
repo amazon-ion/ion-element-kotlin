@@ -12,6 +12,9 @@ plugins {
 
     // TODO: Configure and use this
     id("com.diffplug.spotless") version "6.11.0"
+
+    // There are newer versions available, but they are not guaranteed to support Java 8.
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 repositories {
@@ -136,15 +139,6 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            url = uri("https://aws.oss.sonatype.org/service/local/")
-            credentials {
-                username = properties["ossrhUsername"].toString()
-                password = properties["ossrhPassword"].toString()
-            }
-        }
-    }
 }
 
 signing {
@@ -159,5 +153,22 @@ signing {
         val signingKey: String? by project
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    }
+
+    sign(publishing.publications["IonElement"])
+}
+
+nexusPublishing {
+    // Documentation for this plugin, see https://github.com/gradle-nexus/publish-plugin/blob/v1.3.0/README.md
+    this.repositories {
+        sonatype {
+            nexusUrl.set(uri("https://aws.oss.sonatype.org/service/local/"))
+            // For CI environments, the username and password should be stored in
+            // ORG_GRADLE_PROJECT_sonatypeUsername and ORG_GRADLE_PROJECT_sonatypePassword respectively.
+            if (!isCI) {
+                username.set(properties["ossrhUsername"].toString())
+                password.set(properties["ossrhPassword"].toString())
+            }
+        }
     }
 }
