@@ -24,6 +24,8 @@ import com.amazon.ionelement.util.IonElementLoaderTestCase
 import com.amazon.ionelement.util.convertToString
 import java.math.BigInteger
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -169,5 +171,25 @@ class IonElementLoaderTests {
     @Test
     fun `loadSingleElement throws exception when more than one values in reader`() {
         assertThrows<IllegalArgumentException> { loadSingleElement("a b") }
+    }
+
+    @Test
+    fun `create an IonElementLoaderOptions instance`() {
+        val opts = IonElementLoaderOptions {
+            includeLocationMeta = true
+            useRecursiveLoad = false
+        }
+
+        assertTrue(opts.includeLocationMeta)
+        assertFalse(opts.useRecursiveLoad)
+
+        val copy = opts.copyWith {
+            useRecursiveLoad = true
+        }
+
+        // Unchanged
+        assertTrue(copy.includeLocationMeta)
+        // Changed
+        assertTrue(copy.useRecursiveLoad)
     }
 }

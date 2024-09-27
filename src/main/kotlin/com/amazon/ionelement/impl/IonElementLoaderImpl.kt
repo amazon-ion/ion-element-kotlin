@@ -31,12 +31,11 @@ import kotlinx.collections.immutable.adapters.ImmutableListAdapter
 
 internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions) : IonElementLoader {
 
-    // TODO: It seems like some data can be read faster with a recursive approach, but other data is
-    //       faster with an iterative approach. Consider making this configurable. It probably doesn't
-    //       need to be finely-tune-able—just 0 or 100 (i.e. on/off) is probably sufficient.
     companion object {
-        private const val MAX_RECURSION_DEPTH: Int = 100
+        private const val DEFAULT_MAX_RECURSION_DEPTH: Int = 100
     }
+
+    private var maxRecursionDepth = if (options.useRecursiveLoad) DEFAULT_MAX_RECURSION_DEPTH else 0
 
     /**
      * Catches an [IonException] occurring in [block] and throws an [IonElementLoaderException] with
@@ -143,7 +142,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.LIST -> {
                         ionReader.stepIn()
                         val listContent = ArrayList<AnyElement>()
-                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                        if (ionReader.depth < maxRecursionDepth) {
                             while (ionReader.next() != null) {
                                 listContent.add(loadCurrentElementRecursively(ionReader))
                             }
@@ -156,7 +155,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.SEXP -> {
                         ionReader.stepIn()
                         val sexpContent = ArrayList<AnyElement>()
-                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                        if (ionReader.depth < maxRecursionDepth) {
                             while (ionReader.next() != null) {
                                 sexpContent.add(loadCurrentElementRecursively(ionReader))
                             }
@@ -169,7 +168,7 @@ internal class IonElementLoaderImpl(private val options: IonElementLoaderOptions
                     IonType.STRUCT -> {
                         val fields = ArrayList<StructField>()
                         ionReader.stepIn()
-                        if (ionReader.depth < MAX_RECURSION_DEPTH) {
+                        if (ionReader.depth < maxRecursionDepth) {
                             while (ionReader.next() != null) {
                                 val fieldName = ionReader.fieldName
                                 val element = loadCurrentElementRecursively(ionReader)

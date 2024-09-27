@@ -388,16 +388,37 @@ public final class com/amazon/ionelement/api/IonElementLoaderException : com/ama
 }
 
 public final class com/amazon/ionelement/api/IonElementLoaderOptions {
+	public static final field Companion Lcom/amazon/ionelement/api/IonElementLoaderOptions$Companion;
 	public fun <init> ()V
 	public fun <init> (Z)V
 	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun builder ()Lcom/amazon/ionelement/api/IonElementLoaderOptions$Builder;
 	public final fun component1 ()Z
+	public final fun copy ()Lcom/amazon/ionelement/api/IonElementLoaderOptions;
 	public final fun copy (Z)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
 	public static synthetic fun copy$default (Lcom/amazon/ionelement/api/IonElementLoaderOptions;ZILjava/lang/Object;)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
+	public final synthetic fun copyWith (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getIncludeLocationMeta ()Z
+	public final fun getUseRecursiveLoad ()Z
 	public fun hashCode ()I
+	public final fun toBuilder ()Lcom/amazon/ionelement/api/IonElementLoaderOptions$Builder;
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/amazon/ionelement/api/IonElementLoaderOptions$Builder {
+	public final fun build ()Lcom/amazon/ionelement/api/IonElementLoaderOptions;
+	public final fun getIncludeLocationMeta ()Z
+	public final fun getUseRecursiveLoad ()Z
+	public final synthetic fun setIncludeLocationMeta (Z)V
+	public final synthetic fun setUseRecursiveLoad (Z)V
+	public final fun withIncludeLocationMeta (Z)Lcom/amazon/ionelement/api/IonElementLoaderOptions$Builder;
+	public final fun withUseRecursiveLoad (Z)Lcom/amazon/ionelement/api/IonElementLoaderOptions$Builder;
+}
+
+public final class com/amazon/ionelement/api/IonElementLoaderOptions$Companion {
+	public final fun builder ()Lcom/amazon/ionelement/api/IonElementLoaderOptions$Builder;
+	public final synthetic fun invoke (Lkotlin/jvm/functions/Function1;)Lcom/amazon/ionelement/api/IonElementLoaderOptions;
 }
 
 public abstract class com/amazon/ionelement/api/IonLocation {
