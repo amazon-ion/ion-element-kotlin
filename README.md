@@ -168,7 +168,7 @@ More details about these functions are included below.
 ## `AnyElement`'s `*Value[OrNull]` Properties
 
 In order to reduce the need to downcast to the appropriate sub-interface of `IonElement`, `AnyElement` provides two
-read-only properties per type of Ion data: `<kotlinType>Value` and `<kotlinType>ValueOrNull`, where `<jvmType>` is the
+read-only properties per type of Ion data: `<kotlinType>Value` and `<kotlinType>ValueOrNull`, where `<kotlinType>` is the
 JVM Kotlin equivalent of the corresponding Ion type. Each of these properties will check whether the Ion type is
 correct for the property called, and if not, will throw `IonElementConstraintException` to indicate that the element is
 of an unexpected type.
@@ -226,10 +226,10 @@ Here is an example using `asInt()` and `asString()`
 val anInteger: AnyElement = loadSingleElement("42")
 
 // Prints 42
-println(anInteger.longValue)
+println(anInteger.asInt())
 
 // throws IonElementConstraintException
-anInteger.stringValue
+anInteger.asString()
 ```
 
 As before, if the `AnyElement` instance contains an Ion null value, an `IonElementConstraintException` is also thrown.
